@@ -1,0 +1,34 @@
+@startuml activity
+title pdfparser::concrete_syntax_tree::parse
+start
+
+:node root_node(0, root, "");
+while (まだデータがある?) is (y)
+	switch(データの先頭)
+	case (<< or >> or < or > or [ or ] or { or } or /)
+		:データを対応するタイプの
+		トークンとする;
+	case (white-space)
+		:次の非white-space文字までを
+		white_space_characters とする;
+	case (regular)
+		:次の非regular文字までを
+		regular_characters とする;
+		if (トークンが stream?) then (y)
+			if (次のトークンが CRLF or LF でない) then (y)
+				:throw pdfparser::syntax_error;
+			endif
+			:CRLF or LF を eol とする;
+			:次の EOL endstream までを stream_content とし、
+			EOL を eol、endstream を regular_characters とする;
+		endif
+	case (%)
+		:次のEOLまでを comment_content とし、
+		EOLを eol とする;
+	case (()
+		:ghi;
+	endswitch
+endwhile (n)
+
+stop
+@enduml
