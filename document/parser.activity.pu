@@ -1,0 +1,129 @@
+@startuml parser
+partition "parser(std::istream&& istr)" {
+start
+	:m_stream = istr;
+	:take_footer();
+stop
+}
+@enduml
+
+@startuml take_footer
+partition "take_footer()" {
+start
+	:ストリームを最終行の行頭に移動;
+	:require(EOF);
+	:ストリームを最終行の1行前の行頭に移動;
+	if (移動できなかった) then (y)
+		:throw syntax_error(xref_byte_offset_not_found);
+		stop
+	endif
+	:take_xref_byte_offset();
+	:ストリームを最終行の2行前の行頭に移動;
+	if (移動できなかった) then (y)
+		:throw syntax_error(startxref_not_found);
+		stop
+	endif
+	:require(startxref);
+stop
+}
+@enduml
+
+@startuml take_xref_byte_offset
+partition "take_xref_byte_offset()" {
+start
+	:ignore_if_present(any_whitespace_characters_except_EOL);
+	:xref_byte_offset = take_unsigned_integer();
+	if (unsigned_integer_not_found の例外が出た)
+		:throw xref_byte_offset_not_found();
+		stop
+	endif
+	if (xref_byte_offset > m_xref_byte_offset の格納できる最大値) then (y)
+		:throw overflow_or_underflow_error();
+		stop
+	endif
+	:ignore_if_present(any_whitespace_characters_except_EOL | comment);
+	:require(EOL);
+stop
+}
+@enduml
+
+@startuml require
+partition "require(require_type req_type)" {
+start
+	switch (req_type?)
+	case (EOF)
+		if (ストリームから "%%EOF" が読み取れなかった) then (y)
+			:throw syntax_error(EOF_not_found);
+			stop
+		endif
+
+		if (ファイル終端) then (y)
+			stop
+		endif
+
+		if (次の文字が "**[EOL]**") then (y)
+			stop
+		endif
+
+		:throw syntax_error(EOF_invalid);
+		stop
+	case (EOL)
+		if (LF || CRLF || CR) then (y)
+			stop
+		endif
+
+		:throw syntax_error(EOL_not_found);
+		stop
+	case (startxref)
+		:ignore_if_present(any_whitespace_characters_except_EOL);
+		if (ストリームから "startxref" が読み取れなかった) then (y)
+			:throw syntax_error(startxref_not_found);
+		endif
+		:ignore_if_present(any_whitespace_characters_except_EOL | comment);
+		:require(EOL);
+	endswitch
+stop
+}
+@enduml
+
+@startuml ignore
+partition "ignore(const std::bitset<6>& flags)" {
+start
+	:flagsに指定のある空白類のみ読み飛ばす;
+stop
+}
+@enduml
+
+@startuml take_signed_integer
+partition "take_signed_integer()" {
+start
+	:+ or - の符号付(あるいは無し)整数の取得;
+	if (取得できなかった) then (y)
+		:throw syntax_error(signed_integer_not_found);
+		stop
+	endif
+	if (その整数 < intmax_t の最小値 || intmax_t の最大値 < その整数) then (y)
+		:throw overflow_or_underflow_error();
+		stop
+	endif
+	:return その整数;
+stop
+}
+@enduml
+
+@startuml take_unsigned_integer
+partition "take_unsigned_integer()" {
+start
+	:符号のない整数の取得;
+	if (取得できなかった) then (y)
+		:throw syntax_error(unsigned_integer_not_found);
+		stop
+	endif
+	if (uintmax_t の最大値 < その整数) then (y)
+		:throw overflow_or_underflow_error();
+		stop
+	endif
+	:return その整数;
+stop
+}
+@enduml

@@ -5,6 +5,7 @@
 - Visual Studio
 - Git
 - Github
+- PlantUML
 
 # 使用言語(予定)
 - C#
