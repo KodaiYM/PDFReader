@@ -17,7 +17,7 @@ start
 		:throw syntax_error(xref_byte_offset_not_found);
 		stop
 	endif
-	:take_xref_byte_offset();
+	:m_xref_byte_offset = take_xref_byte_offset();
 	:ストリームを最終行の2行前の行頭に移動;
 	if (移動できなかった) then (y)
 		:throw syntax_error(startxref_not_found);
@@ -43,6 +43,7 @@ start
 	endif
 	:ignore_if_present(any_whitespace_characters_except_EOL | comment);
 	:require(EOL);
+	:return xref_byte_offset;
 stop
 }
 @enduml
