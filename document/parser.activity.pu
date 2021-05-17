@@ -1,5 +1,5 @@
 @startuml parser
-partition "parser(std::istream&& istr)" {
+partition "parser(istr : std::istream&&)" {
 start
 	:m_stream = istr;
 	:take_footer();
@@ -48,7 +48,7 @@ stop
 @enduml
 
 @startuml require
-partition "require(require_type req_type)" {
+partition "require(req_type : require_type)" {
 start
 	switch (req_type?)
 	case (EOF)
@@ -87,7 +87,7 @@ stop
 @enduml
 
 @startuml ignore
-partition "ignore(const std::bitset<6>& flags)" {
+partition "ignore(flags : const std::bitset<6>&)" {
 start
 	:flagsに指定のある空白類のみ読み飛ばす;
 stop

@@ -23,12 +23,12 @@ class parser {
 	-m_stream : std::istream
 	-m_xref_byte_offset : decltype(m_stream.tellg())
 
-	+parser(std::istream&& istr)
+	+parser(istr : std::istream&&)
 	-take_footer() : void
 	-take_xref_byte_offset() : void
 
-	-require(require_type req_type) : void
-	-ignore_if_present(const std::bitset<7>& flags) : void
+	-require(req_type : require_type) : void
+	-ignore_if_present(flags : const std::bitset<7>&) : void
 	-take_signed_integer() : intmax_t
 	-take_unsigned_integer() : uintmax_t
 }
@@ -44,7 +44,7 @@ enum error_code {
 class syntax_error {
 	-m_error_code : error_code
 
-	+syntax_error(const error_code& error_code)
+	+syntax_error(error_code : const error_code&)
 	+code() : error_code
 }
 syntax_error --|> std::runtime_error
