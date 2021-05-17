@@ -94,14 +94,14 @@ class xref_types {
 class xref_inuse_entry {
 	+byte_offset : decltype(std::istream{}.tellg())
 }
-xref_inuse_entry --|> "private" "std::pair<object_t, generation_t>"
+xref_inuse_entry --|> "std::pair<object_t, generation_t>"
 class xref_free_entry {
 	+next_free_object_number : object_t
 }
 xref_free_entry x..> xref_types
-xref_free_entry --|> "private" "std::pair<object_t, generation_t>"
+xref_free_entry --|> "std::pair<object_t, generation_t>"
 class xref_table {
 }
-xref_table --|> "private" "std::set<xref_entry>"
+xref_table --|> "std::set<xref_entry>"
 }
 @enduml
