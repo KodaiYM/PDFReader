@@ -1,5 +1,6 @@
 # parser.cpp
 ## 概要
+[コンポーネント図](parser.component.pu)
 | クラス名 | 概要 |
 | --- | --- |
 | pdfparser::parser | PDFの構文に従ってストリームを解析し、間接参照オブジェクトへのランダムアクセスを可能にする |
@@ -33,7 +34,7 @@
 
 
 ## クラス一覧
-[クラス図](parser.class-diagram.md)
+[クラス図](parser.class.md)
 
 ### フローチャート
-[アクティビティ図](concrete_syntax_tree.activity-diagram.pu)
+[アクティビティ図](parser.activity.pu)

@@ -1,5 +1,5 @@
 @startuml parser
-partition "parser(istr : std::istream&&)" {
+partition "parser(inout istr : std::istream&&)" {
 start
 	:m_stream = istr;
 	:take_footer();
@@ -29,11 +29,11 @@ stop
 @enduml
 
 @startuml take_xref_byte_offset
-partition "take_xref_byte_offset()" {
+partition "take_xref_byte_offset(inout istr : std::istream&)" {
 start
 	:ignore_if_present(any_whitespace_characters_except_EOL);
 	:xref_byte_offset = take_unsigned_integer();
-	if (unsigned_integer_not_found の例外が出た)
+	if (unsigned_integer_not_found の例外が出た) then (y)
 		:throw xref_byte_offset_not_found();
 		stop
 	endif
@@ -49,7 +49,7 @@ stop
 @enduml
 
 @startuml require
-partition "require(req_type : require_type)" {
+partition "require(inout istr : std::istream&, req_type : require_type)" {
 start
 	switch (req_type?)
 	case (EOF)
@@ -79,6 +79,7 @@ start
 		:ignore_if_present(any_whitespace_characters_except_EOL);
 		if (ストリームから "startxref" が読み取れなかった) then (y)
 			:throw syntax_error(startxref_not_found);
+			stop
 		endif
 		:ignore_if_present(any_whitespace_characters_except_EOL | comment);
 		:require(EOL);
@@ -88,7 +89,7 @@ stop
 @enduml
 
 @startuml ignore
-partition "ignore(flags : const std::bitset<6>&)" {
+partition "ignore(inout istr : std::istream&, flags : const std::bitset<7>&)" {
 start
 	:flagsに指定のある空白類のみ読み飛ばす;
 stop
@@ -96,7 +97,7 @@ stop
 @enduml
 
 @startuml take_signed_integer
-partition "take_signed_integer()" {
+partition "take_signed_integer(inout istr : std::istream&)" {
 start
 	:+ or - の符号付(あるいは無し)整数の取得;
 	if (取得できなかった) then (y)
@@ -113,7 +114,7 @@ stop
 @enduml
 
 @startuml take_unsigned_integer
-partition "take_unsigned_integer()" {
+partition "take_unsigned_integer(inout istr : std::istream&)" {
 start
 	:符号のない整数の取得;
 	if (取得できなかった) then (y)
