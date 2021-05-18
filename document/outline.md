@@ -4,7 +4,7 @@
 - 解析結果はメモリ上に保持されるのみで、表示されない。
 
 ## 解析手順
-1. [構文解析](concrete_syntax_tree.md)
+1. [構文解析](parse.md)
 
 ## 参考仕様書
 - https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf
