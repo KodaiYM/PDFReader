@@ -6,14 +6,15 @@
 - Git
 - Github
 - PlantUML
+- WPF
 
 # 使用言語(予定)
 - C#
 - F#
 - C++/CLI
 
-# API
-- WPF on .NET Core 3.1
+# 動作環境
+- .NET Core 3.1
 
 # 開発手順
 1. Github の Issues に長くても1～2週間でできそうな要件定義(やりたいこと)を書く
