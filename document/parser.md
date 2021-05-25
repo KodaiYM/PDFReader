@@ -34,7 +34,7 @@
 
 
 ## クラス一覧
-[クラス図](parser.class.md)
+[クラス図](parser.class.pu)
 
 ### フローチャート
 [アクティビティ図](parser.activity.pu)
