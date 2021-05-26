@@ -23,7 +23,7 @@ enum ignore_flags <<Enumeration>> {
 }
 class parser {
 	-m_stream : std::istream
-	-m_xref_byte_offset : decltype(m_stream.tellg())
+	-m_xref_byte_offset : std::streamoff
 	-m_xref_table : xref_table
 
 	+parser(inout istr : std::istream&&)
@@ -62,10 +62,10 @@ enum error_code <<Enumeration>> {
 	+{static} EOF_invalid : int = 1
 	+{static} EOL_not_found : int = 2
 	+{static} xref_byte_offset_not_found : int = 3
-	+{static} startxref_not_found : int = 4
+	+{static} keyword_startxref_not_found : int = 4
 	+{static} signed_integer_not_found : int = 5
 	+{static} unsigned_integer_not_found : int = 6
-	+{static} xref_not_found : int = 7
+	+{static} keyword_xref_not_found : int = 7
 	+{static} space_not_found : int = 8
 	+{static} xref_entry_first_10_digits_invalid : int = 9
 	+{static} xref_entry_second_5_digits_invalid : int = 10
@@ -73,35 +73,54 @@ enum error_code <<Enumeration>> {
 	+{static} xref_entry_last_2_bytes_invalid : int = 12
 }
 class syntax_error {
-	-m_error_code : error_code
+	+enum error_code
+	-m_error_code : error_code {Const}
 
-	+syntax_error(in error_code : const error_code&)
+	+syntax_error(in er_code : error_code)
 	+code() : error_code
 }
 syntax_error --|> std::runtime_error
 syntax_error x--> "1" error_code
 
 class overflow_or_underflow_error {
+	+{static} overflow_or_underflow_error : typedef = std::variant<std::overflow_error, std::underflow_error> {Const}
 }
-overflow_or_underflow_error --|> std::overflow_error
-overflow_or_underflow_error --|> std::underflow_error
 
 class xref_types {
-	+{static} object_t : typedef = uint32_t {Const}
-	+{static} generation_t : typedef = uint16_t {Const}
-	+{static} xref_entry : typedef = std::variant<xref_inuse_entry, xref_free_entry> {Const}
+	<<Const>>
+	+{static} object_t : typedef = uint32_t
+	+{static} generation_t : typedef = uint16_t
+	+class object_traits
+	+class xref_inuse_entry
+	+class xref_free_entry
+	+{static} xref_entry : typedef = std::variant<xref_inuse_entry, xref_free_entry>
+	+{static} xref_table : typedef = std::set<xref_entry>
 }
+abstract class object_traits {
+	+object_number : object_t
+	+generation_number : generation_t
+
+	#object_traits(in object_number : object_t, in generation_number : generation_t)
+	+operator==(in rhs : const object_traits&) : bool
+	+operator!=(in rhs : const object_traits&) : bool
+	+operator<(in rhs : const object_traits&) : bool
+	+operator>(in rhs : const object_traits&) : bool
+	+operator<=(in rhs : const object_traits&) : bool
+	+operator>=(in rhs : const object_traits&) : bool
+}
+object_traits x--> "1" object_t
+object_traits x--> "1" generation_t
+
 class xref_inuse_entry {
-	+byte_offset : decltype(std::istream{}.tellg())
+	+xref_inuse_entry(in object_number : object_t, in generation_number : generation_t, in byte_offset : std::streamoff)
+	+byte_offset : std::streamoff
 }
-xref_inuse_entry --|> "std::pair<object_t, generation_t>"
+xref_inuse_entry ..|> object_traits
+
 class xref_free_entry {
+	+xref_inuse_entry(in object_number : object_t, in generation_number : generation_t, in next_free_object_number : object_t)
 	+next_free_object_number : object_t
 }
-xref_free_entry x..> xref_types
-xref_free_entry --|> "std::pair<object_t, generation_t>"
-class xref_table {
-}
-xref_table --|> "std::set<xref_entry>"
+xref_free_entry ..|> object_traits
 }
 @enduml
