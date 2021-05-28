@@ -7,6 +7,14 @@ stop
 }
 @enduml
 
+@startuml get_xref_table
+partition "get_xref_table()" {
+start
+	:return m_xref_table;
+stop
+}
+@enduml
+
 @startuml take_footer
 partition "take_footer()" {
 start

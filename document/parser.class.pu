@@ -27,6 +27,7 @@ class parser {
 	-m_xref_table : xref_table
 
 	+parser(inout istr : std::istream&&)
+	+get_xref_table() : const xref_table&
 	-take_footer() : void
 }
 parser x..> syntax_error

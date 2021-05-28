@@ -1,5 +1,4 @@
-﻿#define private public
-#include "PDFParser.h"
+﻿#include "PDFParser.h"
 #undef private
 
 #include <fstream>
@@ -8,14 +7,17 @@ using namespace Microsoft::VisualStudio::TestTools::UnitTesting;
 
 namespace pdfparser_test {
 [DeploymentItem(
-    R"(data\helloworld.pdf)")][TestClass] public ref class test_parser {
+    R"(data\helloworld.pdf)")][TestClass] public ref class parser_test {
 public:
 	[TestMethod] void test_normal_helloworld() {
 		using namespace pdfparser::xref_types;
 
 		pdfparser::parser parser{std::ifstream("helloworld.pdf")};
-		Assert::AreEqual(440, parser.m_xref_byte_offset);
-		Assert::AreEqual(xref_table{xref_free_entry{}}, parser.m_xref_table);
+		Assert::IsTrue(
+		    xref_table{xref_free_entry{0, 65535, 0}, xref_inuse_entry{1, 0, 15},
+		               xref_inuse_entry{2, 0, 66}, xref_inuse_entry{3, 0, 223},
+		               xref_inuse_entry{4, 0, 125},
+		               xref_inuse_entry{5, 0, 329}} == parser.get_xref_table());
 	}
 };
 } // namespace pdfparser_test

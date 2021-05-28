@@ -122,6 +122,9 @@ inline namespace error_types {
  **************/
 class parser final {
 public:
+	const xref_types::xref_table& get_xref_table() const noexcept;
+
+public:
 	parser(std::istream&& istr);
 
 private:
