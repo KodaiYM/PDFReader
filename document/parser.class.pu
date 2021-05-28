@@ -118,7 +118,7 @@ class xref_inuse_entry {
 xref_inuse_entry ..|> object_traits
 
 class xref_free_entry {
-	+xref_inuse_entry(in object_number : object_t, in generation_number : generation_t, in next_free_object_number : object_t)
+	+xref_free_entry(in object_number : object_t, in generation_number : generation_t, in next_free_object_number : object_t)
 	+next_free_object_number : object_t
 }
 xref_free_entry ..|> object_traits
