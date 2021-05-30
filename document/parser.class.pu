@@ -21,20 +21,20 @@ enum ignore_flags <<Enumeration>> {
 	+{static} any_whitespace_characters : int = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
 	+{static} any_whitespace_characters_except_EOL : int = any_whitespace_characters & ~EOL
 }
-class parser {
-	-m_stream : std::istream
+class parser<InputStreamT> {
+	-m_stream : InputStreamT
 	-m_footer : footer
 
-	+parser(inout istr : std::istream&&)
+	+parser(inout istr : InputStreamT&&)
 	+get_xref_table() : const xref_table&
 }
 parser "1..*" x--> "1" footer
 
-class footer {
+class footer<InputStreamT> {
 	+xref_byte_offset : std::streamoff
 	+xref_table : xref_table
 
-	+footer(inout istr : std::istream&)
+	+footer(inout istr : InputStreamT&)
 }
 footer x..> syntax_error
 footer x..> parser_utility

@@ -1,5 +1,5 @@
 @startuml parser
-partition "parser(inout istr : std::istream&&)" {
+partition "parser(inout istr : T&&)" {
 start
 	:m_stream = istr;
 	:m_footer = footer(m_stream);
