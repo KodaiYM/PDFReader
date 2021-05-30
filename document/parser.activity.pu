@@ -2,7 +2,7 @@
 partition "parser(inout istr : std::istream&&)" {
 start
 	:m_stream = istr;
-	:take_footer();
+	:m_footer = footer(m_stream);
 stop
 }
 @enduml
@@ -10,31 +10,31 @@ stop
 @startuml get_xref_table
 partition "get_xref_table()" {
 start
-	:return m_xref_table;
+	:return m_footer.xref_table();
 stop
 }
 @enduml
 
-@startuml take_footer
-partition "take_footer()" {
+@startuml footer
+partition "footer(inout istr : std::istream&)" {
 start
-	:ストリームを最終行の行頭に移動;
-	:require(m_stream, EOF);
-	:ストリームを最終行の1行前の行頭に移動;
+	:istr を最終行の行頭に移動;
+	:require(istr, EOF);
+	:istr を最終行の1行前の行頭に移動;
 	if (移動できなかった) then (y)
 		:throw syntax_error(xref_byte_offset_not_found);
 		stop
 	endif
-	:m_xref_byte_offset = take_xref_byte_offset(m_stream);
-	:ストリームを最終行の2行前の行頭に移動;
+	:xref_byte_offset = take_xref_byte_offset(istr);
+	:istr を最終行の2行前の行頭に移動;
 	if (移動できなかった) then (y)
 		:throw syntax_error(keyword_startxref_not_found);
 		stop
 	endif
-	:require(m_stream, startxref);
+	:require(istr, startxref);
 
-	:ストリームを先頭から m_xref_byte_offset バイト目に移動;
-	:take_xref_table(m_stream);
+	:istr を先頭から m_xref_byte_offset バイト目に移動;
+	:xref_table = take_xref_table(istr);
 stop
 }
 @enduml

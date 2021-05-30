@@ -23,18 +23,22 @@ enum ignore_flags <<Enumeration>> {
 }
 class parser {
 	-m_stream : std::istream
-	-m_xref_byte_offset : std::streamoff
-	-m_xref_table : xref_table
+	-m_footer : footer
 
 	+parser(inout istr : std::istream&&)
 	+get_xref_table() : const xref_table&
-	-take_footer() : void
 }
-parser x..> syntax_error
-parser x..> overflow_or_underflow_error
-parser x..> error_code
-parser x..> parser_utility
-parser x--> "1" xref_table
+parser "1..*" x--> "1" footer
+
+class footer {
+	+xref_byte_offset : std::streamoff
+	+xref_table : xref_table
+
+	+footer(inout istr : std::istream&)
+}
+footer x..> syntax_error
+footer x..> parser_utility
+footer "1" x--> "1" xref_table
 
 class parser_utility <<utility>> {
 	+enum require_type
@@ -52,7 +56,6 @@ parser_utility x..> require_type
 parser_utility x..> ignore_flags
 parser_utility x..> syntax_error
 parser_utility x..> overflow_or_underflow_error
-parser_utility x..> error_code
 parser_utility x..> xref_table
 parser_utility x..> xref_entry
 parser_utility x..> xref_types
@@ -97,6 +100,13 @@ class xref_types {
 	+{static} xref_entry : typedef = std::variant<xref_inuse_entry, xref_free_entry>
 	+{static} xref_table : typedef = std::set<xref_entry>
 }
+xref_table "1" x--* "1..*" xref_entry
+xref_entry "1" x--> "0, 1" xref_inuse_entry
+note right on link
+xref_inuse_entry XOR xref_free_entry
+end note
+xref_entry "1" x--> "0, 1" xref_free_entry
+
 abstract class object_traits {
 	+object_number : object_t
 	+generation_number : generation_t
@@ -109,8 +119,6 @@ abstract class object_traits {
 	+operator<=(in rhs : const object_traits&) : bool
 	+operator>=(in rhs : const object_traits&) : bool
 }
-object_traits x--> "1" object_t
-object_traits x--> "1" generation_t
 
 class xref_inuse_entry {
 	+xref_inuse_entry(in object_number : object_t, in generation_number : generation_t, in byte_offset : std::streamoff)
