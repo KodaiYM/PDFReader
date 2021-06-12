@@ -10,7 +10,7 @@ stop
 @startuml get_xref_table
 partition "get_xref_table()" {
 start
-	:return m_footer.xref_table();
+	:return m_footer.xref_table;
 stop
 }
 @enduml
@@ -43,7 +43,7 @@ stop
 partition "take_xref_byte_offset(inout istr : std::istream&)" {
 start
 	:ignore_if_present(any_whitespace_characters_except_EOL);
-	:xref_byte_offset = take_unsigned_integer<decltype(istr.tellg())>();
+	:xref_byte_offset = take_unsigned_integer<std::streamoff>();
 	if (unsigned_integer_not_found の例外が出た) then (y)
 		:throw xref_byte_offset_not_found();
 		stop

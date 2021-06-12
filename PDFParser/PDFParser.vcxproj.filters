@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ヘッダー ファイル\PDFParser">
+      <UniqueIdentifier>{8a905d2e-9bab-4fce-95d0-e824ca84aca7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PDFParser.h">
@@ -21,12 +24,24 @@
     <ClInclude Include="Resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="PDFParser.error_types.h">
+      <Filter>ヘッダー ファイル\PDFParser</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFParser.parser.h">
+      <Filter>ヘッダー ファイル\PDFParser</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFParser.xref_types.h">
+      <Filter>ヘッダー ファイル\PDFParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PDFParser.cpp">
+    <ClCompile Include="PDFParser.xref_types.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PDFParser.parser.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -39,5 +54,10 @@
     <Image Include="app.ico">
       <Filter>リソース ファイル</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PDFParser.error_types.cpp">
+      <Filter>ソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>

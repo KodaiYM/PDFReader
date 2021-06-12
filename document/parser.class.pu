@@ -8,7 +8,7 @@ enum require_type <<Enumeration>> {
 	+{static} xref : int = 3
 	+{static} space : int = 4
 }
-enum ignore_flags <<Enumeration>> {
+enum ignore_flag <<Enumeration>> {
 	<<Const, Flag>>
 	+{static} null : int = 1
 	+{static} horizontal_tab : int = 2
@@ -21,6 +21,12 @@ enum ignore_flags <<Enumeration>> {
 	+{static} any_whitespace_characters : int = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
 	+{static} any_whitespace_characters_except_EOL : int = any_whitespace_characters & ~EOL
 }
+class ignore_flag_bitset_t {
+	<<Const>>
+	+{static} ignore_flag_bitset_t : typedef = std::bitset<7>
+}
+ignore_flag_bitset_t .. ignore_flag
+
 class parser<InputStreamT> {
 	-m_stream : InputStreamT
 	-m_footer : footer
@@ -42,18 +48,18 @@ footer "1" x--> "1" xref_table
 
 class parser_utility <<utility>> {
 	+enum require_type
-	+enum ignore_flags
+	+enum ignore_flag
 
-	+{static} take_xref_byte_offset(inout istr : std::istream&, in object_number : object_t) : decltype(istr.tellg())
+	+{static} take_xref_byte_offset(inout istr : std::istream&) : std::streamoff)
 	+{static} take_xref_table(inout istr : std::istream&) : xref_table
 	+{static} take_xref_entry(inout istr : std::istream&) : xref_entry
 	+{static} require(inout istr : std::istream&, in req_type : require_type) : void
-	+{static} ignore_if_present(inout istr : std::istream&, in flags : const std::bitset<7>&) : void
+	+{static} ignore_if_present(inout istr : std::istream&, in flags : const ignore_flag_bitset_t&) : void
 	+{static} take_signed_integer<SignedIntType>(inout istr : std::istream&) : SignedIntType
 	+{static} take_unsigned_integer<UnsignedIntType>(inout istr : std::istream&) : UnsignedIntType
 }
 parser_utility x..> require_type
-parser_utility x..> ignore_flags
+parser_utility x..> ignore_flag_bitset_t
 parser_utility x..> syntax_error
 parser_utility x..> overflow_or_underflow_error
 parser_utility x..> xref_table
@@ -87,7 +93,8 @@ syntax_error --|> std::runtime_error
 syntax_error x--> "1" error_code
 
 class overflow_or_underflow_error {
-	+{static} overflow_or_underflow_error : typedef = std::variant<std::overflow_error, std::underflow_error> {Const}
+	<<Const>>
+	+{static} overflow_or_underflow_error : typedef = std::variant<std::overflow_error, std::underflow_error>
 }
 
 class xref_types {

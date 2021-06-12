@@ -1,5 +1,6 @@
-﻿#include "PDFParser.h"
-#undef private
+﻿#include "PDFParser.error_types.cpp"
+#include "PDFParser.parser.cpp"
+#include "PDFParser.xref_types.cpp"
 
 #include <fstream>
 

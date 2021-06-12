@@ -127,18 +127,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="PDFParser.error_types.h" />
     <ClInclude Include="PDFParser.h" />
+    <ClInclude Include="PDFParser.parser.h" />
+    <ClInclude Include="PDFParser.xref_types.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="PDFParser.cpp" />
+    <ClCompile Include="PDFParser.parser.cpp" />
+    <ClCompile Include="PDFParser.xref_types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PDFParser.error_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
