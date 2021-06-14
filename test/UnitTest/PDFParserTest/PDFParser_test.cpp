@@ -13,7 +13,7 @@ public:
 	[TestMethod] void test_normal_helloworld() {
 		using namespace pdfparser::xref_types;
 
-		pdfparser::parser parser{std::ifstream("helloworld.pdf")};
+		pdfparser::parser parser{"helloworld.pdf"};
 		Assert::IsTrue(
 		    xref_table{xref_free_entry{0, 65535, 0}, xref_inuse_entry{1, 0, 15},
 		               xref_inuse_entry{2, 0, 66}, xref_inuse_entry{3, 0, 223},

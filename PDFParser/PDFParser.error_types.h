@@ -9,7 +9,7 @@
 namespace pdfparser { namespace error_types {
 	class syntax_error: public std::runtime_error {
 	public:
-		enum class error_code {
+		enum error_code {
 			// %%EOF not found
 			EOF_not_found,
 

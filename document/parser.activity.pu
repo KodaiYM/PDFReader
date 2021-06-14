@@ -1,8 +1,8 @@
 @startuml parser
-partition "parser(inout istr : T&&)" {
+partition "parser(in filename : const FilenameT&)" {
 start
-	:m_stream = istr;
-	:m_footer = footer(m_stream);
+	:m_stream = std::ifstream(filename, std::ios_base::binary);
+	:m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);
 stop
 }
 @enduml
@@ -10,6 +10,9 @@ stop
 @startuml get_xref_table
 partition "get_xref_table()" {
 start
+	if (!m_footer) then (y)
+		:m_footer = std::make_unique<footer>(m_stream);
+	endif
 	:return m_footer.xref_table;
 stop
 }
@@ -19,6 +22,10 @@ stop
 partition "footer(inout istr : std::istream&)" {
 start
 	:istr を最終行の行頭に移動;
+	if (移動できなかった) then (y)
+		:throw syntax_error(EOF_not_found);
+		stop
+	endif
 	:require(istr, EOF);
 	:istr を最終行の1行前の行頭に移動;
 	if (移動できなかった) then (y)
@@ -35,6 +42,31 @@ start
 
 	:istr を先頭から m_xref_byte_offset バイト目に移動;
 	:xref_table = take_xref_table(istr);
+stop
+}
+@enduml
+
+@startuml seek_to_frontward_beginning_of_line
+partition "seek_to_frontward_beginning_of_line(inout istr : std::istream&)" {
+start
+	:1バイト戻る;
+	if (戻れなかった) then (y)
+		stop
+	endif
+	switch (1バイト先読み?)
+	case ('\\r')
+		:何もしない;
+	case ('\\n')
+		:1バイト戻る;
+	endswitch
+
+	repeat
+		:1バイト戻る;
+		if (戻れなかった) then (y)
+			stop
+		endif
+	repeat while (1バイト先読み != '\\r', '\\n')
+	:1バイト進む;
 stop
 }
 @enduml

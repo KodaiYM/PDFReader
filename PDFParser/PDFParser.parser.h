@@ -4,24 +4,25 @@
 
 #include <fstream> // Intellisense
 #include <ios>
+#include <memory>
 
 /**************
   Parser Class
  **************/
 namespace pdfparser {
-template <class InputStreamT>
 class parser final {
 public:
-	const xref_types::xref_table& get_xref_table() const& noexcept;
+	const xref_types::xref_table& get_xref_table() &;
 	xref_types::xref_table        get_xref_table() &&;
 
 public:
-	explicit parser(InputStreamT&& istr);
+	template <class FilenameT>
+	explicit parser(const FilenameT& filename);
 
 private:
 	struct footer {
 	public:
-		explicit footer(InputStreamT& istr);
+		explicit footer(std::istream& istr);
 
 	public:
 		std::streamoff xref_byte_offset;   // cross reference table byte offset
@@ -29,7 +30,7 @@ private:
 	};
 
 private:
-	footer       m_footer;
-	InputStreamT m_stream; // input stream
+	std::ifstream           m_stream;
+	std::unique_ptr<footer> m_footer;
 };
 } // namespace pdfparser

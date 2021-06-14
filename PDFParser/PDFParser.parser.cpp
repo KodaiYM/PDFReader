@@ -1,23 +1,30 @@
+#include "PDFParser.error_types.h"
 #include "PDFParser.parser.h"
 
 #include <bitset>
+#include <climits>
+
+static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 
 /**************
   Parser Class
  **************/
 namespace pdfparser {
-template <class InputStreamT>
-const xref_types::xref_table&
-    parser<InputStreamT>::get_xref_table() const& noexcept {
-	return m_footer.xref_table;
+const xref_types::xref_table& parser::get_xref_table() & {
+	if (!m_footer) {
+		m_footer = std::make_unique<footer>(m_stream);
+	}
+	return m_footer->xref_table;
 }
-template <class InputStreamT>
-xref_types::xref_table parser<InputStreamT>::get_xref_table() && {
-	return std::move(m_footer.xref_table);
+xref_types::xref_table parser::get_xref_table() && {
+	this->get_xref_table();
+	return std::move(m_footer->xref_table);
 }
-template <class InputStreamT>
-parser<InputStreamT>::parser(InputStreamT&& istr)
-    : m_stream(std::move(istr)), m_footer(m_stream) {}
+template <class FilenameT>
+parser::parser(const FilenameT& filename)
+    : m_stream(filename, std::ios_base::binary) {
+	m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+}
 
 /****************
   Parser Utility
@@ -43,33 +50,91 @@ enum class ignore_flag {
 using ignore_flag_bitset_t = std::bitset<7>;
 
 // TODO: implement following functions
-template <class InputStreamT>
-static std::streamoff take_xref_byte_offset(InputStreamT& istr);
 
-template <class InputStreamT>
-static xref_types::xref_table take_xref_table(InputStreamT& istr);
+static void seek_to_frontward_beginning_of_line(std::istream& istr) {
+	// immediately preceding newline character
+	istr.seekg(-1, std::ios_base::cur);
+	switch (istr.peek()) {
+		case '\r':
+			break;
+		case '\n':
+			try {
+				istr.seekg(-1, std::ios_base::cur);
+			} catch (std::ios_base::failure&) { istr.clear(); }
+			break;
+	}
 
-template <class InputStreamT>
-static xref_types::xref_entry take_xref_entry(InputStreamT& istr);
+	// seek to the next character after the previous newline character or
+	// beginning of the stream
+	do {
+		try {
+			istr.seekg(-1, std::ios_base::cur);
+		} catch (std::ios_base::failure&) {
+			istr.clear();
+			return;
+		}
+	} while (istr.peek() != '\r' && istr.peek() != '\n');
+	istr.seekg(1, std::ios_base::cur);
+}
 
-template <class InputStreamT>
-static void require(InputStreamT& istr, require_type req_type);
+static std::streamoff take_xref_byte_offset(std::istream& istr);
 
-template <class InputStreamT>
-static void ignore_if_present(InputStreamT&               istr,
+static xref_types::xref_table take_xref_table(std::istream& istr);
+
+static xref_types::xref_entry take_xref_entry(std::istream& istr);
+
+static void require(std::istream& istr, require_type req_type);
+
+static void ignore_if_present(std::istream&               istr,
                               const ignore_flag_bitset_t& flags);
 
-template <typename SignedIntType, class InputStreamT>
-static SignedIntType take_signed_integer(InputStreamT& istr);
+template <typename SignedIntType>
+static SignedIntType take_signed_integer(std::istream& istr);
 
-template <typename UnsignedIntType, class InputStreamT>
-static UnsignedIntType take_unsigned_integer(InputStreamT& istr);
+template <typename UnsignedIntType>
+static UnsignedIntType take_unsigned_integer(std::istream& istr);
 
 /**********************
   parser::footer Class
  **********************/
-template <class InputStreamT>
-parser<InputStreamT>::footer::footer(InputStreamT& istr) {
-	// TODO: take_footer
+parser::footer::footer(std::istream& istr) {
+	// check %%EOF
+	try {
+		istr.seekg(0, std::ios_base::end);
+		seek_to_frontward_beginning_of_line(istr);
+	} catch (std::ios_base::failure&) {
+		throw error_types::syntax_error(error_types::syntax_error::EOF_not_found);
+	} /*
+	{
+	  auto eof_pos = istr.tellg();
+	  require(istr, require_type::EOF);
+	  istr.seekg(eof_pos);
+	}
+
+	// get cross-reference table byte offset
+	try {
+	  seek_to_frontward_beginning_of_line(istr);
+	} catch (std::ios_base::failure&) {
+	  throw error_types::syntax_error(
+	      error_types::syntax_error::xref_byte_offset_not_found);
+	}
+	{
+	  auto xref_byte_offset_pos = istr.tellg();
+	  xref_byte_offset          = take_xref_byte_offset(istr);
+	  istr.seekg(xref_byte_offset_pos);
+	}
+
+	// check keyword "startxref"
+	try {
+	  seek_to_frontward_beginning_of_line(istr);
+	} catch (std::ios_base::failure&) {
+	  throw error_types::syntax_error(
+	      error_types::syntax_error::keyword_startxref_not_found);
+	}
+	require(istr, require_type::startxref);
+
+	// get cross-reference table
+	istr.seekg(xref_byte_offset, std::ios_base::beg);
+	xref_table = take_xref_table(istr);*/
 }
 } // namespace pdfparser

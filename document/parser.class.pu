@@ -27,20 +27,20 @@ class ignore_flag_bitset_t {
 }
 ignore_flag_bitset_t .. ignore_flag
 
-class parser<InputStreamT> {
-	-m_stream : InputStreamT
-	-m_footer : footer
+class parser {
+	-m_stream : std::ifstream
+	-m_footer : std::unique_ptr<footer>
 
-	+parser(inout istr : InputStreamT&&)
+	+parser<FilenameT>(in filename : const FilenameT&)
 	+get_xref_table() : const xref_table&
 }
 parser "1..*" x--> "1" footer
 
-class footer<InputStreamT> {
+class footer {
 	+xref_byte_offset : std::streamoff
 	+xref_table : xref_table
 
-	+footer(inout istr : InputStreamT&)
+	+footer(inout istr : std::istream&)
 }
 footer x..> syntax_error
 footer x..> parser_utility
@@ -50,7 +50,8 @@ class parser_utility <<utility>> {
 	+enum require_type
 	+enum ignore_flag
 
-	+{static} take_xref_byte_offset(inout istr : std::istream&) : std::streamoff)
+	+{static} seek_to_frontward_beginning_of_line(inout istr : std::istream&) : void
+	+{static} take_xref_byte_offset(inout istr : std::istream&) : std::streamoff
 	+{static} take_xref_table(inout istr : std::istream&) : xref_table
 	+{static} take_xref_entry(inout istr : std::istream&) : xref_entry
 	+{static} require(inout istr : std::istream&, in req_type : require_type) : void
