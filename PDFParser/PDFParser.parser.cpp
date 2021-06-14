@@ -2,6 +2,7 @@
 #include "PDFParser.parser.h"
 
 #include <bitset>
+#include <cassert>
 #include <climits>
 
 static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
@@ -23,7 +24,9 @@ xref_types::xref_table parser::get_xref_table() && {
 template <class FilenameT>
 parser::parser(const FilenameT& filename)
     : m_stream(filename, std::ios_base::binary) {
-	m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+	m_stream.exceptions(
+	    std::ios_base::failbit |
+	    std::ios_base::badbit); // HACK: handle file open exception.
 }
 
 /****************
@@ -53,7 +56,8 @@ using ignore_flag_bitset_t = std::bitset<7>;
 
 static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 	// immediately preceding newline character
-	istr.seekg(-1, std::ios_base::cur);
+	istr.seekg(-1, std::ios_base::cur); // HACK: handle seek exception
+	assert(istr.good());
 	switch (istr.peek()) {
 		case '\r':
 			break;
@@ -73,10 +77,12 @@ static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 			istr.clear();
 			return;
 		}
+		assert(istr.good());
 	} while (istr.peek() != '\r' && istr.peek() != '\n');
+
+	// assert: noexcept
 	istr.seekg(1, std::ios_base::cur);
 }
-
 static std::streamoff take_xref_byte_offset(std::istream& istr);
 
 static xref_types::xref_table take_xref_table(std::istream& istr);
