@@ -2,18 +2,20 @@
 #include "PDFParser.parser.cpp"
 #include "PDFParser.xref_types.cpp"
 
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 
 using namespace Microsoft::VisualStudio::TestTools::UnitTesting;
 
 namespace pdfparser_test {
-[DeploymentItem(
-    R"(data\helloworld.pdf)")][TestClass] public ref class parser_test {
+[TestClass] public ref class parser_test {
 public:
 	[TestMethod] void test_normal_helloworld() {
 		using namespace pdfparser::xref_types;
 
-		pdfparser::parser parser{"helloworld.pdf"};
+		pdfparser::parser parser{
+		    R"(..\..\test\UnitTest\PDFParserTest\data\helloworld.pdf)"};
 		Assert::IsTrue(
 		    xref_table{xref_free_entry{0, 65535, 0}, xref_inuse_entry{1, 0, 15},
 		               xref_inuse_entry{2, 0, 66}, xref_inuse_entry{3, 0, 223},
