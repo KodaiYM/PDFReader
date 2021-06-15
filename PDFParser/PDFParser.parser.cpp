@@ -3,9 +3,14 @@
 
 #include <bitset>
 #include <cassert>
+#include <cctype>
 #include <climits>
+#include <sstream>
+#include <string>
+#include <type_traits>
 
 static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
+using namespace std::string_literals;
 
 /**************
   Parser Class
@@ -32,10 +37,8 @@ parser::parser(const FilenameT& filename)
 /****************
   Parser Utility
  ****************/
-#define EOF_ EOF
 #undef EOF
 enum class require_type { EOF, EOL, startxref, xref, space };
-#define EOF EOF_
 
 enum class ignore_flag {
 	null                      = 1,
@@ -97,8 +100,31 @@ static void ignore_if_present(std::istream&               istr,
 template <typename SignedIntType>
 static SignedIntType take_signed_integer(std::istream& istr);
 
-template <typename UnsignedIntType>
-static UnsignedIntType take_unsigned_integer(std::istream& istr);
+template <typename UnsignedIntType,
+          typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
+                                    std::nullptr_t> = nullptr>
+static UnsignedIntType take_unsigned_integer(std::istream& istr) {
+	std::stringstream unsigned_integer_stream;
+	while (istr.peek() !=
+	           std::remove_reference_t<decltype(istr)>::traits_type::eof() &&
+	       std::isdigit(static_cast<unsigned char>(istr.peek()))) {
+		// assert: noexcept
+		unsigned_integer_stream.put(istr.get());
+	}
+
+	if (decltype(unsigned_integer_stream)::traits_type::eof() ==
+	    unsigned_integer_stream.peek()) {
+		throw syntax_error(syntax_error::unsigned_interger_not_found);
+	}
+
+	UnsignedIntType unsigned_integer;
+	unsigned_integer_stream >> unsigned_integer;
+	if (unsigned_integer_stream.fail()) {
+		throw overflow_or_underflow_error();
+	}
+
+	return unsigned_integer;
+}
 
 /**********************
   parser::footer Class
@@ -109,7 +135,7 @@ parser::footer::footer(std::istream& istr) {
 		istr.seekg(0, std::ios_base::end);
 		seek_to_frontward_beginning_of_line(istr);
 	} catch (std::ios_base::failure&) {
-		throw error_types::syntax_error(error_types::syntax_error::EOF_not_found);
+		throw syntax_error(syntax_error::EOF_not_found);
 	} /*
 	{
 	  auto eof_pos = istr.tellg();
@@ -121,8 +147,8 @@ parser::footer::footer(std::istream& istr) {
 	try {
 	  seek_to_frontward_beginning_of_line(istr);
 	} catch (std::ios_base::failure&) {
-	  throw error_types::syntax_error(
-	      error_types::syntax_error::xref_byte_offset_not_found);
+	  throw syntax_error(
+	      syntax_error::xref_byte_offset_not_found);
 	}
 	{
 	  auto xref_byte_offset_pos = istr.tellg();
@@ -134,8 +160,8 @@ parser::footer::footer(std::istream& istr) {
 	try {
 	  seek_to_frontward_beginning_of_line(istr);
 	} catch (std::ios_base::failure&) {
-	  throw error_types::syntax_error(
-	      error_types::syntax_error::keyword_startxref_not_found);
+	  throw syntax_error(
+	      syntax_error::keyword_startxref_not_found);
 	}
 	require(istr, require_type::startxref);
 

@@ -94,9 +94,9 @@ syntax_error --|> std::runtime_error
 syntax_error x--> "1" error_code
 
 class overflow_or_underflow_error {
-	<<Const>>
-	+{static} overflow_or_underflow_error : typedef = std::variant<std::overflow_error, std::underflow_error>
+	+overflow_or_underflow_error()
 }
+overflow_or_underflow_error --|> std::runtime_error
 
 class xref_types {
 	<<Const>>

@@ -1,12 +1,11 @@
 #pragma once
 
 #include <stdexcept>
-#include <variant>
 
 /**************
   Error Types
  **************/
-namespace pdfparser { namespace error_types {
+namespace pdfparser { inline namespace error_types {
 	class syntax_error: public std::runtime_error {
 	public:
 		enum error_code {
@@ -46,6 +45,8 @@ namespace pdfparser { namespace error_types {
 	private:
 		const error_code m_error_code;
 	};
-	using overflow_or_underflow_error =
-	    std::variant<std::overflow_error, std::underflow_error>;
+	class overflow_or_underflow_error: public std::runtime_error {
+	public:
+		overflow_or_underflow_error();
+	};
 }} // namespace pdfparser::error_types
