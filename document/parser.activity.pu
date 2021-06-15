@@ -216,8 +216,8 @@ stop
 }
 @enduml
 
-@startuml ignore
-partition "ignore(inout istr : std::istream&, flags : const std::bitset<7>&)" {
+@startuml ignore_if_present
+partition "ignore_if_present(inout istr : std::istream&, flags : const ignore_flag_bitset_t&)" {
 start
 	:flagsに指定のある空白類のみ読み飛ばす;
 stop

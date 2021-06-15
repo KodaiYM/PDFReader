@@ -1,14 +1,17 @@
 #include "PDFParser.error_types.h"
 #include "PDFParser.parser.h"
 
+#include <array>
 #include <bitset>
 #include <cassert>
 #include <cctype>
 #include <climits>
 #include <functional>
+#include <set>
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 using namespace std::string_literals;
@@ -41,7 +44,7 @@ parser::parser(const FilenameT& filename)
 #undef EOF
 enum class require_type { EOF, EOL, startxref, xref, space };
 
-enum class ignore_flag {
+enum class ignore_flag : uint8_t {
 	null                      = 1,
 	horizontal_tab            = 2,
 	line_feed                 = 4,
@@ -54,7 +57,6 @@ enum class ignore_flag {
 	                            carriage_return | space | EOL,
 	any_whitespace_characters_except_EOL = any_whitespace_characters & ~EOL
 };
-using ignore_flag_bitset_t = std::bitset<7>;
 
 /// <exception cref="std::ios_base::failure">
 /// thrown when there is no beginning of line frontward
@@ -102,8 +104,109 @@ static xref_types::xref_entry take_xref_entry(std::istream& istr);
 
 static void require(std::istream& istr, require_type req_type);
 
-static void ignore_if_present(std::istream&               istr,
-                              const ignore_flag_bitset_t& flags);
+/// <summary>
+/// ignore whitespaces specified on flags if present on istr.
+/// </summary>
+/// <param name="flags">whitespace bit flags to be ignored</param>
+static void ignore_if_present(std::istream&                       istr,
+                              std::underlying_type_t<ignore_flag> flags) {
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
+
+	using istream_t = std::istream;
+
+	std::vector<std::function<bool(istream_t&)>> ignore_functions;
+	{
+		// constant (moved)
+		std::array<std::pair<ignore_flag, std::function<bool(istream_t&)>>, 7>
+		    ignore_functions_map{
+		        {{ignore_flag::null,
+		          [](istream_t& istr) {
+			          if ('\0' == istr.peek()) {
+				          istr.seekg(1, std::ios_base::cur);
+				          return true;
+			          } else {
+				          return false;
+			          }
+		          }},
+		         {ignore_flag::horizontal_tab,
+		          [](istream_t& istr) {
+			          if ('\t' == istr.peek()) {
+				          istr.seekg(1, std::ios_base::cur);
+				          return true;
+			          } else {
+				          return false;
+			          }
+		          }},
+		         {ignore_flag::line_feed,
+		          [](istream_t& istr) {
+			          if ('\n' == istr.peek()) {
+				          istr.seekg(1, std::ios_base::cur);
+				          return true;
+			          } else {
+				          return false;
+			          }
+		          }},
+		         {ignore_flag::form_feed,
+		          [](istream_t& istr) {
+			          if ('\f' == istr.peek()) {
+				          istr.seekg(1, std::ios_base::cur);
+				          return true;
+			          } else {
+				          return false;
+			          }
+		          }},
+		         {ignore_flag::carriage_return,
+		          [](istream_t& istr) {
+			          if ('\r' == istr.peek()) {
+				          istr.seekg(1, std::ios_base::cur);
+				          return true;
+			          } else {
+				          return false;
+			          }
+		          }},
+		         {ignore_flag::space,
+		          [](istream_t& istr) {
+			          if (' ' == istr.peek()) {
+				          istr.seekg(1, std::ios_base::cur);
+				          return true;
+			          } else {
+				          return false;
+			          }
+		          }},
+		         {ignore_flag::comment, [](istream_t& istr) {
+			          if (istr.peek() != '%') {
+				          return false;
+			          }
+			          istr.seekg(1, std::ios_base::cur);
+
+			          // skip comment contents
+			          while (istr.peek() != istream_t::traits_type::eof() &&
+			                 istr.peek() != '\r' && istr.peek() != '\n') {
+				          istr.seekg(1, std::ios_base::cur);
+			          }
+			          return true;
+		          }}}};
+
+		// generate ignore_functions
+		for (auto&& [flag, function] : ignore_functions_map) {
+			if (static_cast<std::underlying_type_t<ignore_flag>>(flag) & flags) {
+				ignore_functions.push_back(std::move(function));
+			}
+		}
+	}
+
+	bool ignored = true;
+	while (ignored && istr.peek() != istream_t::traits_type::eof()) {
+		ignored = false;
+		for (const auto& ignore_a_whitespace : ignore_functions) {
+			if (ignore_a_whitespace(istr)) {
+				ignored = true;
+				break;
+			}
+		}
+	}
+}
 
 /// <exception cref="pdfparser::error_types::syntax_error">
 /// thrown when istr cannot be interpreted as a signed integer
