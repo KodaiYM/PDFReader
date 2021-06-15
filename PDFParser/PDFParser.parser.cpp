@@ -2,7 +2,6 @@
 #include "PDFParser.parser.h"
 
 #include <array>
-#include <bitset>
 #include <cassert>
 #include <cctype>
 #include <climits>
