@@ -23,8 +23,8 @@ namespace pdfparser { inline namespace error_types {
 			xref_byte_offset_not_found,
 
 			keyword_startxref_not_found,
-			signed_integer_not_ound,
-			unsigned_interger_not_found,
+			signed_integer_not_found,
+			unsigned_integer_not_found,
 			keyword_xref_not_found,
 			space_not_found,
 			xref_entry_first_10_digits_invalid,

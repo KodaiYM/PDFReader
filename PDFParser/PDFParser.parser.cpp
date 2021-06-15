@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cctype>
 #include <climits>
+#include <functional>
 #include <sstream>
 #include <string>
 #include <type_traits>
@@ -55,11 +56,15 @@ enum class ignore_flag {
 };
 using ignore_flag_bitset_t = std::bitset<7>;
 
-// TODO: implement following functions
-
+/// <exception cref="std::ios_base::failure">
+/// thrown when there is no beginning of line frontward
+/// </exception>
 static void seek_to_frontward_beginning_of_line(std::istream& istr) {
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
+
 	// immediately preceding newline character
-	istr.seekg(-1, std::ios_base::cur); // HACK: handle seek exception
+	istr.seekg(-1, std::ios_base::cur); // throws std::ios_base::failure
 	assert(istr.good());
 	switch (istr.peek()) {
 		case '\r':
@@ -86,6 +91,9 @@ static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 	// assert: noexcept
 	istr.seekg(1, std::ios_base::cur);
 }
+
+// TODO: implement following functions
+
 static std::streamoff take_xref_byte_offset(std::istream& istr);
 
 static xref_types::xref_table take_xref_table(std::istream& istr);
@@ -97,31 +105,75 @@ static void require(std::istream& istr, require_type req_type);
 static void ignore_if_present(std::istream&               istr,
                               const ignore_flag_bitset_t& flags);
 
-template <typename SignedIntType>
-static SignedIntType take_signed_integer(std::istream& istr);
+/// <exception cref="pdfparser::error_types::syntax_error">
+/// thrown when istr cannot be interpreted as a signed integer
+/// </exception>
+/// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
+/// thrown when the integer is overflow or underflow
+/// </exception>
+template <typename SignedIntType,
+          typename std::enable_if_t<std::is_signed_v<SignedIntType>,
+                                    std::nullptr_t> = nullptr>
+static SignedIntType take_signed_integer(std::istream& istr) {
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
 
+	bool has_sign = false;
+	switch (istr.peek()) {
+		case std::remove_reference_t<decltype(istr)>::traits_type::eof():
+			throw syntax_error(syntax_error::signed_integer_not_found);
+		case '+':
+		case '-':
+			has_sign = true;
+			// assert: noexcept
+			istr.seekg(1, std::ios_base::cur);
+			break;
+	}
+
+	// if istr does not begin with any of "0123456789"
+	if (istr.peek() ==
+	        std::remove_reference_t<decltype(istr)>::traits_type::eof() ||
+	    !std::isdigit(static_cast<unsigned char>(istr.peek()))) {
+		throw syntax_error(syntax_error::signed_integer_not_found);
+	}
+
+	if (has_sign) {
+		// assert: noexcept
+		istr.seekg(-1, std::ios_base::cur);
+	}
+
+	SignedIntType signed_integer;
+	try {
+		istr >> signed_integer;
+	} catch (std::ios_base::failure&) { throw overflow_or_underflow_error(); }
+
+	return signed_integer;
+}
+
+/// <exception cref="pdfparser::error_types::syntax_error">
+/// thrown when istr cannot be interpreted as an unsigned integer
+/// </exception>
+/// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
+/// thrown when the integer is overflow
+/// </exception>
 template <typename UnsignedIntType,
           typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
                                     std::nullptr_t> = nullptr>
 static UnsignedIntType take_unsigned_integer(std::istream& istr) {
-	std::stringstream unsigned_integer_stream;
-	while (istr.peek() !=
-	           std::remove_reference_t<decltype(istr)>::traits_type::eof() &&
-	       std::isdigit(static_cast<unsigned char>(istr.peek()))) {
-		// assert: noexcept
-		unsigned_integer_stream.put(istr.get());
-	}
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
 
-	if (decltype(unsigned_integer_stream)::traits_type::eof() ==
-	    unsigned_integer_stream.peek()) {
-		throw syntax_error(syntax_error::unsigned_interger_not_found);
+	// if istr does not begin with any of "0123456789"
+	if (istr.peek() ==
+	        std::remove_reference_t<decltype(istr)>::traits_type::eof() ||
+	    !std::isdigit(static_cast<unsigned char>(istr.peek()))) {
+		throw syntax_error(syntax_error::unsigned_integer_not_found);
 	}
 
 	UnsignedIntType unsigned_integer;
-	unsigned_integer_stream >> unsigned_integer;
-	if (unsigned_integer_stream.fail()) {
-		throw overflow_or_underflow_error();
-	}
+	try {
+		istr >> unsigned_integer;
+	} catch (std::ios_base::failure&) { throw overflow_or_underflow_error(); }
 
 	return unsigned_integer;
 }
@@ -130,6 +182,9 @@ static UnsignedIntType take_unsigned_integer(std::istream& istr) {
   parser::footer Class
  **********************/
 parser::footer::footer(std::istream& istr) {
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
+
 	// check %%EOF
 	try {
 		istr.seekg(0, std::ios_base::end);
