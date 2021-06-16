@@ -92,16 +92,17 @@ constexpr ignore_flag operator~(ignore_flag operand) noexcept {
 static void           seek_to_frontward_beginning_of_line(std::istream& istr);
 static std::streamoff take_xref_byte_offset(std::istream& istr);
 static xref_types::xref_table take_xref_table(std::istream& istr);
-static xref_types::xref_entry take_xref_entry(std::istream& istr);
+static xref_types::xref_entry
+    take_xref_entry(std::istream& istr, xref_types::object_t object_number);
 static void require(std::istream& istr, require_type req_type);
 static void ignore_if_present(std::istream& istr, ignore_flag flags);
-template <
-    typename SignedIntType,
-    typename std::enable_if_t<std::is_signed_v<SignedIntType>, std::nullptr_t>>
+template <typename SignedIntType,
+          typename std::enable_if_t<std::is_signed_v<SignedIntType>,
+                                    std::nullptr_t> = nullptr>
 static SignedIntType take_signed_integer(std::istream& istr);
 template <typename UnsignedIntType,
           typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
-                                    std::nullptr_t>>
+                                    std::nullptr_t> = nullptr>
 static UnsignedIntType take_unsigned_integer(std::istream& istr);
 
 /* definitions of internal functions */
@@ -145,7 +146,33 @@ static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 
 static std::streamoff take_xref_byte_offset(std::istream& istr);
 
-static xref_types::xref_table take_xref_table(std::istream& istr);
+static xref_types::xref_table take_xref_table(std::istream& istr) {
+	using namespace xref_types;
+
+	xref_table this_xref_table;
+	require(istr, require_type::xref);
+	const object_t first_object_number = take_unsigned_integer<object_t>(istr);
+	require(istr, require_type::space);
+	const object_t number_of_entries = take_unsigned_integer<object_t>(istr);
+
+	assert(number_of_entries > 0); // HACK: error check? throw?
+	// this if expression means...
+	// first_object_number + number_of_entries - 1 >
+	// std::numeric_limits<object_t>::max()
+	if (number_of_entries - 1 >
+	    std::numeric_limits<object_t>::max() - first_object_number) {
+		throw overflow_or_underflow_error();
+	}
+	ignore_if_present(istr, ignore_flag::any_whitespace_characters_except_EOL |
+	                            ignore_flag::comment);
+	require(istr, require_type::EOL);
+	for (object_t entry_offset = 0; entry_offset < number_of_entries;
+	     ++entry_offset) {
+		this_xref_table.insert(
+		    take_xref_entry(istr, first_object_number + entry_offset));
+	}
+	return this_xref_table;
+}
 
 /// <exceptions cref="pdfparser::error_types::syntax_error">
 /// thrown when invalid format detected
@@ -429,9 +456,9 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 /// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
 /// thrown when the integer is overflow or underflow
 /// </exception>
-template <typename SignedIntType,
-          typename std::enable_if_t<std::is_signed_v<SignedIntType>,
-                                    std::nullptr_t> = nullptr>
+template <
+    typename SignedIntType,
+    typename std::enable_if_t<std::is_signed_v<SignedIntType>, std::nullptr_t>>
 static SignedIntType take_signed_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
@@ -476,7 +503,7 @@ static SignedIntType take_signed_integer(std::istream& istr) {
 /// </exception>
 template <typename UnsignedIntType,
           typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
-                                    std::nullptr_t> = nullptr>
+                                    std::nullptr_t>>
 static UnsignedIntType take_unsigned_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);

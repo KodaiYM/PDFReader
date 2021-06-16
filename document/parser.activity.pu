@@ -92,12 +92,16 @@ partition "take_xref_table(inout istr : std::istream&)" {
 start
 	:this_xref_table : xref_table;
 	:require(istr, xref);
-	:first_object_number = take_unsigned_integer<xref_entry::object_t>() : xref_entry::object_t;
+	:first_object_number = take_unsigned_integer<object_t>() : object_t;
 	:require(istr, space);
-	:number_of_entries = take_unsigned_integer<uintmax_t> : uintmax_t;
+	:number_of_entries = take_unsigned_integer<object_t> : object_t;
+	if (first_object_number + number_of_entries - 1 がオーバーフロー) then (y)
+		:throw overflow_or_underflow_error();
+		stop
+	endif
 	:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 	:require(istr, EOL);
-	:entry_offset = 0 : uintmax_t;
+	:entry_offset = 0 : object_t;
 	while (entry_offset < number_of_entries)
 		:this_xref_table.insert(take_xref_entry(istr, first_object_number + entry_offset));
 		:++number_of_entries;
