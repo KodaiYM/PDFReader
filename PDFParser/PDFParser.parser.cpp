@@ -59,31 +59,37 @@ enum class ignore_flag : uint8_t {
 	                            carriage_return | space | EOL,
 	any_whitespace_characters_except_EOL = any_whitespace_characters & ~EOL
 };
-constexpr ignore_flag operator&(ignore_flag lhs, ignore_flag rhs) noexcept {
+constexpr static ignore_flag operator&(ignore_flag lhs,
+                                       ignore_flag rhs) noexcept {
 	using int_type = std::underlying_type_t<ignore_flag>;
 	return static_cast<ignore_flag>(static_cast<int_type>(lhs) &
 	                                static_cast<int_type>(rhs));
 }
-constexpr ignore_flag operator|(ignore_flag lhs, ignore_flag rhs) noexcept {
+constexpr static ignore_flag operator|(ignore_flag lhs,
+                                       ignore_flag rhs) noexcept {
 	using int_type = std::underlying_type_t<ignore_flag>;
 	return static_cast<ignore_flag>(static_cast<int_type>(lhs) |
 	                                static_cast<int_type>(rhs));
 }
-constexpr ignore_flag operator^(ignore_flag lhs, ignore_flag rhs) noexcept {
+constexpr static ignore_flag operator^(ignore_flag lhs,
+                                       ignore_flag rhs) noexcept {
 	using int_type = std::underlying_type_t<ignore_flag>;
 	return static_cast<ignore_flag>(static_cast<int_type>(lhs) ^
 	                                static_cast<int_type>(rhs));
 }
-constexpr ignore_flag& operator&=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+constexpr static ignore_flag& operator&=(ignore_flag& lhs,
+                                         ignore_flag  rhs) noexcept {
 	return lhs = lhs & rhs;
 }
-constexpr ignore_flag& operator|=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+constexpr static ignore_flag& operator|=(ignore_flag& lhs,
+                                         ignore_flag  rhs) noexcept {
 	return lhs = lhs | rhs;
 }
-constexpr ignore_flag& operator^=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+constexpr static ignore_flag& operator^=(ignore_flag& lhs,
+                                         ignore_flag  rhs) noexcept {
 	return lhs = lhs ^ rhs;
 }
-constexpr ignore_flag operator~(ignore_flag operand) noexcept {
+constexpr static ignore_flag operator~(ignore_flag operand) noexcept {
 	using int_type = std::underlying_type_t<ignore_flag>;
 	return static_cast<ignore_flag>(~static_cast<int_type>(operand));
 }
@@ -138,8 +144,13 @@ static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 	istr.seekg(1, std::ios_base::cur);
 }
 
-// TODO: implement following functions
-
+/// <summary>
+/// take byte offset of cross reference table from footer
+/// </summary>
+/// <exceptions cref="pdfparser::error_types::overflow_or_underflow_error">
+/// </exceptions>
+/// <exceptions cref="pdfparser::error_types::syntax_error"></exceptions>
+/// <returns>byte offset of cross reference table</returns>
 static std::streamoff take_xref_byte_offset(std::istream& istr) {
 	ignore_if_present(istr, ignore_flag::any_whitespace_characters_except_EOL);
 
@@ -160,6 +171,13 @@ static std::streamoff take_xref_byte_offset(std::istream& istr) {
 	return xref_byte_offset;
 }
 
+/// <summary>
+/// take cross reference table
+/// </summary>
+/// <exceptions cref="pdfparser::error_types::overflow_or_underflow_error">
+/// </exceptions>
+/// <exceptions cref="pdfparser::error_types::syntax_error"></exceptions>
+/// <returns>byte offset of cross reference table</returns>
 static xref_types::xref_table take_xref_table(std::istream& istr) {
 	using namespace xref_types;
 
@@ -546,37 +564,35 @@ parser::footer::footer(std::istream& istr) {
 		seek_to_frontward_beginning_of_line(istr);
 	} catch (std::ios_base::failure&) {
 		throw syntax_error(syntax_error::EOF_not_found);
-	} /*
+	}
 	{
-	  auto eof_pos = istr.tellg();
-	  require(istr, require_type::EOF);
-	  istr.seekg(eof_pos);
+		auto eof_pos = istr.tellg();
+		require(istr, require_type::EOF);
+		istr.seekg(eof_pos);
 	}
 
 	// get cross-reference table byte offset
 	try {
-	  seek_to_frontward_beginning_of_line(istr);
+		seek_to_frontward_beginning_of_line(istr);
 	} catch (std::ios_base::failure&) {
-	  throw syntax_error(
-	      syntax_error::xref_byte_offset_not_found);
+		throw syntax_error(syntax_error::xref_byte_offset_not_found);
 	}
 	{
-	  auto xref_byte_offset_pos = istr.tellg();
-	  xref_byte_offset          = take_xref_byte_offset(istr);
-	  istr.seekg(xref_byte_offset_pos);
+		auto xref_byte_offset_pos = istr.tellg();
+		xref_byte_offset          = take_xref_byte_offset(istr);
+		istr.seekg(xref_byte_offset_pos);
 	}
 
 	// check keyword "startxref"
 	try {
-	  seek_to_frontward_beginning_of_line(istr);
+		seek_to_frontward_beginning_of_line(istr);
 	} catch (std::ios_base::failure&) {
-	  throw syntax_error(
-	      syntax_error::keyword_startxref_not_found);
+		throw syntax_error(syntax_error::keyword_startxref_not_found);
 	}
 	require(istr, require_type::startxref);
 
 	// get cross-reference table
 	istr.seekg(xref_byte_offset, std::ios_base::beg);
-	xref_table = take_xref_table(istr);*/
+	xref_table = take_xref_table(istr);
 }
 } // namespace pdfparser

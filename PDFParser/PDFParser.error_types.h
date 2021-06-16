@@ -40,7 +40,9 @@ namespace pdfparser { inline namespace error_types {
 
 	public:
 		explicit syntax_error(error_code er_code);
-		constexpr error_code code() const noexcept;
+		constexpr error_code code() const noexcept {
+			return m_error_code;
+		}
 
 	private:
 		const error_code m_error_code;

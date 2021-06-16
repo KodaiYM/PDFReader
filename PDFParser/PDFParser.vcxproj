@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="PDFParser.error_types.cpp" />
     <ClCompile Include="PDFParser.parser.cpp" />
     <ClCompile Include="PDFParser.xref_types.cpp" />
   </ItemGroup>
@@ -143,9 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="PDFParser.error_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

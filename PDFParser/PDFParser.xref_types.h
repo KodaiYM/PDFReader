@@ -2,6 +2,7 @@
 
 #include <ios>
 #include <set>
+#include <tuple>
 #include <variant>
 
 #if __cplusplus > 201703L
@@ -34,12 +35,26 @@ namespace pdfparser { namespace xref_types {
 #if CPP20
 		auto operator<=>(const object_traits&) const = default;
 #else
-		constexpr bool operator==(const object_traits& rhs) const noexcept;
-		constexpr bool operator!=(const object_traits& rhs) const noexcept;
-		constexpr bool operator<(const object_traits& rhs) const noexcept;
-		constexpr bool operator>(const object_traits& rhs) const noexcept;
-		constexpr bool operator<=(const object_traits& rhs) const noexcept;
-		constexpr bool operator>=(const object_traits& rhs) const noexcept;
+		constexpr bool operator==(const object_traits& rhs) const noexcept {
+			return std::tie(object_number, generation_number) ==
+			       std::tie(rhs.object_number, rhs.generation_number);
+		}
+		constexpr bool operator!=(const object_traits& rhs) const noexcept {
+			return !(*this == rhs);
+		}
+		constexpr bool operator<(const object_traits& rhs) const noexcept {
+			return std::tie(object_number, generation_number) <
+			       std::tie(rhs.object_number, rhs.generation_number);
+		}
+		constexpr bool operator>(const object_traits& rhs) const noexcept {
+			return rhs < *this;
+		}
+		constexpr bool operator<=(const object_traits& rhs) const noexcept {
+			return !(*this > rhs);
+		}
+		constexpr bool operator>=(const object_traits& rhs) const noexcept {
+			return !(*this < rhs);
+		}
 #endif
 	};
 	struct xref_inuse_entry final: object_traits {
