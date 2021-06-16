@@ -96,14 +96,10 @@ static xref_types::xref_entry
     take_xref_entry(std::istream& istr, xref_types::object_t object_number);
 static void require(std::istream& istr, require_type req_type);
 static void ignore_if_present(std::istream& istr, ignore_flag flags);
-template <typename SignedIntType,
-          typename std::enable_if_t<std::is_signed_v<SignedIntType>,
-                                    std::nullptr_t> = nullptr>
-static SignedIntType take_signed_integer(std::istream& istr);
-template <typename UnsignedIntType,
-          typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
-                                    std::nullptr_t> = nullptr>
-static UnsignedIntType take_unsigned_integer(std::istream& istr);
+template <typename IntType>
+static IntType take_signed_integer(std::istream& istr);
+template <typename IntType>
+static IntType take_unsigned_integer(std::istream& istr);
 
 /* definitions of internal functions */
 /// <exception cref="std::ios_base::failure">
@@ -144,7 +140,25 @@ static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 
 // TODO: implement following functions
 
-static std::streamoff take_xref_byte_offset(std::istream& istr);
+static std::streamoff take_xref_byte_offset(std::istream& istr) {
+	ignore_if_present(istr, ignore_flag::any_whitespace_characters_except_EOL);
+
+	std::streamoff xref_byte_offset;
+	try {
+		xref_byte_offset = take_unsigned_integer<std::streamoff>(istr);
+	} catch (syntax_error& e) {
+		if (e.code() == syntax_error::unsigned_integer_not_found) {
+			throw syntax_error(syntax_error::xref_byte_offset_not_found);
+		} else {
+			throw;
+		}
+	}
+
+	ignore_if_present(istr, ignore_flag::any_whitespace_characters_except_EOL |
+	                            ignore_flag::comment);
+	require(istr, require_type::EOL);
+	return xref_byte_offset;
+}
 
 static xref_types::xref_table take_xref_table(std::istream& istr) {
 	using namespace xref_types;
@@ -456,10 +470,8 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 /// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
 /// thrown when the integer is overflow or underflow
 /// </exception>
-template <
-    typename SignedIntType,
-    typename std::enable_if_t<std::is_signed_v<SignedIntType>, std::nullptr_t>>
-static SignedIntType take_signed_integer(std::istream& istr) {
+template <typename IntType>
+static IntType take_signed_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
 
@@ -487,12 +499,12 @@ static SignedIntType take_signed_integer(std::istream& istr) {
 		istr.seekg(-1, std::ios_base::cur);
 	}
 
-	SignedIntType signed_integer;
+	IntType integer;
 	try {
-		istr >> signed_integer;
+		istr >> integer;
 	} catch (std::ios_base::failure&) { throw overflow_or_underflow_error(); }
 
-	return signed_integer;
+	return integer;
 }
 
 /// <exception cref="pdfparser::error_types::syntax_error">
@@ -501,10 +513,8 @@ static SignedIntType take_signed_integer(std::istream& istr) {
 /// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
 /// thrown when the integer is overflow
 /// </exception>
-template <typename UnsignedIntType,
-          typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
-                                    std::nullptr_t>>
-static UnsignedIntType take_unsigned_integer(std::istream& istr) {
+template <typename IntType>
+static IntType take_unsigned_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
 
@@ -515,12 +525,12 @@ static UnsignedIntType take_unsigned_integer(std::istream& istr) {
 		throw syntax_error(syntax_error::unsigned_integer_not_found);
 	}
 
-	UnsignedIntType unsigned_integer;
+	IntType integer;
 	try {
-		istr >> unsigned_integer;
+		istr >> integer;
 	} catch (std::ios_base::failure&) { throw overflow_or_underflow_error(); }
 
-	return unsigned_integer;
+	return integer;
 }
 
 /**********************
