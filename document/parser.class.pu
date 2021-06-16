@@ -49,7 +49,7 @@ class parser_utility <<utility>> {
 	+{static} seek_to_frontward_beginning_of_line(inout istr : std::istream&) : void
 	+{static} take_xref_byte_offset(inout istr : std::istream&) : std::streamoff
 	+{static} take_xref_table(inout istr : std::istream&) : xref_table
-	+{static} take_xref_entry(inout istr : std::istream&) : xref_entry
+	+{static} take_xref_entry(inout istr : std::istream&, in object_number : object_t) : xref_entry
 	+{static} require(inout istr : std::istream&, in req_type : require_type) : void
 	+{static} ignore_if_present(inout istr : std::istream&, in flags : ignore_flag) : void
 	+{static} take_signed_integer<SignedIntType>(inout istr : std::istream&) : SignedIntType

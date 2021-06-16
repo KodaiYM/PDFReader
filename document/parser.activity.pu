@@ -139,23 +139,20 @@ start
 		stop
 	endif
 	if (keyword == 'n') then (y)
-		:this_xref_entry : xref_entry = xref_inuse_entry{object_number, generation_number};
 		:byte_offset = first_10_digitsを整数に変換;
 		if (byte_offset < this_xref_entry.byte_offsetの最小値 || this_xref_entry.byte_offsetの最大値 < byte_offset) then (y)
 			:throw overflow_or_underflow_error();
 			stop
 		endif
-		:this_xref_entry.byte_offset = byte_offset;
+		:return xref_inuse_entry{object_number, generation_number, byte_offset};
 	else
-		:this_xref_entry : xref_entry = xref_free_entry{object_number, generation_number};
 		:next_free_object_number = first_10_digitsを整数に変換;
 		if (next_free_object_number < object_tの最小値 || object_tの最小値の最大値 < next_free_object_number) then (y)
 			:throw overflow_or_underflow_error();
 			stop
 		endif
-		:this_xref_entry.next_free_object_number = next_free_object_number;
+		:return xref_free_entry{object_number, generation_number, next_free_object_number};
 	endif
-	:return this_xref_entry;
 stop
 }
 @enduml

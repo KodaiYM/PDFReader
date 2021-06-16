@@ -1,9 +1,11 @@
 #include "PDFParser.error_types.h"
 #include "PDFParser.parser.h"
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <cctype>
+#include <charconv>
 #include <climits>
 #include <functional>
 #include <set>
@@ -45,7 +47,6 @@ parser::parser(const FilenameT& filename)
 enum class require_type { EOF, EOL, startxref, xref, space };
 
 enum class ignore_flag : uint8_t {
-	none                      = 0,
 	null                      = 1 << 0,
 	horizontal_tab            = 1 << 1,
 	line_feed                 = 1 << 2,
@@ -146,8 +147,110 @@ static std::streamoff take_xref_byte_offset(std::istream& istr);
 
 static xref_types::xref_table take_xref_table(std::istream& istr);
 
-static xref_types::xref_entry take_xref_entry(std::istream& istr);
+/// <exceptions cref="pdfparser::error_types::syntax_error">
+/// thrown when invalid format detected
+/// </exceptions>
+static xref_types::xref_entry
+    take_xref_entry(std::istream& istr, xref_types::object_t object_number) {
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
 
+	char first_10_digits[10];
+	try {
+		istr.read(first_10_digits, 10);
+	} catch (std::ios_base::failure&) {
+		throw syntax_error(syntax_error::xref_entry_first_10_digits_invalid);
+	}
+	if (!std::all_of(std::cbegin(first_10_digits), std::cend(first_10_digits),
+	                 [](char digit) { return std::isdigit(digit); })) {
+		throw syntax_error(syntax_error::xref_entry_first_10_digits_invalid);
+	}
+
+	require(istr, require_type::space);
+
+	char second_5_digits[5];
+	try {
+		istr.read(second_5_digits, 5);
+	} catch (std::ios_base::failure&) {
+		throw syntax_error(syntax_error::xref_entry_second_5_digits_invalid);
+	}
+	if (!std::all_of(std::cbegin(second_5_digits), std::cend(second_5_digits),
+	                 [](char digit) { return std::isdigit(digit); })) {
+		throw syntax_error(syntax_error::xref_entry_second_5_digits_invalid);
+	}
+
+	require(istr, require_type::space);
+
+	char keyword;
+	try {
+		istr.read(&keyword, 1);
+	} catch (std::ios_base::failure&) {
+		throw syntax_error(syntax_error::xref_entry_keyword_invalid);
+	}
+	if (keyword != 'n' && keyword != 'f') {
+		throw syntax_error(syntax_error::xref_entry_keyword_invalid);
+	}
+
+	char last_2_bytes[2];
+	try {
+		istr.read(last_2_bytes, 2);
+	} catch (std::ios_base::failure&) {
+		throw syntax_error(syntax_error::xref_entry_last_2_bytes_invalid);
+	}
+	if (std::string_view last_2_bytes_sv{last_2_bytes, 2};
+	    last_2_bytes_sv != " \r" && last_2_bytes_sv != " \n" &&
+	    last_2_bytes_sv != "\r\n") {
+		throw syntax_error(syntax_error::xref_entry_last_2_bytes_invalid);
+	}
+
+	xref_types::generation_t generation_number;
+	{
+		auto generation_conv_result = std::from_chars(
+		    second_5_digits, second_5_digits + 5, generation_number, 10);
+		assert(generation_conv_result.ec == std::errc{} ||
+		       generation_conv_result.ec == std::errc::result_out_of_range);
+		if (std::errc::result_out_of_range == generation_conv_result.ec) {
+			throw overflow_or_underflow_error();
+		}
+	}
+
+	if ('n' == keyword) {
+		decltype(xref_types::xref_inuse_entry::byte_offset) byte_offset;
+		auto byte_offset_conv_result =
+		    std::from_chars(first_10_digits, first_10_digits + 10, byte_offset, 10);
+		assert(byte_offset_conv_result.ec == std::errc{} ||
+		       byte_offset_conv_result.ec == std::errc::result_out_of_range);
+		if (std::errc::result_out_of_range == byte_offset_conv_result.ec) {
+			throw overflow_or_underflow_error();
+		}
+		return xref_types::xref_inuse_entry{object_number, generation_number,
+		                                    byte_offset};
+	} else {
+		assert('f' == keyword);
+
+		decltype(xref_types::xref_free_entry::next_free_object_number)
+		     next_free_object_number;
+		auto next_free_object_number_conv_result = std::from_chars(
+		    first_10_digits, first_10_digits + 10, next_free_object_number, 10);
+		assert(next_free_object_number_conv_result.ec == std::errc{} ||
+		       next_free_object_number_conv_result.ec ==
+		           std::errc::result_out_of_range);
+		if (std::errc::result_out_of_range ==
+		    next_free_object_number_conv_result.ec) {
+			throw overflow_or_underflow_error();
+		}
+		return xref_types::xref_free_entry{object_number, generation_number,
+		                                   next_free_object_number};
+	}
+}
+
+/// <summary>
+/// consume token specified by req_type
+/// if it's not present, throw syntax_error
+/// </summary>
+/// <exceptions cref="pdfparser::error_types::syntax_error">
+/// thrown when specified token is not present.
+/// </exceptions>
 static void require(std::istream& istr, require_type req_type) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
@@ -218,7 +321,7 @@ static void require(std::istream& istr, require_type req_type) {
 }
 
 /// <summary>
-/// ignore whitespaces specified on flags if present on istr.
+/// ignore whitespaces specified by flags if they are present on istr.
 /// </summary>
 /// <param name="flags">whitespace bit flags to be ignored</param>
 static void ignore_if_present(std::istream& istr, ignore_flag flags) {
@@ -302,7 +405,7 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 
 		// generate ignore_functions
 		for (auto&& [flag, function] : ignore_functions_map) {
-			if ((flag & flags) != ignore_flag::none) {
+			if ((flag & flags) != ignore_flag{}) {
 				ignore_functions.push_back(std::move(function));
 			}
 		}
