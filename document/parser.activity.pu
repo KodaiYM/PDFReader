@@ -81,7 +81,7 @@ start
 		stop
 	endif
 	:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
-	:require(EOL);
+	:require(istr, EOL);
 	:return xref_byte_offset;
 stop
 }
@@ -191,7 +191,7 @@ start
 			stop
 		endif
 		:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
-		:require(EOL);
+		:require(istr, EOL);
 		stop
 	case (xref)
 		:ignore_if_present(istr, any_whitespace_characters_except_EOL);
@@ -200,7 +200,7 @@ start
 			stop
 		endif
 		:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
-		:require(EOL);
+		:require(istr, EOL);
 		stop
 	case (space)
 		if (ストリームから " " が読み取れなかった) then (y)
