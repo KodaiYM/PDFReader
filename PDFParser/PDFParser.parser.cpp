@@ -9,6 +9,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <vector>
 
@@ -44,19 +45,65 @@ parser::parser(const FilenameT& filename)
 enum class require_type { EOF, EOL, startxref, xref, space };
 
 enum class ignore_flag : uint8_t {
-	null                      = 1,
-	horizontal_tab            = 2,
-	line_feed                 = 4,
-	form_feed                 = 8,
-	carriage_return           = 16,
-	space                     = 32,
-	comment                   = 64,
+	none                      = 0,
+	null                      = 1 << 0,
+	horizontal_tab            = 1 << 1,
+	line_feed                 = 1 << 2,
+	form_feed                 = 1 << 3,
+	carriage_return           = 1 << 4,
+	space                     = 1 << 5,
+	comment                   = 1 << 6,
 	EOL                       = line_feed | carriage_return,
 	any_whitespace_characters = null | horizontal_tab | line_feed | form_feed |
 	                            carriage_return | space | EOL,
 	any_whitespace_characters_except_EOL = any_whitespace_characters & ~EOL
 };
+constexpr ignore_flag operator&(ignore_flag lhs, ignore_flag rhs) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(static_cast<int_type>(lhs) &
+	                                static_cast<int_type>(rhs));
+}
+constexpr ignore_flag operator|(ignore_flag lhs, ignore_flag rhs) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(static_cast<int_type>(lhs) |
+	                                static_cast<int_type>(rhs));
+}
+constexpr ignore_flag operator^(ignore_flag lhs, ignore_flag rhs) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(static_cast<int_type>(lhs) ^
+	                                static_cast<int_type>(rhs));
+}
+constexpr ignore_flag& operator&=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+	return lhs = lhs & rhs;
+}
+constexpr ignore_flag& operator|=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+	return lhs = lhs | rhs;
+}
+constexpr ignore_flag& operator^=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+	return lhs = lhs ^ rhs;
+}
+constexpr ignore_flag operator~(ignore_flag operand) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(~static_cast<int_type>(operand));
+}
 
+/* Forward declarations of internal functions */
+static void           seek_to_frontward_beginning_of_line(std::istream& istr);
+static std::streamoff take_xref_byte_offset(std::istream& istr);
+static xref_types::xref_table take_xref_table(std::istream& istr);
+static xref_types::xref_entry take_xref_entry(std::istream& istr);
+static void require(std::istream& istr, require_type req_type);
+static void ignore_if_present(std::istream& istr, ignore_flag flags);
+template <
+    typename SignedIntType,
+    typename std::enable_if_t<std::is_signed_v<SignedIntType>, std::nullptr_t>>
+static SignedIntType take_signed_integer(std::istream& istr);
+template <typename UnsignedIntType,
+          typename std::enable_if_t<std::is_unsigned_v<UnsignedIntType>,
+                                    std::nullptr_t>>
+static UnsignedIntType take_unsigned_integer(std::istream& istr);
+
+/* definitions of internal functions */
 /// <exception cref="std::ios_base::failure">
 /// thrown when there is no beginning of line frontward
 /// </exception>
@@ -101,14 +148,80 @@ static xref_types::xref_table take_xref_table(std::istream& istr);
 
 static xref_types::xref_entry take_xref_entry(std::istream& istr);
 
-static void require(std::istream& istr, require_type req_type);
+static void require(std::istream& istr, require_type req_type) {
+	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
+	assert(istr.rdstate() == std::ios_base::goodbit);
+
+	const auto attempt = [](std::istream&    istr,
+	                        std::string_view attempt_str) noexcept -> bool {
+		for (auto attempt_char : attempt_str) {
+			if (istr.peek() == attempt_char) {
+				istr.seekg(1, std::ios_base::cur);
+			} else {
+				return false;
+			}
+		}
+
+		return true;
+	};
+
+	switch (req_type) {
+		case require_type::EOF:
+			if (!attempt(istr, "%%EOF")) {
+				throw syntax_error(syntax_error::EOF_not_found);
+			}
+
+			if (std::remove_reference_t<decltype(istr)>::traits_type::eof() ==
+			    istr.peek()) {
+				return;
+			}
+
+			require(istr, require_type::EOL);
+			break;
+		case require_type::EOL:
+			if (attempt(istr, "\n")) {
+				// do nothing
+			} else if (attempt(istr, "\r")) {
+				attempt(istr, "\n");
+			} else {
+				throw syntax_error(syntax_error::EOL_not_found);
+			}
+			break;
+		case require_type::startxref:
+			ignore_if_present(istr,
+			                  ignore_flag::any_whitespace_characters_except_EOL);
+			if (!attempt(istr, "startxref")) {
+				throw syntax_error(syntax_error::keyword_startxref_not_found);
+			}
+			ignore_if_present(istr,
+			                  ignore_flag::any_whitespace_characters_except_EOL |
+			                      ignore_flag::comment);
+			require(istr, require_type::EOL);
+			break;
+		case require_type::xref:
+			ignore_if_present(istr,
+			                  ignore_flag::any_whitespace_characters_except_EOL);
+			if (!attempt(istr, "xref")) {
+				throw syntax_error(syntax_error::keyword_xref_not_found);
+			}
+			ignore_if_present(istr,
+			                  ignore_flag::any_whitespace_characters_except_EOL |
+			                      ignore_flag::comment);
+			require(istr, require_type::EOL);
+			break;
+		case require_type::space:
+			if (!attempt(istr, " ")) {
+				throw syntax_error(syntax_error::space_not_found);
+			}
+			break;
+	}
+}
 
 /// <summary>
 /// ignore whitespaces specified on flags if present on istr.
 /// </summary>
 /// <param name="flags">whitespace bit flags to be ignored</param>
-static void ignore_if_present(std::istream&                       istr,
-                              std::underlying_type_t<ignore_flag> flags) {
+static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
 
@@ -189,7 +302,7 @@ static void ignore_if_present(std::istream&                       istr,
 
 		// generate ignore_functions
 		for (auto&& [flag, function] : ignore_functions_map) {
-			if (static_cast<std::underlying_type_t<ignore_flag>>(flag) & flags) {
+			if ((flag & flags) != ignore_flag::none) {
 				ignore_functions.push_back(std::move(function));
 			}
 		}

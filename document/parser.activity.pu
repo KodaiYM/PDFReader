@@ -74,13 +74,13 @@ stop
 @startuml take_xref_byte_offset
 partition "take_xref_byte_offset(inout istr : std::istream&)" {
 start
-	:ignore_if_present(any_whitespace_characters_except_EOL);
+	:ignore_if_present(istr, any_whitespace_characters_except_EOL);
 	:xref_byte_offset = take_unsigned_integer<std::streamoff>();
 	if (unsigned_integer_not_found の例外が出た) then (y)
 		:throw xref_byte_offset_not_found();
 		stop
 	endif
-	:ignore_if_present(any_whitespace_characters_except_EOL | comment);
+	:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 	:require(EOL);
 	:return xref_byte_offset;
 stop
@@ -95,7 +95,7 @@ start
 	:first_object_number = take_unsigned_integer<xref_entry::object_t>() : xref_entry::object_t;
 	:require(istr, space);
 	:number_of_entries = take_unsigned_integer<uintmax_t> : uintmax_t;
-	:ignore_if_present(any_whitespace_characters_except_EOL | comment);
+	:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 	:require(istr, EOL);
 	:entry_offset = 0 : uintmax_t;
 	while (entry_offset < number_of_entries)
@@ -174,11 +174,7 @@ start
 			stop
 		endif
 
-		if (次の文字が "**[EOL]**") then (y)
-			stop
-		endif
-
-		:throw syntax_error(EOF_invalid);
+		:require(istr, EOL);
 		stop
 	case (EOL)
 		if (LF || CRLF || CR) then (y)
@@ -188,21 +184,21 @@ start
 		:throw syntax_error(EOL_not_found);
 		stop
 	case (startxref)
-		:ignore_if_present(any_whitespace_characters_except_EOL);
+		:ignore_if_present(istr, any_whitespace_characters_except_EOL);
 		if (ストリームから "startxref" が読み取れなかった) then (y)
 			:throw syntax_error(keyword_startxref_not_found);
 			stop
 		endif
-		:ignore_if_present(any_whitespace_characters_except_EOL | comment);
+		:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 		:require(EOL);
 		stop
 	case (xref)
-		:ignore_if_present(any_whitespace_characters_except_EOL);
+		:ignore_if_present(istr, any_whitespace_characters_except_EOL);
 		if (ストリームから "xref" が読み取れなかった) then (y)
 			:throw syntax_error(keyword_xref_not_found);
 			stop
 		endif
-		:ignore_if_present(any_whitespace_characters_except_EOL | comment);
+		:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 		:require(EOL);
 		stop
 	case (space)
@@ -217,7 +213,7 @@ stop
 @enduml
 
 @startuml ignore_if_present
-partition "ignore_if_present(inout istr : std::istream&, flags : std::underlying_type_t<ignore_flag>)" {
+partition "ignore_if_present(inout istr : std::istream&, flags : ignore_flag)" {
 start
 	:flagsに指定のある空白類のみ読み飛ばす;
 stop

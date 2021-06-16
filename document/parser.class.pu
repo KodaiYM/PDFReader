@@ -10,16 +10,17 @@ enum require_type <<Enumeration>> {
 }
 enum ignore_flag <<Enumeration>> {
 	<<Const, Flag>>
-	+{static} null : int = 1
-	+{static} horizontal_tab : int = 2
-	+{static} line_feed : int = 4
-	+{static} form_feed : int = 8
-	+{static} carriage_return : int = 16
-	+{static} space : int = 32
-	+{static} comment : int = 64
-	+{static} EOL : int = line_feed | carriage_return
-	+{static} any_whitespace_characters : int = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
-	+{static} any_whitespace_characters_except_EOL : int = any_whitespace_characters & ~EOL
+	+{static} none : uint8_t = 0
+	+{static} null : uint8_t = 1
+	+{static} horizontal_tab : uint8_t = 2
+	+{static} line_feed : uint8_t = 4
+	+{static} form_feed : uint8_t = 8
+	+{static} carriage_return : uint8_t = 16
+	+{static} space : uint8_t = 32
+	+{static} comment : uint8_t = 64
+	+{static} EOL : uint8_t = line_feed | carriage_return
+	+{static} any_whitespace_characters : uint8_t = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
+	+{static} any_whitespace_characters_except_EOL : uint8_t = any_whitespace_characters & ~EOL
 }
 
 class parser {
@@ -50,7 +51,7 @@ class parser_utility <<utility>> {
 	+{static} take_xref_table(inout istr : std::istream&) : xref_table
 	+{static} take_xref_entry(inout istr : std::istream&) : xref_entry
 	+{static} require(inout istr : std::istream&, in req_type : require_type) : void
-	+{static} ignore_if_present(inout istr : std::istream&, in flags : std::underlying_type_t<ignore_flag>) : void
+	+{static} ignore_if_present(inout istr : std::istream&, in flags : ignore_flag) : void
 	+{static} take_signed_integer<SignedIntType>(inout istr : std::istream&) : SignedIntType
 	+{static} take_unsigned_integer<UnsignedIntType>(inout istr : std::istream&) : UnsignedIntType
 }
