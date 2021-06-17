@@ -95,8 +95,8 @@ constexpr static ignore_flag operator~(ignore_flag operand) noexcept {
 }
 
 /* Forward declarations of internal functions */
-static void           seek_to_frontward_beginning_of_line(std::istream& istr);
-static std::streamoff take_xref_byte_offset(std::istream& istr);
+static void                   seek_forward_head_of_line(std::istream& istr);
+static std::streamoff         take_xref_byte_offset(std::istream& istr);
 static xref_types::xref_table take_xref_table(std::istream& istr);
 static xref_types::xref_entry
     take_xref_entry(std::istream& istr, xref_types::object_t object_number);
@@ -111,7 +111,7 @@ static IntType take_unsigned_integer(std::istream& istr);
 /// <exception cref="std::ios_base::failure">
 /// thrown when there is no beginning of line frontward
 /// </exception>
-static void seek_to_frontward_beginning_of_line(std::istream& istr) {
+static void seek_forward_head_of_line(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
 
@@ -124,7 +124,15 @@ static void seek_to_frontward_beginning_of_line(std::istream& istr) {
 		case '\n':
 			try {
 				istr.seekg(-1, std::ios_base::cur);
-			} catch (std::ios_base::failure&) { istr.clear(); }
+			} catch (std::ios_base::failure&) {
+				istr.clear();
+				return;
+			}
+
+			if (istr.peek() != '\r') {
+				// assert: noexcept
+				istr.seekg(1, std::ios_base::cur);
+			}
 			break;
 	}
 
@@ -561,7 +569,7 @@ parser::footer::footer(std::istream& istr) {
 	// check %%EOF
 	try {
 		istr.seekg(0, std::ios_base::end);
-		seek_to_frontward_beginning_of_line(istr);
+		seek_forward_head_of_line(istr);
 	} catch (std::ios_base::failure&) {
 		throw syntax_error(syntax_error::EOF_not_found);
 	}
@@ -573,7 +581,7 @@ parser::footer::footer(std::istream& istr) {
 
 	// get cross-reference table byte offset
 	try {
-		seek_to_frontward_beginning_of_line(istr);
+		seek_forward_head_of_line(istr);
 	} catch (std::ios_base::failure&) {
 		throw syntax_error(syntax_error::xref_byte_offset_not_found);
 	}
@@ -585,7 +593,7 @@ parser::footer::footer(std::istream& istr) {
 
 	// check keyword "startxref"
 	try {
-		seek_to_frontward_beginning_of_line(istr);
+		seek_forward_head_of_line(istr);
 	} catch (std::ios_base::failure&) {
 		throw syntax_error(syntax_error::keyword_startxref_not_found);
 	}

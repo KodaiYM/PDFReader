@@ -46,7 +46,7 @@ class parser_utility <<utility>> {
 	+enum require_type
 	+enum ignore_flag
 
-	+{static} seek_to_frontward_beginning_of_line(inout istr : std::istream&) : void
+	+{static} seek_forward_head_of_line(inout istr : std::istream&) : void
 	+{static} take_xref_byte_offset(inout istr : std::istream&) : std::streamoff
 	+{static} take_xref_table(inout istr : std::istream&) : xref_table
 	+{static} take_xref_entry(inout istr : std::istream&, in object_number : object_t) : xref_entry

@@ -46,8 +46,8 @@ stop
 }
 @enduml
 
-@startuml seek_to_frontward_beginning_of_line
-partition "seek_to_frontward_beginning_of_line(inout istr : std::istream&)" {
+@startuml seek_forward_head_of_line
+partition "seek_forward_head_of_line(inout istr : std::istream&)" {
 start
 	:1バイト戻る;
 	if (戻れなかった) then (y)
