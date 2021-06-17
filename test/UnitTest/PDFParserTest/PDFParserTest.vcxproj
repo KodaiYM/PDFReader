@@ -123,11 +123,6 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\PDFParser\PDFParser.vcxproj">
-      <Project>{bf237448-b57c-4300-81a0-cbc7acd0738a}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="PDFParser_test.cpp" />
   </ItemGroup>
   <ItemGroup>

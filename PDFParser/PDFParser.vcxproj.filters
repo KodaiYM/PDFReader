@@ -16,6 +16,9 @@
     <Filter Include="ヘッダー ファイル\PDFParser">
       <UniqueIdentifier>{8a905d2e-9bab-4fce-95d0-e824ca84aca7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\PDFParser">
+      <UniqueIdentifier>{ef5eb83f-ffd9-45c1-a9c6-948d97526de4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PDFParser.h">
@@ -35,17 +38,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PDFParser.xref_types.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PDFParser.parser.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="PDFParser.error_types.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\PDFParser</Filter>
+    </ClCompile>
+    <ClCompile Include="PDFParser.parser.cpp">
+      <Filter>ソース ファイル\PDFParser</Filter>
+    </ClCompile>
+    <ClCompile Include="PDFParser.xref_types.cpp">
+      <Filter>ソース ファイル\PDFParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
