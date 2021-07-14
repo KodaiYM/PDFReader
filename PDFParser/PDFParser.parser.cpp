@@ -43,8 +43,13 @@ parser::parser(const FilenameT& filename)
 /****************
   Parser Utility
  ****************/
-#undef EOF
-enum class require_type { EOF, EOL, startxref, xref, space };
+enum class require_type {
+	keyword_EOF,
+	EOL,
+	keyword_startxref,
+	keyword_xref,
+	space
+};
 
 enum class ignore_flag : uint8_t {
 	null                      = 1 << 0,
@@ -100,7 +105,7 @@ static std::streamoff         take_xref_byte_offset(std::istream& istr);
 static xref_types::xref_table take_xref_table(std::istream& istr);
 static xref_types::xref_entry
     take_xref_entry(std::istream& istr, xref_types::object_t object_number);
-static void require(std::istream& istr, require_type req_type); // TODO: test
+static void require(std::istream& istr, require_type req_type);
 static void ignore_if_present(std::istream& istr,
                               ignore_flag   flags); // TODO: test
 template <typename IntType>
@@ -191,7 +196,7 @@ static xref_types::xref_table take_xref_table(std::istream& istr) {
 	using namespace xref_types;
 
 	xref_table this_xref_table;
-	require(istr, require_type::xref);
+	require(istr, require_type::keyword_xref);
 	const object_t first_object_number = take_unsigned_integer<object_t>(istr);
 	require(istr, require_type::space);
 	const object_t number_of_entries = take_unsigned_integer<object_t>(istr);
@@ -326,7 +331,7 @@ static void require(std::istream& istr, require_type req_type) {
 	const auto attempt = [](std::istream&    istr,
 	                        std::string_view attempt_str) noexcept -> bool {
 		for (auto attempt_char : attempt_str) {
-			if (istr.peek() == attempt_char) {
+			if (attempt_char == istr.peek()) {
 				istr.seekg(1, std::ios_base::cur);
 			} else {
 				return false;
@@ -337,7 +342,7 @@ static void require(std::istream& istr, require_type req_type) {
 	};
 
 	switch (req_type) {
-		case require_type::EOF:
+		case require_type::keyword_EOF:
 			if (!attempt(istr, "%%EOF")) {
 				throw syntax_error(syntax_error::EOF_not_found);
 			}
@@ -358,7 +363,7 @@ static void require(std::istream& istr, require_type req_type) {
 				throw syntax_error(syntax_error::EOL_not_found);
 			}
 			break;
-		case require_type::startxref:
+		case require_type::keyword_startxref:
 			ignore_if_present(istr,
 			                  ignore_flag::any_whitespace_characters_except_EOL);
 			if (!attempt(istr, "startxref")) {
@@ -369,7 +374,7 @@ static void require(std::istream& istr, require_type req_type) {
 			                      ignore_flag::comment);
 			require(istr, require_type::EOL);
 			break;
-		case require_type::xref:
+		case require_type::keyword_xref:
 			ignore_if_present(istr,
 			                  ignore_flag::any_whitespace_characters_except_EOL);
 			if (!attempt(istr, "xref")) {
@@ -576,7 +581,7 @@ parser::footer::footer(std::istream& istr) {
 	}
 	{
 		auto eof_pos = istr.tellg();
-		require(istr, require_type::EOF);
+		require(istr, require_type::keyword_EOF);
 		istr.seekg(eof_pos);
 	}
 
@@ -598,7 +603,7 @@ parser::footer::footer(std::istream& istr) {
 	} catch (std::ios_base::failure&) {
 		throw syntax_error(syntax_error::keyword_startxref_not_found);
 	}
-	require(istr, require_type::startxref);
+	require(istr, require_type::keyword_startxref);
 
 	// get cross-reference table
 	istr.seekg(xref_byte_offset, std::ios_base::beg);

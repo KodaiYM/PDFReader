@@ -24,6 +24,6 @@ public:
 	[TestMethod] void test_CRLF_LFCRLF();
 
 private:
-	std::stringstream* ss;
+	std::stringstream* m_ss;
 };
 } // namespace pdfparser_test

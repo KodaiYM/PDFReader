@@ -2,10 +2,10 @@
 namespace pdfparser {
 enum require_type <<Enumeration>> {
 	<<Const>>
-	+{static} EOF : int = 0
+	+{static} keyword_EOF : int = 0
 	+{static} EOL : int = 1
-	+{static} startxref : int = 2
-	+{static} xref : int = 3
+	+{static} keyword_startxref : int = 2
+	+{static} keyword_xref : int = 3
 	+{static} space : int = 4
 }
 enum ignore_flag <<Enumeration>> {
@@ -64,8 +64,7 @@ parser_utility x..> xref_types
 
 enum error_code <<Enumeration>> {
 	<<Const>>
-	+{static} EOF_not_found : int = 0
-	+{static} EOF_invalid : int = 1
+	+{static} keyword_EOF_not_found : int = 0
 	+{static} EOL_not_found : int = 2
 	+{static} xref_byte_offset_not_found : int = 3
 	+{static} keyword_startxref_not_found : int = 4

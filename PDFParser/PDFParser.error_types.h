@@ -12,9 +12,6 @@ namespace pdfparser { inline namespace error_types {
 			// %%EOF not found
 			EOF_not_found,
 
-			// %%EOF was there, but the next byte is not EOF or EOL
-			EOF_invalid,
-
 			// end-of-line(EOL) not found
 			EOL_not_found,
 
