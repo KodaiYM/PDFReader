@@ -123,10 +123,20 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PDFParser_test.cpp" />
+    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\helloworld.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="parser_test.hpp" />
+    <ClInclude Include="require_test.hpp" />
+    <ClInclude Include="seek_forward_head_of_line_test.hpp" />
+    <ClInclude Include="take_signed_integer_test.hpp" />
+    <ClInclude Include="take_unsigned_integer_test.hpp" />
+    <ClInclude Include="take_xref_entry_test.hpp" />
+    <ClInclude Include="take_xref_table_test.hpp" />
+    <ClInclude Include="testtool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -100,12 +100,13 @@ static std::streamoff         take_xref_byte_offset(std::istream& istr);
 static xref_types::xref_table take_xref_table(std::istream& istr);
 static xref_types::xref_entry
     take_xref_entry(std::istream& istr, xref_types::object_t object_number);
-static void require(std::istream& istr, require_type req_type);
-static void ignore_if_present(std::istream& istr, ignore_flag flags);
+static void require(std::istream& istr, require_type req_type); // TODO: test
+static void ignore_if_present(std::istream& istr,
+                              ignore_flag   flags); // TODO: test
 template <typename IntType>
-static IntType take_signed_integer(std::istream& istr);
+static IntType take_signed_integer(std::istream& istr); // TODO: test
 template <typename IntType>
-static IntType take_unsigned_integer(std::istream& istr);
+static IntType take_unsigned_integer(std::istream& istr); // TODO: test
 
 /* definitions of internal functions */
 /// <exception cref="std::ios_base::failure">

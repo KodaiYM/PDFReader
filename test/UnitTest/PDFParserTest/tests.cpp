@@ -1,46 +1,20 @@
-ï»¿#include "PDFParser.error_types.cpp"
+#include "PDFParser.error_types.cpp"
 #include "PDFParser.parser.cpp"
 #include "PDFParser.xref_types.cpp"
+#include "parser_test.hpp"
+// TODO: ƒRƒƒ“ƒgŠO‚µ‚ÄA’è‹`‚ğì‚é
+// #include "require_test.hpp"
+#include "seek_forward_head_of_line_test.hpp"
+#include "take_xref_entry_test.hpp"
+#include "take_xref_table_test.hpp"
 
-#include <cassert>
+#include <iomanip>
 #include <sstream>
 
-using namespace Microsoft::VisualStudio::TestTools::UnitTesting;
+using namespace pdfparser_test;
 using namespace pdfparser;
 
-namespace pdfparser_test {
-[TestClass] public ref class seek_forward_head_of_line_test {
-public:
-	[TestInitialize] void initialize();
-	[TestCleanup] void    cleanup();
-
-public:
-	[TestMethod] void test_beginning_of_file();
-	[TestMethod] void test_beginning_of_line();
-	[TestMethod] void test_middle_of_line();
-	[TestMethod] void test_CR();
-	[TestMethod] void test_LF();
-	[TestMethod] void test_CRLF();
-	[TestMethod] void test_CR_CRCR();
-	[TestMethod] void test_CR_LFCR();
-	[TestMethod] void test_LF_LFLF();
-	[TestMethod] void test_CRLF_CRCRLF();
-	[TestMethod] void test_CRLF_LFCRLF();
-
-private:
-	std::stringstream* ss;
-};
-[TestClass] public ref class take_xref_table_test {
-public:
-	[TestMethod] void test_maximum_xref_table();
-	[TestMethod] void test_overflow();
-};
-[TestClass] public ref class parser_test {
-public:
-	[TestMethod] void test_normal_helloworld();
-};
-
-/* definitions */
+#pragma region seek_forward_head_of_line_test
 void seek_forward_head_of_line_test::initialize() {
 	ss = new std::stringstream(std::ios_base::in | std::ios_base::out |
 	                           std::ios_base::binary);
@@ -51,26 +25,27 @@ void seek_forward_head_of_line_test::cleanup() {
 }
 /**
  * | abc
- * def ã®æ™‚ã«ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ã‹
+ * def ‚Ì‚ÉƒGƒ‰[‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_beginning_of_file() {
 	*ss << "abc\ndef";
 
 	try {
 		seek_forward_head_of_line(*ss);
-		throw gcnew AssertFailedException("didnt throw");
 	} catch (std::ios_base::failure&) {
 		// success
+		return;
 	}
+	Assert::Fail();
 }
 /**
  * abc
  * def
- * | ghi ã®æ™‚ã«
+ * | ghi ‚Ì‚É
  *
  * abc
  * | def
- * ghi ã«ãªã‚‹ã‹
+ * ghi ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_beginning_of_line() {
 	*ss << "abc\n";
@@ -88,10 +63,10 @@ void seek_forward_head_of_line_test::test_beginning_of_line() {
 }
 /**
  * abc
- * de | f ã®æ™‚ã«
+ * de | f ‚Ì‚É
  *
  * abc
- * | def ã«ãªã‚‹ã‹
+ * | def ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_middle_of_line() {
 	*ss << "abc\n";
@@ -108,8 +83,8 @@ void seek_forward_head_of_line_test::test_middle_of_line() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * CR | ã®æ™‚ã«
- * | CR ã«ãªã‚‹ã‹
+ * CR | ‚Ì‚É
+ * | CR ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_CR() {
 	auto expected = ss->tellp();
@@ -121,8 +96,8 @@ void seek_forward_head_of_line_test::test_CR() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * LF | ã®æ™‚ã«
- * | LF ã«ãªã‚‹ã‹
+ * LF | ‚Ì‚É
+ * | LF ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_LF() {
 	auto expected = ss->tellp();
@@ -134,8 +109,8 @@ void seek_forward_head_of_line_test::test_LF() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * CRLF | ã®æ™‚ã«
- * | CRLF ã«ãªã‚‹ã‹
+ * CRLF | ‚Ì‚É
+ * | CRLF ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_CRLF() {
 	auto expected = ss->tellp();
@@ -147,8 +122,8 @@ void seek_forward_head_of_line_test::test_CRLF() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * c CR CR | ã®æ™‚ã«
- * c CR | CR ã«ãªã‚‹ã‹
+ * c CR CR | ‚Ì‚É
+ * c CR | CR ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_CR_CRCR() {
 	*ss << "c\r";
@@ -161,8 +136,8 @@ void seek_forward_head_of_line_test::test_CR_CRCR() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * c LF CR | ã®æ™‚ã«
- * c LF | CR ã«ãªã‚‹ã‹
+ * c LF CR | ‚Ì‚É
+ * c LF | CR ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_CR_LFCR() {
 	*ss << "c\n";
@@ -175,8 +150,8 @@ void seek_forward_head_of_line_test::test_CR_LFCR() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * c LF LF | ã®æ™‚ã«
- * c LF | LF ã«ãªã‚‹ã‹
+ * c LF LF | ‚Ì‚É
+ * c LF | LF ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_LF_LFLF() {
 	*ss << "c\n";
@@ -189,8 +164,8 @@ void seek_forward_head_of_line_test::test_LF_LFLF() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * c CR CRLF | ã®æ™‚ã«
- * c CR | CRLF ã«ãªã‚‹ã‹
+ * c CR CRLF | ‚Ì‚É
+ * c CR | CRLF ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_CRLF_CRCRLF() {
 	*ss << "c\r";
@@ -203,8 +178,8 @@ void seek_forward_head_of_line_test::test_CRLF_CRCRLF() {
 	Assert::IsTrue(expected == ss->tellg());
 }
 /**
- * c LF CRLF | ã®æ™‚ã«
- * c LF | CRLF ã«ãªã‚‹ã‹
+ * c LF CRLF | ‚Ì‚É
+ * c LF | CRLF ‚É‚È‚é‚©
  */
 void seek_forward_head_of_line_test::test_CRLF_LFCRLF() {
 	*ss << "c\n";
@@ -216,6 +191,9 @@ void seek_forward_head_of_line_test::test_CRLF_LFCRLF() {
 	seek_forward_head_of_line(*ss);
 	Assert::IsTrue(expected == ss->tellg());
 }
+#pragma endregion // region seek_forward_head_of_line_test
+
+#pragma region take_xref_table_test
 // test largest xref table
 void take_xref_table_test::test_maximum_xref_table() {
 	std::stringstream ss(std::ios_base::in | std::ios_base::out |
@@ -227,17 +205,16 @@ void take_xref_table_test::test_maximum_xref_table() {
 	try {
 		ss << "1 " << std::numeric_limits<xref_types::object_t>::max() << "\n";
 		take_xref_table(ss);
-
-		throw gcnew AssertFailedException("didnt throw");
-	} catch (overflow_or_underflow_error&) {
-		throw gcnew AssertFailedException("overflow_or_underflow_error was thrown");
 	} catch (syntax_error& syntax_e) {
 		Assert::AreEqual(
 		    static_cast<std::underlying_type_t<syntax_error::error_code>>(
 		        syntax_error::xref_entry_first_10_digits_invalid),
 		    static_cast<std::underlying_type_t<syntax_error::error_code>>(
 		        syntax_e.code()));
-	}
+		// success
+		return;
+	} finally {}
+	Assert::Fail();
 }
 // test too large xref table (which occurs overflow_error)
 void take_xref_table_test::test_overflow() {
@@ -251,16 +228,88 @@ void take_xref_table_test::test_overflow() {
 		constexpr auto max = std::numeric_limits<xref_types::object_t>::max();
 		ss << "1 " << (max / 10) << (max % 10 + 1) << "\n";
 		take_xref_table(ss);
-
-		throw gcnew AssertFailedException("didnt throw");
-	} catch (syntax_error&) {
-		throw gcnew AssertFailedException("syntax_error was thrown");
 	} catch (overflow_or_underflow_error&) {
 		// success
-	}
+		return;
+	} finally {}
+	Assert::Fail();
 }
+#pragma endregion // region take_xref_table_test
+
+#pragma region take_xref_entry_test
+void take_xref_entry_test::test_SPCR() {
+	using namespace xref_types;
+
+	std::stringstream ss(std::ios_base::in | std::ios_base::out |
+	                     std::ios_base::binary);
+	ss.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+
+	constexpr object_t     object_number = 1;
+	constexpr auto         next_free     = std::numeric_limits<object_t>::max();
+	constexpr generation_t generation_number =
+	    std::numeric_limits<generation_t>::max();
+	ss << std::setfill('0');
+	ss << std::setw(10) << next_free << " " << std::setw(5) << generation_number;
+	ss << " f";
+	ss << " \r";
+	assert(ss.str().length() == 20);
+
+	Assert::IsTrue(
+	    take_xref_entry(ss, object_number) ==
+	    xref_entry{xref_free_entry{object_number, generation_number, next_free}});
+}
+void take_xref_entry_test::test_SPLF() {
+	using namespace xref_types;
+
+	std::stringstream ss(std::ios_base::in | std::ios_base::out |
+	                     std::ios_base::binary);
+	ss.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+
+	constexpr object_t     object_number = 0;
+	constexpr auto         next_free     = 0;
+	constexpr generation_t generation_number =
+	    std::numeric_limits<generation_t>::max();
+	ss << std::setfill('0');
+	ss << std::setw(10) << next_free << " " << std::setw(5) << generation_number;
+	ss << " f";
+	ss << " \n";
+	assert(ss.str().length() == 20);
+
+	Assert::IsTrue(
+	    take_xref_entry(ss, object_number) ==
+	    xref_entry{xref_free_entry{object_number, generation_number, next_free}});
+}
+void take_xref_entry_test::test_CRLF() {
+	using namespace xref_types;
+
+	std::stringstream ss(std::ios_base::in | std::ios_base::out |
+	                     std::ios_base::binary);
+	ss.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+
+	constexpr object_t     object_number = std::numeric_limits<object_t>::max();
+	constexpr auto         byte_offset   = 9999999999;
+	constexpr generation_t generation_number =
+	    std::numeric_limits<generation_t>::max();
+	ss << std::setfill('0');
+	ss << std::setw(10) << byte_offset << " " << std::setw(5)
+	   << generation_number;
+	ss << " n";
+	ss << "\r\n";
+	assert(ss.str().length() == 20);
+
+	Assert::IsTrue(take_xref_entry(ss, object_number) ==
+	               xref_entry{xref_inuse_entry{object_number, generation_number,
+	                                           byte_offset}});
+}
+#pragma endregion // take_xref_entry_test
+
+// TODO: ì‚é
+#pragma region require_test
+#pragma endregion // region require_test
+
+#pragma region parser_test
 /**
- * helloworld.pdf ã®èª­ã¿è¾¼ã¿ãƒ†ã‚¹ãƒˆ
+ * helloworld.pdf ‚Ì“Ç‚İ‚İƒeƒXƒg
  */
 void parser_test::test_normal_helloworld() {
 	using namespace xref_types;
@@ -272,4 +321,4 @@ void parser_test::test_normal_helloworld() {
 	               xref_inuse_entry{4, 0, 125},
 	               xref_inuse_entry{5, 0, 329}} == parser.get_xref_table());
 }
-} // namespace pdfparser_test
+#pragma endregion // parser_test
