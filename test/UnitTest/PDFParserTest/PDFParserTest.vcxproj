@@ -129,6 +129,7 @@
     <None Include="data\helloworld.pdf" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ignore_if_present_test.hpp" />
     <ClInclude Include="parser_test.hpp" />
     <ClInclude Include="require_test.hpp" />
     <ClInclude Include="seek_forward_head_of_line_test.hpp" />

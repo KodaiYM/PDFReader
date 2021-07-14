@@ -52,5 +52,8 @@
     <ClInclude Include="take_unsigned_integer_test.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ignore_if_present_test.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

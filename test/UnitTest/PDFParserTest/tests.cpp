@@ -301,6 +301,26 @@ void take_xref_entry_test::test_CRLF() {
 }
 #pragma endregion // take_xref_entry_test
 
+#pragma region ignore_if_present_test
+#include "ignore_if_present_test.hpp"
+using namespace pdfparser_test;
+void ignore_if_present_test::initialize() {
+	m_ss = new std::stringstream(std::ios_base::in | std::ios_base::out |
+	                             std::ios_base::binary);
+	m_ss->exceptions(std::ios_base::failbit | std::ios_base::badbit);
+}
+void ignore_if_present_test::cleanup() {
+	delete m_ss;
+}
+
+void ignore_if_present_test::test_all_whitespaces() {
+	*m_ss << '\0' << "\t\n\f\r ";
+	ignore_if_present(*m_ss, ignore_flag::any_whitespace_characters);
+	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               m_ss->peek());
+}
+#pragma endregion // region ignore_if_present_test
+
 #pragma region require_test
 #include "require_test.hpp"
 using namespace pdfparser_test;
@@ -315,14 +335,14 @@ void require_test::cleanup() {
 void require_test::test_EOF_EOF_EOL() {
 	*m_ss << "%%EOF\r\n";
 	require(*m_ss, require_type::keyword_EOF);
-	Assert::AreEqual(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof(),
-	                 m_ss->peek());
+	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               m_ss->peek());
 }
 void require_test::test_EOF_EOF_only() {
 	*m_ss << "%%EOF";
 	require(*m_ss, require_type::keyword_EOF);
-	Assert::AreEqual(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof(),
-	                 m_ss->peek());
+	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               m_ss->peek());
 }
 void require_test::test_EOF_EOF_not_EOL() {
 	*m_ss << "%%EOF ";
@@ -379,8 +399,8 @@ void require_test::test_startxref_startxref_EOL() {
 	               m_ss->peek());
 }
 void require_test::test_startxref_SP_startxref_comment_EOL() {
-	*m_ss << '\0' << "\x09\x0A\x0C\x0D\x20startxref" << '\0'
-	      << "\x09\x0A\x0C\x0D\x20 % this is "
+	*m_ss << '\0' << "\x09\x0C\x20startxref" << '\0'
+	      << "\x09\x0C\x20 % this is "
 	         "comment.\r\n";
 
 	require(*m_ss, require_type::keyword_startxref);
@@ -438,11 +458,14 @@ void require_test::test_startxref_end_of_line() {
 void require_test::test_xref_xref_EOL() {
 	*m_ss << "xref\r\n";
 	require(*m_ss, require_type::keyword_xref);
-	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
-	               m_ss->peek());
+	Assert::IsTrue(
+
+	    std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	    m_ss->peek());
 }
 void require_test::test_xref_SP_xref_comment_EOL() {
-	*m_ss << "\x00\x09\x0A\x0C\x0D\x20xref\x00\x09\x0A\x0C\x0D\x20%this is "
+	*m_ss << '\0' << "\x09\x0C\x20xref" << '\0'
+	      << "\x09\x0C\x20 % this is "
 	         "comment.\r\n";
 	require(*m_ss, require_type::keyword_xref);
 	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==

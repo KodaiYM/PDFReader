@@ -334,6 +334,7 @@ static void require(std::istream& istr, require_type req_type) {
 			if (attempt_char == istr.peek()) {
 				istr.seekg(1, std::ios_base::cur);
 			} else {
+				istr.clear();
 				return false;
 			}
 		}
@@ -349,6 +350,7 @@ static void require(std::istream& istr, require_type req_type) {
 
 			if (std::remove_reference_t<decltype(istr)>::traits_type::eof() ==
 			    istr.peek()) {
+				istr.clear();
 				return;
 			}
 
@@ -405,7 +407,7 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 
 	std::vector<std::function<bool(istream_t&)>> ignore_functions;
 	{
-		// constant (moved)
+		// constant (will be moved)
 		std::array<std::pair<ignore_flag, std::function<bool(istream_t&)>>, 7>
 		    ignore_functions_map{
 		        {{ignore_flag::null,
@@ -494,6 +496,7 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 			}
 		}
 	}
+	istr.clear();
 }
 
 /// <exception cref="pdfparser::error_types::syntax_error">
