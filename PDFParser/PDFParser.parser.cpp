@@ -329,11 +329,16 @@ static void require(std::istream& istr, require_type req_type) {
 
 	const auto attempt = [](std::istream&    istr,
 	                        std::string_view attempt_str) noexcept -> bool {
+		if (istr.eof()) {
+			return false;
+		}
+
+		const auto old_pos = istr.tellg();
 		for (auto attempt_char : attempt_str) {
 			if (attempt_char == istr.peek()) {
 				istr.seekg(1, std::ios_base::cur);
 			} else {
-				istr.clear();
+				istr.seekg(old_pos);
 				return false;
 			}
 		}
@@ -343,19 +348,26 @@ static void require(std::istream& istr, require_type req_type) {
 
 	switch (req_type) {
 		case require_type::keyword_EOF:
+			if (istr.eof()) {
+				throw syntax_error(syntax_error::EOF_not_found);
+			}
+
 			if (!attempt(istr, "%%EOF")) {
 				throw syntax_error(syntax_error::EOF_not_found);
 			}
 
 			if (std::remove_reference_t<decltype(istr)>::traits_type::eof() ==
 			    istr.peek()) {
-				istr.clear();
 				return;
 			}
 
 			require(istr, require_type::EOL);
 			break;
 		case require_type::EOL:
+			if (istr.eof()) {
+				throw syntax_error(syntax_error::EOL_not_found);
+			}
+
 			if (attempt(istr, "\n")) {
 				// do nothing
 			} else if (attempt(istr, "\r")) {
@@ -365,6 +377,10 @@ static void require(std::istream& istr, require_type req_type) {
 			}
 			break;
 		case require_type::keyword_startxref:
+			if (istr.eof()) {
+				throw syntax_error(syntax_error::keyword_startxref_not_found);
+			}
+
 			ignore_if_present(istr,
 			                  ignore_flag::any_whitespace_characters_except_EOL);
 			if (!attempt(istr, "startxref")) {
@@ -376,6 +392,10 @@ static void require(std::istream& istr, require_type req_type) {
 			require(istr, require_type::EOL);
 			break;
 		case require_type::keyword_xref:
+			if (istr.eof()) {
+				throw syntax_error(syntax_error::keyword_xref_not_found);
+			}
+
 			ignore_if_present(istr,
 			                  ignore_flag::any_whitespace_characters_except_EOL);
 			if (!attempt(istr, "xref")) {
@@ -387,6 +407,10 @@ static void require(std::istream& istr, require_type req_type) {
 			require(istr, require_type::EOL);
 			break;
 		case require_type::space:
+			if (istr.eof()) {
+				throw syntax_error(syntax_error::space_not_found);
+			}
+
 			if (!attempt(istr, " ")) {
 				throw syntax_error(syntax_error::space_not_found);
 			}
@@ -401,6 +425,10 @@ static void require(std::istream& istr, require_type req_type) {
 static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
+
+	if (istr.eof()) {
+		return;
+	}
 
 	using istream_t = std::istream;
 
@@ -495,7 +523,6 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 			}
 		}
 	}
-	istr.clear();
 }
 
 /// <exception cref="pdfparser::error_types::syntax_error">
@@ -508,6 +535,10 @@ template <typename IntType>
 static IntType take_signed_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
+
+	if (istr.eof()) {
+		throw syntax_error(syntax_error::signed_integer_not_found);
+	}
 
 	bool has_sign = false;
 	switch (istr.peek()) {
@@ -551,6 +582,10 @@ template <typename IntType>
 static IntType take_unsigned_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
 	assert(istr.rdstate() == std::ios_base::goodbit);
+
+	if (istr.eof()) {
+		throw syntax_error(syntax_error::unsigned_integer_not_found);
+	}
 
 	// if istr does not begin with any of "0123456789"
 	if (istr.peek() ==
