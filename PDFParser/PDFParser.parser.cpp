@@ -106,8 +106,7 @@ static xref_types::xref_table take_xref_table(std::istream& istr);
 static xref_types::xref_entry
     take_xref_entry(std::istream& istr, xref_types::object_t object_number);
 static void require(std::istream& istr, require_type req_type);
-static void ignore_if_present(std::istream& istr,
-                              ignore_flag   flags); // TODO: test
+static void ignore_if_present(std::istream& istr, ignore_flag flags);
 template <typename IntType>
 static IntType take_signed_integer(std::istream& istr); // TODO: test
 template <typename IntType>
@@ -577,7 +576,8 @@ parser::footer::footer(std::istream& istr) {
 
 	// check %%EOF
 	try {
-		istr.seekg(0, std::ios_base::end);
+		istr.seekg(0, std::ios_base::end); // NOTE: undefined behaviour on ISO C but
+		                                   // it will go well
 		seek_forward_head_of_line(istr);
 	} catch (std::ios_base::failure&) {
 		throw syntax_error(syntax_error::EOF_not_found);

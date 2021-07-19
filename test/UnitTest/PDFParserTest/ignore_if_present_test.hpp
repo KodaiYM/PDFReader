@@ -11,8 +11,17 @@ public:
 	[TestCleanup] void    cleanup();
 
 public:
-	// TODO: ignore_if_present のテストケース増やす（作りかけ）
-	[TestMethod] void test_all_whitespaces();
+	[TestMethod] void test_null_only();
+	[TestMethod] void test_line_feed_only();
+	[TestMethod] void test_form_feed_only();
+	[TestMethod] void test_carriage_return_only();
+	[TestMethod] void test_space_only();
+	[TestMethod] void test_comment_only();
+	[TestMethod] void test_EOL_only();
+	[TestMethod] void test_any_whitespace_characters();
+	[TestMethod] void test_all_whitespaces_including_comment();
+	[TestMethod] void test_nothing_to_ignore();
+	[TestMethod] void test_no_flags();
 
 private:
 	std::stringstream* m_ss;

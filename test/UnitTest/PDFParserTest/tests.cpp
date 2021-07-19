@@ -207,11 +207,8 @@ void take_xref_table_test::test_maximum_xref_table() {
 		*m_ss << "1 " << std::numeric_limits<xref_types::object_t>::max() << "\n";
 		take_xref_table(*m_ss);
 	} catch (const syntax_error& syntax_e) {
-		Assert::AreEqual(
-		    static_cast<std::underlying_type_t<syntax_error::error_code>>(
-		        syntax_error::xref_entry_first_10_digits_invalid),
-		    static_cast<std::underlying_type_t<syntax_error::error_code>>(
-		        syntax_e.code()));
+		Assert::IsTrue(syntax_error::xref_entry_first_10_digits_invalid ==
+		               syntax_e.code());
 
 		// success
 		return;
@@ -313,11 +310,66 @@ void ignore_if_present_test::cleanup() {
 	delete m_ss;
 }
 
-void ignore_if_present_test::test_all_whitespaces() {
+void ignore_if_present_test::test_null_only() {
+	*m_ss << '\0' << " \t\n\f\r ";
+	ignore_if_present(*m_ss, ignore_flag::null);
+	Assert::IsTrue(1 == m_ss->tellg());
+}
+void ignore_if_present_test::test_line_feed_only() {
+	*m_ss << "\n\r";
+	ignore_if_present(*m_ss, ignore_flag::line_feed);
+	Assert::IsTrue(1 == m_ss->tellg());
+}
+void ignore_if_present_test::test_form_feed_only() {
+	*m_ss << '\f' << " \t\n\f\r ";
+	ignore_if_present(*m_ss, ignore_flag::form_feed);
+	Assert::IsTrue(1 == m_ss->tellg());
+}
+void ignore_if_present_test::test_carriage_return_only() {
+	*m_ss << "\r\n";
+	ignore_if_present(*m_ss, ignore_flag::carriage_return);
+	Assert::IsTrue(1 == m_ss->tellg());
+}
+void ignore_if_present_test::test_space_only() {
+	*m_ss << ' ' << "\t\n\f\r ";
+	ignore_if_present(*m_ss, ignore_flag::space);
+	Assert::IsTrue(1 == m_ss->tellg());
+}
+void ignore_if_present_test::test_comment_only() {
+	*m_ss << "% this is comment section\n\r";
+	ignore_if_present(*m_ss, ignore_flag::comment);
+	Assert::IsTrue('\n' == m_ss->get());
+}
+void ignore_if_present_test::test_EOL_only() {
+	*m_ss << "\r\n ";
+	ignore_if_present(*m_ss, ignore_flag::EOL);
+	Assert::IsTrue(2 == m_ss->tellg());
+}
+void ignore_if_present_test::test_any_whitespace_characters() {
 	*m_ss << '\0' << "\t\n\f\r ";
 	ignore_if_present(*m_ss, ignore_flag::any_whitespace_characters);
 	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
 	               m_ss->peek());
+}
+void ignore_if_present_test::test_all_whitespaces_including_comment() {
+	*m_ss << '\0' << "\t\n\f\r %comment section\r\n"
+	      << "\t\n\r\n " << '\0' << "\r\n %comment 2 section!\r"
+	      << "% last comment !\n ";
+	ignore_if_present(*m_ss, ignore_flag::any_whitespace_characters |
+	                             ignore_flag::comment);
+	Assert::IsTrue(std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               m_ss->peek());
+}
+void ignore_if_present_test::test_nothing_to_ignore() {
+	*m_ss << "don't ignore\r\n";
+	ignore_if_present(*m_ss, ignore_flag::any_whitespace_characters |
+	                             ignore_flag::comment);
+	Assert::IsTrue(0 == m_ss->tellg());
+}
+void ignore_if_present_test::test_no_flags() {
+	*m_ss << '\0' << "\t\n\f\r ";
+	ignore_if_present(*m_ss, ignore_flag::null & ~ignore_flag::null);
+	Assert::IsTrue(0 == m_ss->tellg());
 }
 #pragma endregion // region ignore_if_present_test
 
