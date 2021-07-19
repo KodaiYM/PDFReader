@@ -110,7 +110,7 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags);
 template <typename IntType>
 static IntType take_signed_integer(std::istream& istr);
 template <typename IntType>
-static IntType take_unsigned_integer(std::istream& istr); // TODO: test
+static IntType take_unsigned_integer(std::istream& istr);
 
 /* definitions of internal functions */
 /// <exception cref="std::ios_base::failure">

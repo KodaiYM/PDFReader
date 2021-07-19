@@ -514,6 +514,93 @@ void take_signed_integer_test::test_min_minus1() {
 }
 #pragma endregion // region take_signed_integer_test
 
+#pragma region take_unsigned_integer_test
+#include "take_unsigned_integer_test.hpp"
+using namespace pdfparser_test;
+void take_unsigned_integer_test::initialize() {
+	m_ss = new std::stringstream(std::ios_base::in | std::ios_base::out |
+	                             std::ios_base::binary);
+	m_ss->exceptions(std::ios_base::failbit | std::ios_base::badbit);
+}
+void take_unsigned_integer_test::cleanup() {
+	delete m_ss;
+}
+
+void take_unsigned_integer_test::test_unsigned() {
+	*m_ss << "17";
+	auto integer = take_unsigned_integer<long long>(*m_ss);
+	Assert::AreEqual((long long)17, integer);
+	Assert::IsTrue(m_ss->eof() ||
+	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	                   m_ss->peek());
+}
+void take_unsigned_integer_test::test_max() {
+	constexpr auto max = std::numeric_limits<unsigned long long>::max();
+	*m_ss << max;
+	auto integer = take_unsigned_integer<unsigned long long>(*m_ss);
+	Assert::AreEqual(max, integer);
+	Assert::IsTrue(m_ss->eof() ||
+	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	                   m_ss->peek());
+}
+void take_unsigned_integer_test::test_min() {
+	*m_ss << 0;
+	auto integer = take_unsigned_integer<unsigned long long>(*m_ss);
+	Assert::AreEqual((unsigned long long)0, integer);
+	Assert::IsTrue(m_ss->eof() ||
+	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	                   m_ss->peek());
+}
+
+void take_unsigned_integer_test::test_not_number() {
+	*m_ss << "deadbeef";
+	try {
+		take_unsigned_integer<long long>(*m_ss);
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::unsigned_integer_not_found == syntax_e.code());
+
+		// success
+		return;
+	}
+	Assert::Fail();
+}
+void take_unsigned_integer_test::test_EOF() {
+	try {
+		take_unsigned_integer<long long>(*m_ss);
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::unsigned_integer_not_found == syntax_e.code());
+
+		// success
+		return;
+	}
+	Assert::Fail();
+}
+void take_unsigned_integer_test::test_signed() {
+	*m_ss << "+17";
+	try {
+		take_unsigned_integer<long long>(*m_ss);
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::unsigned_integer_not_found == syntax_e.code());
+
+		// success
+		return;
+	}
+	Assert::Fail();
+}
+void take_unsigned_integer_test::test_max_plus1() {
+	constexpr auto max = std::numeric_limits<unsigned long long>::max();
+	*m_ss << (max / 10) << (max % 10 + 1);
+
+	try {
+		take_unsigned_integer<long long>(*m_ss);
+	} catch (overflow_or_underflow_error&) {
+		// success
+		return;
+	}
+	Assert::Fail();
+}
+#pragma endregion // region take_unsigned_integer_test
+
 #pragma region require_test
 #include "require_test.hpp"
 using namespace pdfparser_test;

@@ -11,8 +11,14 @@ public:
 	[TestCleanup] void    cleanup();
 
 public:
-	// TODO: テストメソッドを作る
-	[TestMethod] void test_();
+	[TestMethod] void test_unsigned();
+	[TestMethod] void test_max();
+	[TestMethod] void test_min();
+
+	[TestMethod] void test_not_number();
+	[TestMethod] void test_EOF();
+	[TestMethod] void test_signed();
+	[TestMethod] void test_max_plus1();
 
 private:
 	std::stringstream* m_ss;
