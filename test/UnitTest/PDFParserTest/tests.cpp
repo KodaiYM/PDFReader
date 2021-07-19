@@ -503,7 +503,7 @@ void take_signed_integer_test::test_max_plus1() {
 }
 void take_signed_integer_test::test_min_minus1() {
 	constexpr auto min = std::numeric_limits<long long>::min();
-	*m_ss << min / 10 << ((min % 10) + 1);
+	*m_ss << min / 10 << (-(min % 10) + 1);
 	try {
 		take_signed_integer<long long>(*m_ss);
 	} catch (const overflow_or_underflow_error& syntax_e) {

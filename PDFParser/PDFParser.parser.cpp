@@ -118,7 +118,7 @@ static IntType take_unsigned_integer(std::istream& istr); // TODO: test
 /// </exception>
 static void seek_forward_head_of_line(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	// immediately preceding newline character
 	istr.seekg(-1, std::ios_base::cur); // throws std::ios_base::failure
@@ -225,7 +225,7 @@ static xref_types::xref_table take_xref_table(std::istream& istr) {
 static xref_types::xref_entry
     take_xref_entry(std::istream& istr, xref_types::object_t object_number) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	char first_10_digits[10];
 	try {
@@ -325,7 +325,7 @@ static xref_types::xref_entry
 /// </exceptions>
 static void require(std::istream& istr, require_type req_type) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	const auto attempt = [](std::istream&    istr,
 	                        std::string_view attempt_str) noexcept -> bool {
@@ -424,7 +424,7 @@ static void require(std::istream& istr, require_type req_type) {
 /// <param name="flags">whitespace bit flags to be ignored</param>
 static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	if (istr.eof()) {
 		return;
@@ -534,7 +534,7 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 template <typename IntType>
 static IntType take_signed_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	if (istr.eof()) {
 		throw syntax_error(syntax_error::signed_integer_not_found);
@@ -581,7 +581,7 @@ static IntType take_signed_integer(std::istream& istr) {
 template <typename IntType>
 static IntType take_unsigned_integer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	if (istr.eof()) {
 		throw syntax_error(syntax_error::unsigned_integer_not_found);
@@ -607,7 +607,7 @@ static IntType take_unsigned_integer(std::istream& istr) {
  **********************/
 parser::footer::footer(std::istream& istr) {
 	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(istr.rdstate() == std::ios_base::goodbit);
+	assert(!istr.fail());
 
 	// check %%EOF
 	try {
