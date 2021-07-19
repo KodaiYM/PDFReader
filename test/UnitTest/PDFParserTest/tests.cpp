@@ -495,7 +495,7 @@ void take_signed_integer_test::test_max_plus1() {
 	*m_ss << max / 10 << ((max % 10) + 1);
 	try {
 		take_signed_integer<long long>(*m_ss);
-	} catch (const overflow_or_underflow_error& syntax_e) {
+	} catch (overflow_or_underflow_error&) {
 		// success
 		return;
 	}
@@ -506,7 +506,7 @@ void take_signed_integer_test::test_min_minus1() {
 	*m_ss << min / 10 << (-(min % 10) + 1);
 	try {
 		take_signed_integer<long long>(*m_ss);
-	} catch (const overflow_or_underflow_error& syntax_e) {
+	} catch (overflow_or_underflow_error&) {
 		// success
 		return;
 	}
@@ -608,8 +608,8 @@ void require_test::test_startxref_startxref_only() {
 	*m_ss << "startxref";
 	try {
 		require(*m_ss, require_type::keyword_startxref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::EOL_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::EOL_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -620,8 +620,8 @@ void require_test::test_startxref_startxref_not_EOL() {
 	*m_ss << "startxref invalidtokens\n";
 	try {
 		require(*m_ss, require_type::keyword_startxref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::EOL_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::EOL_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -632,8 +632,9 @@ void require_test::test_startxref_not_startxref() {
 	*m_ss << "sstartxref\n";
 	try {
 		require(*m_ss, require_type::keyword_startxref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::keyword_startxref_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::keyword_startxref_not_found ==
+		               syntax_e.code());
 
 		// success
 		return;
@@ -643,8 +644,9 @@ void require_test::test_startxref_not_startxref() {
 void require_test::test_startxref_end_of_line() {
 	try {
 		require(*m_ss, require_type::keyword_startxref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::keyword_startxref_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::keyword_startxref_not_found ==
+		               syntax_e.code());
 
 		// success
 		return;
@@ -672,8 +674,8 @@ void require_test::test_xref_xref_only() {
 	*m_ss << "xref";
 	try {
 		require(*m_ss, require_type::keyword_xref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::EOL_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::EOL_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -684,8 +686,8 @@ void require_test::test_xref_xref_not_EOL() {
 	*m_ss << "xref invalidtokens\n";
 	try {
 		require(*m_ss, require_type::keyword_xref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::EOL_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::EOL_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -696,8 +698,8 @@ void require_test::test_xref_not_xref() {
 	*m_ss << "xxref\n";
 	try {
 		require(*m_ss, require_type::keyword_xref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::keyword_xref_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::keyword_xref_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -707,8 +709,8 @@ void require_test::test_xref_not_xref() {
 void require_test::test_xref_end_of_line() {
 	try {
 		require(*m_ss, require_type::keyword_xref);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::keyword_xref_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::keyword_xref_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -727,8 +729,8 @@ void require_test::test_space_not_space() {
 	*m_ss << "\n";
 	try {
 		require(*m_ss, require_type::space);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::space_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::space_not_found == syntax_e.code());
 
 		// success
 		return;
@@ -738,8 +740,8 @@ void require_test::test_space_not_space() {
 void require_test::test_space_end_of_line() {
 	try {
 		require(*m_ss, require_type::space);
-	} catch (const syntax_error& e) {
-		Assert::IsTrue(syntax_error::space_not_found == e.code());
+	} catch (const syntax_error& syntax_e) {
+		Assert::IsTrue(syntax_error::space_not_found == syntax_e.code());
 
 		// success
 		return;

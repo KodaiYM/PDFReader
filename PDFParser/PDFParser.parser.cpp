@@ -108,7 +108,7 @@ static xref_types::xref_entry
 static void require(std::istream& istr, require_type req_type);
 static void ignore_if_present(std::istream& istr, ignore_flag flags);
 template <typename IntType>
-static IntType take_signed_integer(std::istream& istr); // TODO: test
+static IntType take_signed_integer(std::istream& istr);
 template <typename IntType>
 static IntType take_unsigned_integer(std::istream& istr); // TODO: test
 
