@@ -213,8 +213,8 @@ static xref_types::xref_table take_xref_table(std::istream& istr) {
 	require(istr, require_type::EOL);
 	for (object_t entry_offset = 0; entry_offset < number_of_entries;
 	     ++entry_offset) {
-		this_xref_table.insert(
-		    take_xref_entry(istr, first_object_number + entry_offset));
+		const auto object_number = first_object_number + entry_offset;
+		this_xref_table.insert(take_xref_entry(istr, object_number));
 	}
 	return this_xref_table;
 }

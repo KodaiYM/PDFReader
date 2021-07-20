@@ -100,7 +100,7 @@ class xref_types {
 	+class xref_inuse_entry
 	+class xref_free_entry
 	+{static} xref_entry : typedef = std::variant<xref_inuse_entry, xref_free_entry>
-	+{static} xref_table : typedef = std::set<xref_entry>
+	+class xref_table
 }
 xref_table "1" x--* "1..*" xref_entry
 xref_entry "1" x--> "0, 1" xref_inuse_entry
@@ -109,29 +109,93 @@ xref_inuse_entry XOR xref_free_entry
 end note
 xref_entry "1" x--> "0, 1" xref_free_entry
 
-abstract class object_traits {
+class xref_inuse_entry {
 	+object_number : object_t
 	+generation_number : generation_t
-
-	#object_traits(in object_number : object_t, in generation_number : generation_t)
-	+operator==(in rhs : const object_traits&) : bool
-	+operator!=(in rhs : const object_traits&) : bool
-	+operator<(in rhs : const object_traits&) : bool
-	+operator>(in rhs : const object_traits&) : bool
-	+operator<=(in rhs : const object_traits&) : bool
-	+operator>=(in rhs : const object_traits&) : bool
-}
-
-class xref_inuse_entry {
-	+xref_inuse_entry(in object_number : object_t, in generation_number : generation_t, in byte_offset : std::streamoff)
 	+byte_offset : std::streamoff
+	
+	+operator==() : bool
+	+operator!=() : bool
 }
-xref_inuse_entry ..|> object_traits
 
 class xref_free_entry {
-	+xref_free_entry(in object_number : object_t, in generation_number : generation_t, in next_free_object_number : object_t)
+	+object_number : object_t
+	+next_used_generation_number : generation_t
 	+next_free_object_number : object_t
+	
+	+operator==() : bool
+	+operator!=() : bool
 }
-xref_free_entry ..|> object_traits
+
+class xref_table {
+	+{static} key_type : typedef = object_t
+	+{static} value_type : typedef = xref_entry
+	+{static} reference : typedef = value_type&
+	+{static} const_reference : typedef = const reference
+	+{static} size_type : typedef = std::size_t
+	+{staitc} difference_type : typedef = std::ptrdiff_t
+	+{static} iterator : typedef = xref_table_iterator
+	+{static} const_iterator : typedef = xref_table_const_iterator
+	+{static} reverse_iterator : typedef = std::reverse_iterator<iterator>
+	+{static} const_reverse_iterator : std::reverse_iterator<const_iterator>
+
+	-{static} table_type : typedef = std::map<key_type, value_type>
+	-m_table : table_type
+
+	+xref_table()
+	+xref_table(entry_list : initializer_list<value_type>)
+
+	+begin() : iterator
+	+cbegin() : const_iterator
+	+end() : iterator
+	+cend() : const_iterator
+	+rbegin() : reverse_iterator
+	+crbegin() : const_reverse_iterator
+	+rend() : reverse_iterator
+	+crend() : const_reverse_iterator
+
+	+insert(insert_entry : const value_type&) : void
+	+insert(insert_entry : value_type&&) : void
+	+erase(erase_position : const_iterator) : iterator
+	+erase(erase_entry : const value_type&) : iterator
+	+erase(erase_object_number : object_t) : iterator
+
+	+at(n : key_type) : const_reference
+
+	+operator==(rhs : const xref_table&) : bool
+	+operator!=(rhs : const xref_table&) : bool
+}
+class xref_table_iterator {
+	+operator++() : xref_table_iterator&
+	+operator++(int) : xref_table_iterator
+	+operator--() : xref_table_iterator&
+	+operator--(int) : xref_table_iterator
+	+operator==(rhs : const xref_table_iterator&) : bool
+	+operator!=(rhs : const xref_table_iterator&) : bool
+
+	+xref_table_iterator(xref_table::table_type::iterator table_it)
+}
+xref_table_iterator --|> xref_table_const_iterator
+class xref_table_const_iterator {
+	+{static} iterator_category : typedef = bidirectional_iterator_tag
+	+{static} value_type : typedef = xref_entry
+	+{static} difference_type : typedef = ptrdiff_t
+	+{static} pointer : typedef = const value_type*
+	+{static} reference : typedef = const value_type&
+
+	-m_table_it : xref_table::table_type::const_iterator
+
+	+operator*() : reference
+	+operator++() : xref_table_const_iterator&
+	+operator++(int) : xref_table_const_iterator
+	+operator--() : xref_table_const_iterator&
+	+operator--(int) : xref_table_const_iterator
+	+operator==(rhs : const xref_table_const_iterator&) : bool
+	+operator!=(rhs : const xref_table_const_iterator&) : bool
+
+	+xref_table_const_iterator(xref_table::table_type::const_iterator table_it)
+}
+xref_table <..> xref_table_iterator
+xref_table <..> xref_table_const_iterator
 }
 @enduml
