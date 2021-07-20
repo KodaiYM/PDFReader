@@ -52,8 +52,8 @@ class parser_utility <<utility>> {
 	+{static} take_xref_entry(inout istr : std::istream&, in object_number : object_t) : xref_entry
 	+{static} require(inout istr : std::istream&, in req_type : require_type) : void
 	+{static} ignore_if_present(inout istr : std::istream&, in flags : ignore_flag) : void
-	+{static} take_signed_integer<SignedIntType>(inout istr : std::istream&) : SignedIntType
-	+{static} take_unsigned_integer<UnsignedIntType>(inout istr : std::istream&) : UnsignedIntType
+	+{static} take_signed_integer<IntType>(inout istr : std::istream&) : IntType
+	+{static} take_unsigned_integer<IntType>(inout istr : std::istream&) : IntType
 }
 parser_utility x..> require_type
 parser_utility x..> syntax_error

@@ -222,14 +222,14 @@ stop
 @enduml
 
 @startuml take_signed_integer
-partition "take_signed_integer<SignedIntType>(inout istr : std::istream&)" {
+partition "take_signed_integer<IntType>(inout istr : std::istream&)" {
 start
 	:+ or - の符号付(あるいは無し)整数の取得;
 	if (取得できなかった) then (y)
 		:throw syntax_error(signed_integer_not_found);
 		stop
 	endif
-	if (その整数 < SignedIntType の最小値 || SignedIntType の最大値 < その整数) then (y)
+	if (その整数 < IntType の最小値 || IntType の最大値 < その整数) then (y)
 		:throw overflow_or_underflow_error();
 		stop
 	endif
@@ -239,14 +239,14 @@ stop
 @enduml
 
 @startuml take_unsigned_integer
-partition "take_unsigned_integer<UnsignedIntType>(inout istr : std::istream&)" {
+partition "take_unsigned_integer<IntType>(inout istr : std::istream&)" {
 start
 	:符号のない整数の取得;
 	if (取得できなかった) then (y)
 		:throw syntax_error(unsigned_integer_not_found);
 		stop
 	endif
-	if (UnsignedIntType の最大値 < その整数) then (y)
+	if (IntType の最大値 < その整数) then (y)
 		:throw overflow_or_underflow_error();
 		stop
 	endif
