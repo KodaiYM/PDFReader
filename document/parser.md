@@ -24,7 +24,7 @@
 | オブジェクト名 | 構文 | 意味 |
 | -------------- | ---- | ---- |
 | Literal String | (文字列) | そのまま文字列を表す |
-| Hexadecimal String | <16進文字列> | 16進数で文字列を表す |
+| Hexadecimal String | <16進文字列> | 16進法で文字列を表す |
 | Name | /名前 | 名前 |
 | Array | [オブジェクト1 オブジェクト2 ...] | オブジェクトの配列 |
 | Dictionary | \<\</Key1 /Value1 /Key2 /Value2\>\> | Key-Value store 型の順序のない辞書 |

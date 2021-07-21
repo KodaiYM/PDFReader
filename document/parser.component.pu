@@ -1,9 +1,9 @@
 @startuml parser
-interface "Random Access to Indirect Objects" as getobject
-interface "Input Stream" as istr
+interface "Random Access to Indirect Objects" as RandomAccess
+interface "File Name" as FileName
 component parse<<component>> [
 	PDFParser
 ]
-getobject -- [parse]
-[parse] -(0- istr
+RandomAccess -- [parse]
+[parse] -(0- FileName
 @enduml

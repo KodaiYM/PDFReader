@@ -176,7 +176,6 @@ start
 		endif
 
 		:require(istr, EOL);
-		stop
 	case (EOL)
 		if (LF || CRLF || CR) then (y)
 			stop
@@ -192,7 +191,6 @@ start
 		endif
 		:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 		:require(istr, EOL);
-		stop
 	case (keyword_xref)
 		:ignore_if_present(istr, any_whitespace_characters_except_EOL);
 		if (ストリームから "xref" が読み取れなかった) then (y)
@@ -201,13 +199,11 @@ start
 		endif
 		:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
 		:require(istr, EOL);
-		stop
 	case (space)
 		if (ストリームから " " が読み取れなかった) then (y)
 			:throw syntax_error(space_not_found);
 			stop
 		endif
-		stop
 	endswitch
 stop
 }
