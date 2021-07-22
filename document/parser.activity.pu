@@ -96,7 +96,7 @@ start
 	:require(istr, space);
 	:number_of_entries = take_unsigned_integer<object_t> : object_t;
 	if (first_object_number + number_of_entries - 1 がオーバーフロー) then (y)
-		:throw overflow_or_underflow_error();
+		:throw std::overflow_error("overflow");
 		stop
 	endif
 	:ignore_if_present(istr, any_whitespace_characters_except_EOL | comment);
@@ -139,20 +139,20 @@ start
 
 	:generation_number = second_5_digitsを整数に変換;
 	if (generation_number < generation_tの最小値 || generation_tの最大値 < generation_number) then (y)
-		:throw overflow_or_underflow_error();
+		:throw std::overflow_error("overflow");
 		stop
 	endif
 	if (keyword == 'n') then (y)
 		:byte_offset = first_10_digitsを整数に変換;
 		if (byte_offset < this_xref_entry.byte_offsetの最小値 || this_xref_entry.byte_offsetの最大値 < byte_offset) then (y)
-			:throw overflow_or_underflow_error();
+			:throw std::overflow_error("overflow");
 			stop
 		endif
 		:return xref_inuse_entry{object_number, generation_number, byte_offset};
 	else
 		:next_free_object_number = first_10_digitsを整数に変換;
 		if (next_free_object_number < object_tの最小値 || object_tの最小値の最大値 < next_free_object_number) then (y)
-			:throw overflow_or_underflow_error();
+			:throw std::overflow_error("overflow");
 			stop
 		endif
 		:return xref_free_entry{object_number, generation_number, next_free_object_number};
@@ -226,7 +226,7 @@ start
 		stop
 	endif
 	if (その整数 < IntType の最小値 || IntType の最大値 < その整数) then (y)
-		:throw overflow_or_underflow_error();
+		:throw std::overflow_error("overflow");
 		stop
 	endif
 	:return その整数;
@@ -243,7 +243,7 @@ start
 		stop
 	endif
 	if (IntType の最大値 < その整数) then (y)
-		:throw overflow_or_underflow_error();
+		:throw std::overflow_error("overflow");
 		stop
 	endif
 	:return その整数;

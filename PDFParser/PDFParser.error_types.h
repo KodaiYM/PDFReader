@@ -44,8 +44,4 @@ namespace pdfparser { inline namespace error_types {
 	private:
 		const error_code m_error_code;
 	};
-	class overflow_or_underflow_error: public std::runtime_error {
-	public:
-		overflow_or_underflow_error();
-	};
 }} // namespace pdfparser::error_types

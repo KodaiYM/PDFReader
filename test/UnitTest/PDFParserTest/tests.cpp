@@ -216,7 +216,7 @@ void take_xref_table_test::test_maximum_xref_table() {
 	}
 	Assert::Fail();
 }
-// test too large xref table (which occurs overflow_error)
+// test too large xref table (which occurs std::overflow_error)
 void take_xref_table_test::test_overflow() {
 	*m_ss << "xref\n";
 
@@ -224,7 +224,7 @@ void take_xref_table_test::test_overflow() {
 		constexpr auto max = std::numeric_limits<xref_types::object_t>::max();
 		*m_ss << "1 " << (max / 10) << (max % 10 + 1) << "\n";
 		take_xref_table(*m_ss);
-	} catch (overflow_or_underflow_error&) {
+	} catch (std::overflow_error&) {
 		// success
 		return;
 	}
@@ -495,7 +495,7 @@ void take_signed_integer_test::test_max_plus1() {
 	*m_ss << max / 10 << ((max % 10) + 1);
 	try {
 		take_signed_integer<long long>(*m_ss);
-	} catch (overflow_or_underflow_error&) {
+	} catch (std::overflow_error&) {
 		// success
 		return;
 	}
@@ -506,7 +506,7 @@ void take_signed_integer_test::test_min_minus1() {
 	*m_ss << min / 10 << (-(min % 10) + 1);
 	try {
 		take_signed_integer<long long>(*m_ss);
-	} catch (overflow_or_underflow_error&) {
+	} catch (std::overflow_error&) {
 		// success
 		return;
 	}
@@ -593,7 +593,7 @@ void take_unsigned_integer_test::test_max_plus1() {
 
 	try {
 		take_unsigned_integer<long long>(*m_ss);
-	} catch (overflow_or_underflow_error&) {
+	} catch (std::overflow_error&) {
 		// success
 		return;
 	}

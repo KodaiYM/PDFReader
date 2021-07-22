@@ -57,7 +57,6 @@ note left: file scope unnamed namespace
 parser_utility x..> require_type
 parser_utility x..> ignore_flag
 parser_utility x..> syntax_error
-parser_utility x..> overflow_or_underflow_error
 parser_utility x..> xref_table
 parser_utility x..> xref_entry
 parser_utility x..> xref_types
@@ -86,11 +85,6 @@ class syntax_error {
 }
 syntax_error --|> std::runtime_error
 syntax_error x--> "1" error_code
-
-class overflow_or_underflow_error {
-	+overflow_or_underflow_error()
-}
-overflow_or_underflow_error --|> std::runtime_error
 
 class xref_types {
 	<<Const>>

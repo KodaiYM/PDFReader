@@ -160,7 +160,7 @@ static void seek_forward_head_of_line(std::istream& istr) {
 /// <summary>
 /// take byte offset of cross reference table from footer
 /// </summary>
-/// <exceptions cref="pdfparser::error_types::overflow_or_underflow_error">
+/// <exceptions cref="std::overflow_error">
 /// </exceptions>
 /// <exceptions cref="pdfparser::error_types::syntax_error"></exceptions>
 /// <returns>byte offset of cross reference table</returns>
@@ -187,7 +187,7 @@ static std::streamoff take_xref_byte_offset(std::istream& istr) {
 /// <summary>
 /// take cross reference table
 /// </summary>
-/// <exceptions cref="pdfparser::error_types::overflow_or_underflow_error">
+/// <exceptions cref="std::overflow_error">
 /// </exceptions>
 /// <exceptions cref="pdfparser::error_types::syntax_error"></exceptions>
 /// <returns>byte offset of cross reference table</returns>
@@ -206,7 +206,7 @@ static xref_types::xref_table take_xref_table(std::istream& istr) {
 	// std::numeric_limits<object_t>::max()
 	if (number_of_entries - 1 >
 	    std::numeric_limits<object_t>::max() - first_object_number) {
-		throw overflow_or_underflow_error();
+		throw std::overflow_error("overflow");
 	}
 	ignore_if_present(istr, ignore_flag::any_whitespace_characters_except_EOL |
 	                            ignore_flag::comment);
@@ -282,7 +282,7 @@ static xref_types::xref_entry
 		assert(generation_conv_result.ec == std::errc{} ||
 		       generation_conv_result.ec == std::errc::result_out_of_range);
 		if (std::errc::result_out_of_range == generation_conv_result.ec) {
-			throw overflow_or_underflow_error();
+			throw std::overflow_error("overflow");
 		}
 	}
 
@@ -293,7 +293,7 @@ static xref_types::xref_entry
 		assert(byte_offset_conv_result.ec == std::errc{} ||
 		       byte_offset_conv_result.ec == std::errc::result_out_of_range);
 		if (std::errc::result_out_of_range == byte_offset_conv_result.ec) {
-			throw overflow_or_underflow_error();
+			throw std::overflow_error("overflow");
 		}
 		return xref_types::xref_inuse_entry{object_number, generation_number,
 		                                    byte_offset};
@@ -309,7 +309,7 @@ static xref_types::xref_entry
 		           std::errc::result_out_of_range);
 		if (std::errc::result_out_of_range ==
 		    next_free_object_number_conv_result.ec) {
-			throw overflow_or_underflow_error();
+			throw std::overflow_error("overflow");
 		}
 		return xref_types::xref_free_entry{object_number, generation_number,
 		                                   next_free_object_number};
@@ -528,7 +528,7 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 /// <exception cref="pdfparser::error_types::syntax_error">
 /// thrown when istr cannot be interpreted as a signed integer
 /// </exception>
-/// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
+/// <exception cref="std::overflow_error">
 /// thrown when the integer is overflow or underflow
 /// </exception>
 template <typename IntType>
@@ -567,7 +567,7 @@ static IntType take_signed_integer(std::istream& istr) {
 	IntType integer;
 	try {
 		istr >> integer;
-	} catch (std::ios_base::failure&) { throw overflow_or_underflow_error(); }
+	} catch (std::ios_base::failure&) { throw std::overflow_error("overflow"); }
 
 	return integer;
 }
@@ -575,7 +575,7 @@ static IntType take_signed_integer(std::istream& istr) {
 /// <exception cref="pdfparser::error_types::syntax_error">
 /// thrown when istr cannot be interpreted as an unsigned integer
 /// </exception>
-/// <exception cref="pdfparser::error_types::overflow_or_underflow_error">
+/// <exception cref="std::overflow_error">
 /// thrown when the integer is overflow
 /// </exception>
 template <typename IntType>
@@ -597,7 +597,7 @@ static IntType take_unsigned_integer(std::istream& istr) {
 	IntType integer;
 	try {
 		istr >> integer;
-	} catch (std::ios_base::failure&) { throw overflow_or_underflow_error(); }
+	} catch (std::ios_base::failure&) { throw std::overflow_error("overflow"); }
 
 	return integer;
 }
