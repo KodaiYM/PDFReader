@@ -1,6 +1,9 @@
 #include "PDFParser.error_types.h"
 #include "PDFParser.parser.h"
 
+// For Windows min max macro
+#define NOMINMAX
+
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -8,6 +11,7 @@
 #include <charconv>
 #include <climits>
 #include <functional>
+#include <msclr/marshal_cppstd.h>
 #include <set>
 #include <sstream>
 #include <string>
@@ -18,10 +22,10 @@
 static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 using namespace std::string_literals;
 
+namespace pdfparser {
 /**************
   Parser Class
  **************/
-namespace pdfparser {
 const xref_types::xref_table& parser::get_xref_table() & {
 	if (!m_footer) {
 		m_footer = std::make_unique<footer>(m_stream);
@@ -38,6 +42,34 @@ parser::parser(const FilenameT& filename)
 	m_stream.exceptions(
 	    std::ios_base::failbit |
 	    std::ios_base::badbit); // HACK: handle file open exception.
+}
+
+/*******************************
+  Parser C++/CLI toString Class
+ *******************************/
+System::String ^ parser_tostring::get(System::String ^ filename) {
+	parser PDFParser{msclr::interop::marshal_as<std::string>(filename)};
+
+	auto xref_table_str = System::String::Empty;
+	auto xref_table     = PDFParser.get_xref_table();
+
+	for (const auto& entry : xref_table) {
+		using namespace xref_types;
+		if (auto inuse_entry = std::get_if<xref_inuse_entry>(&entry)) {
+			xref_table_str += System::String::Format(
+			    "using ({0}, {1}) -> offset: {2}", inuse_entry->object_number,
+			    inuse_entry->generation_number, inuse_entry->byte_offset);
+		} else if (auto free_entry = std::get_if<xref_free_entry>(&entry)) {
+			xref_table_str += System::String::Format(
+			    "free {0} (next gen num to be used: {1}) -> next obj num: {2}",
+			    free_entry->object_number, free_entry->next_used_generation_number,
+			    free_entry->next_free_object_number);
+		} else {
+			assert(false);
+		}
+		xref_table_str += "\n";
+	}
+	return xref_table_str;
 }
 
 /****************
@@ -356,8 +388,7 @@ static void require(std::istream& istr, require_type req_type) {
 				throw syntax_error(syntax_error::EOF_not_found);
 			}
 
-			if (std::remove_reference_t<decltype(istr)>::traits_type::eof() ==
-			    istr.peek()) {
+			if (std::decay_t<decltype(istr)>::traits_type::eof() == istr.peek()) {
 				return;
 			}
 
@@ -542,7 +573,7 @@ static IntType take_signed_integer(std::istream& istr) {
 
 	bool has_sign = false;
 	switch (istr.peek()) {
-		case std::remove_reference_t<decltype(istr)>::traits_type::eof():
+		case std::decay_t<decltype(istr)>::traits_type::eof():
 			throw syntax_error(syntax_error::signed_integer_not_found);
 		case '+':
 		case '-':
@@ -553,8 +584,7 @@ static IntType take_signed_integer(std::istream& istr) {
 	}
 
 	// if istr does not begin with any of "0123456789"
-	if (istr.peek() ==
-	        std::remove_reference_t<decltype(istr)>::traits_type::eof() ||
+	if (istr.peek() == std::decay_t<decltype(istr)>::traits_type::eof() ||
 	    !std::isdigit(static_cast<unsigned char>(istr.peek()))) {
 		throw syntax_error(syntax_error::signed_integer_not_found);
 	}
@@ -588,8 +618,7 @@ static IntType take_unsigned_integer(std::istream& istr) {
 	}
 
 	// if istr does not begin with any of "0123456789"
-	if (istr.peek() ==
-	        std::remove_reference_t<decltype(istr)>::traits_type::eof() ||
+	if (istr.peek() == std::decay_t<decltype(istr)>::traits_type::eof() ||
 	    !std::isdigit(static_cast<unsigned char>(istr.peek()))) {
 		throw syntax_error(syntax_error::unsigned_integer_not_found);
 	}
@@ -648,3 +677,5 @@ parser::footer::footer(std::istream& istr) {
 	xref_table = take_xref_table(istr);
 }
 } // namespace pdfparser
+
+#undef NOMINMAX

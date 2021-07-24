@@ -33,4 +33,9 @@ private:
 	std::ifstream           m_stream;
 	std::unique_ptr<footer> m_footer;
 };
+public
+ref class parser_tostring sealed { // C++/CLI execute parser and get xref_table by string
+public:
+	static System::String ^ get(System::String^ filename);
+};
 } // namespace pdfparser

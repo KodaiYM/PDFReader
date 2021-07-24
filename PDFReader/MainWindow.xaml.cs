@@ -1,18 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Core.ViewModels;
 
 namespace PDFReader
 {
@@ -21,6 +8,8 @@ namespace PDFReader
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Core.ViewModels.MainWindowViewModel ViewModel = new Core.ViewModels.MainWindowViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,7 +18,13 @@ namespace PDFReader
         {
             base.OnInitialized(e);
 
-            this.DataContext = new MainWindowViewModel();
+            this.DataContext = ViewModel;
+        }
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            ViewModel.Text = Core.ViewModels.ParsedXrefTable();
         }
     }
 }

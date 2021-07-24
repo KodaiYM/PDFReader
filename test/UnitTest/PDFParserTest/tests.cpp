@@ -350,7 +350,7 @@ void ignore_if_present_test::test_any_whitespace_characters() {
 	*m_ss << '\0' << "\t\n\f\r ";
 	ignore_if_present(*m_ss, ignore_flag::any_whitespace_characters);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void ignore_if_present_test::test_all_whitespaces_including_comment() {
@@ -360,7 +360,7 @@ void ignore_if_present_test::test_all_whitespaces_including_comment() {
 	ignore_if_present(*m_ss, ignore_flag::any_whitespace_characters |
 	                             ignore_flag::comment);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void ignore_if_present_test::test_nothing_to_ignore() {
@@ -393,7 +393,7 @@ void take_signed_integer_test::test_unsigned() {
 	auto integer = take_signed_integer<long long>(*m_ss);
 	Assert::AreEqual((long long)100, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void take_signed_integer_test::test_plus() {
@@ -401,7 +401,7 @@ void take_signed_integer_test::test_plus() {
 	auto integer = take_signed_integer<long long>(*m_ss);
 	Assert::AreEqual((long long)100, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void take_signed_integer_test::test_minus() {
@@ -409,7 +409,7 @@ void take_signed_integer_test::test_minus() {
 	auto integer = take_signed_integer<long long>(*m_ss);
 	Assert::AreEqual((long long)-100, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void take_signed_integer_test::test_max() {
@@ -418,7 +418,7 @@ void take_signed_integer_test::test_max() {
 	auto integer = take_signed_integer<long long>(*m_ss);
 	Assert::AreEqual(max, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void take_signed_integer_test::test_min() {
@@ -427,7 +427,7 @@ void take_signed_integer_test::test_min() {
 	auto integer = take_signed_integer<long long>(*m_ss);
 	Assert::AreEqual(min, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 
@@ -531,7 +531,7 @@ void take_unsigned_integer_test::test_unsigned() {
 	auto integer = take_unsigned_integer<long long>(*m_ss);
 	Assert::AreEqual((long long)17, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void take_unsigned_integer_test::test_max() {
@@ -540,7 +540,7 @@ void take_unsigned_integer_test::test_max() {
 	auto integer = take_unsigned_integer<unsigned long long>(*m_ss);
 	Assert::AreEqual(max, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void take_unsigned_integer_test::test_min() {
@@ -548,7 +548,7 @@ void take_unsigned_integer_test::test_min() {
 	auto integer = take_unsigned_integer<unsigned long long>(*m_ss);
 	Assert::AreEqual((unsigned long long)0, integer);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 
@@ -616,14 +616,14 @@ void require_test::test_EOF_EOF_EOL() {
 	*m_ss << "%%EOF\r\n";
 	require(*m_ss, require_type::keyword_EOF);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_EOF_EOF_only() {
 	*m_ss << "%%EOF";
 	require(*m_ss, require_type::keyword_EOF);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_EOF_EOF_not_EOL() {
@@ -678,7 +678,7 @@ void require_test::test_startxref_startxref_EOL() {
 	*m_ss << "startxref\r\n";
 	require(*m_ss, require_type::keyword_startxref);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_startxref_SP_startxref_comment_EOL() {
@@ -688,7 +688,7 @@ void require_test::test_startxref_SP_startxref_comment_EOL() {
 
 	require(*m_ss, require_type::keyword_startxref);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_startxref_startxref_only() {
@@ -745,7 +745,7 @@ void require_test::test_xref_xref_EOL() {
 	*m_ss << "xref\r\n";
 	require(*m_ss, require_type::keyword_xref);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_xref_SP_xref_comment_EOL() {
@@ -754,7 +754,7 @@ void require_test::test_xref_SP_xref_comment_EOL() {
 	         "comment.\r\n";
 	require(*m_ss, require_type::keyword_xref);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_xref_xref_only() {
@@ -809,7 +809,7 @@ void require_test::test_space_space_only() {
 	*m_ss << ' ';
 	require(*m_ss, require_type::space);
 	Assert::IsTrue(m_ss->eof() ||
-	               std::remove_reference_t<decltype(*m_ss)>::traits_type::eof() ==
+	               std::decay_t<decltype(*m_ss)>::traits_type::eof() ==
 	                   m_ss->peek());
 }
 void require_test::test_space_not_space() {
