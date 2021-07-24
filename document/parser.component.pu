@@ -1,0 +1,9 @@
+@startuml parser
+interface "Random Access to Indirect Objects" as RandomAccess
+interface "File Name" as FileName
+component parse<<component>> [
+	PDFParser
+]
+RandomAccess -- [parse]
+[parse] -(0- FileName
+@enduml
