@@ -2,7 +2,6 @@
 hide empty members
 namespace pdfparser::xref_types {
 annotation xref_types <<(N, yellow) namespace>> {
-	<<Const>>
 	+{static} object_t     : typedef = uint32_t
 	+{static} generation_t : typedef = uint16_t
 	+{static} xref_entry   : typedef = std::variant<xref_inuse_entry, xref_free_entry>
@@ -36,7 +35,7 @@ class xref_table {
 	+{static} key_type               : typedef = object_t
 	+{static} value_type             : typedef = xref_entry
 	+{static} reference              : typedef = value_type&
-	+{static} const_reference        : typedef = const reference
+	+{static} const_reference        : typedef = const value_type&
 	+{static} size_type              : typedef = std::size_t
 	+{static} difference_type        : typedef = std::ptrdiff_t
 	+{static} iterator               : typedef = xref_table_iterator
