@@ -128,6 +128,9 @@ xref_table_iterator::xref_table_iterator(
     xref_table::table_type::iterator table_it)
     : xref_table_const_iterator(table_it) {}
 
+auto xref_table_iterator::operator*() const -> reference {
+	return xref_table_const_iterator::operator*();
+}
 auto xref_table_iterator::operator++() -> xref_table_iterator& {
 	xref_table_const_iterator::operator++();
 	return *this;

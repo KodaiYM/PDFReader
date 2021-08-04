@@ -3,9 +3,9 @@ hide empty members
 namespace pdfparser::xref_types {
 annotation xref_types <<(N, yellow) namespace>> {
 	<<Const>>
-	+{static} object_t : typedef = uint32_t
+	+{static} object_t     : typedef = uint32_t
 	+{static} generation_t : typedef = uint16_t
-	+{static} xref_entry : typedef = std::variant<xref_inuse_entry, xref_free_entry>
+	+{static} xref_entry   : typedef = std::variant<xref_inuse_entry, xref_free_entry>
 }
 
 xref_entry "1" x--> "0, 1" xref_inuse_entry
@@ -15,55 +15,56 @@ end note
 xref_entry "1" x--> "0, 1" xref_free_entry
 
 class xref_inuse_entry <<struct>> {
-	+object_number : object_t
+	+object_number     : object_t
 	+generation_number : generation_t
-	+byte_offset : std::streamoff
+	+byte_offset       : std::streamoff
 	
 	+operator==(in rhs : const xref_inuse_entry&) : bool
 	+operator!=(in rhs : const xref_inuse_entry&) : bool
 }
 
 class xref_free_entry <<struct>> {
-	+object_number : object_t
+	+object_number               : object_t
 	+next_used_generation_number : generation_t
-	+next_free_object_number : object_t
+	+next_free_object_number     : object_t
 	
 	+operator==(in rhs : const xref_free_entry&) : bool
 	+operator!=(in rhs : const xref_free_entry&) : bool
 }
 
 class xref_table {
-	+{static} key_type : typedef = object_t
-	+{static} value_type : typedef = xref_entry
-	+{static} reference : typedef = value_type&
-	+{static} const_reference : typedef = const reference
-	+{static} size_type : typedef = std::size_t
-	+{static} difference_type : typedef = std::ptrdiff_t
-	+{static} iterator : typedef = xref_table_iterator
-	+{static} const_iterator : typedef = xref_table_const_iterator
-	+{static} reverse_iterator : typedef = std::reverse_iterator<iterator>
+	+{static} key_type               : typedef = object_t
+	+{static} value_type             : typedef = xref_entry
+	+{static} reference              : typedef = value_type&
+	+{static} const_reference        : typedef = const reference
+	+{static} size_type              : typedef = std::size_t
+	+{static} difference_type        : typedef = std::ptrdiff_t
+	+{static} iterator               : typedef = xref_table_iterator
+	+{static} const_iterator         : typedef = xref_table_const_iterator
+	+{static} reverse_iterator       : typedef = std::reverse_iterator<iterator>
 	+{static} const_reverse_iterator : typedef = std::reverse_iterator<const_iterator>
 
 	-{static} table_type : typedef = std::map<key_type, value_type>
+
 	-m_table : table_type
 
 	+xref_table()
 	+xref_table(in entry_list : initializer_list<value_type>)
 
-	+begin() : iterator
-	+cbegin() : const_iterator
-	+end() : iterator
-	+cend() : const_iterator
-	+rbegin() : reverse_iterator
+	+begin()   : iterator
+	+cbegin()  : const_iterator
+	+end()     : iterator
+	+cend()    : const_iterator
+	+rbegin()  : reverse_iterator
 	+crbegin() : const_reverse_iterator
-	+rend() : reverse_iterator
-	+crend() : const_reverse_iterator
+	+rend()    : reverse_iterator
+	+crend()   : const_reverse_iterator
 
 	+insert(in insert_entry : const value_type&) : void
-	+insert(in insert_entry : value_type&&) : void
-	+erase(in erase_position : const_iterator) : iterator
-	+erase(in erase_entry : const value_type&) : iterator
-	+erase(in erase_object_number : object_t) : iterator
+	+insert(in insert_entry : value_type&&)      : void
+	+erase(in erase_position : const_iterator)   : iterator
+	+erase(in erase_entry : const value_type&)   : iterator
+	+erase(in erase_object_number : object_t)    : iterator
 
 	+at(in n : key_type) : const_reference
 
@@ -75,31 +76,41 @@ xref_table <..> xref_table_iterator
 xref_table <..> xref_table_const_iterator
 
 class xref_table_iterator {
-	+operator++() : xref_table_iterator&
+	+{static} iterator_category : typedef = bidirectional_iterator_tag
+	+{static} value_type        : typedef = xref_entry
+	+{static} difference_type   : typedef = ptrdiff_t
+	+{static} pointer           : typedef = const value_type*
+	+{static} reference         : typedef = const value_type&
+
+	+operator*()     : reference
+	+operator++()    : xref_table_iterator&
 	+operator++(int) : xref_table_iterator
-	+operator--() : xref_table_iterator&
+	+operator--()    : xref_table_iterator&
 	+operator--(int) : xref_table_iterator
+
 	+operator==(in rhs : const xref_table_iterator&) : bool
 	+operator!=(in rhs : const xref_table_iterator&) : bool
 
+	+xref_table_iterator(in table_it : xref_table::table_type::const_iterator)
 	+xref_table_iterator(in table_it : xref_table::table_type::iterator)
 }
 xref_table_iterator --|> xref_table_const_iterator
 
 class xref_table_const_iterator {
 	+{static} iterator_category : typedef = bidirectional_iterator_tag
-	+{static} value_type : typedef = xref_entry
-	+{static} difference_type : typedef = ptrdiff_t
-	+{static} pointer : typedef = const value_type*
-	+{static} reference : typedef = const value_type&
+	+{static} value_type        : typedef = xref_entry
+	+{static} difference_type   : typedef = ptrdiff_t
+	+{static} pointer           : typedef = const value_type*
+	+{static} reference         : typedef = const value_type&
 
 	-m_table_it : xref_table::table_type::const_iterator
 
-	+operator*() : reference
-	+operator++() : xref_table_const_iterator&
+	+operator*()     : reference
+	+operator++()    : xref_table_const_iterator&
 	+operator++(int) : xref_table_const_iterator
-	+operator--() : xref_table_const_iterator&
+	+operator--()    : xref_table_const_iterator&
 	+operator--(int) : xref_table_const_iterator
+
 	+operator==(rhs : const xref_table_const_iterator&) : bool
 	+operator!=(rhs : const xref_table_const_iterator&) : bool
 

@@ -3,18 +3,18 @@ hide empty members
 namespace pdfparser::error_types {
 enum error_code <<Enumeration>> {
 	<<Const>>
-	+{static} keyword_EOF_not_found : int = 0
-	+{static} EOL_not_found : int = 1
-	+{static} xref_byte_offset_not_found : int = 2
-	+{static} keyword_startxref_not_found : int = 3
-	+{static} signed_integer_not_found : int = 4
-	+{static} unsigned_integer_not_found : int = 5
-	+{static} keyword_xref_not_found : int = 6
-	+{static} space_not_found : int = 7
+	+{static} keyword_EOF_not_found              : int = 0
+	+{static} EOL_not_found                      : int = 1
+	+{static} xref_byte_offset_not_found         : int = 2
+	+{static} keyword_startxref_not_found        : int = 3
+	+{static} signed_integer_not_found           : int = 4
+	+{static} unsigned_integer_not_found         : int = 5
+	+{static} keyword_xref_not_found             : int = 6
+	+{static} space_not_found                    : int = 7
 	+{static} xref_entry_first_10_digits_invalid : int = 8
 	+{static} xref_entry_second_5_digits_invalid : int = 9
-	+{static} xref_entry_keyword_invalid : int = 10
-	+{static} xref_entry_last_2_bytes_invalid : int = 11
+	+{static} xref_entry_keyword_invalid         : int = 10
+	+{static} xref_entry_last_2_bytes_invalid    : int = 11
 }
 class syntax_error {
 	+enum error_code

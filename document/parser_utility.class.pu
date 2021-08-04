@@ -3,37 +3,41 @@ hide empty members
 namespace pdfparser:: {
 enum require_type <<Enumeration>> {
 	<<Const>>
-	+{static} keyword_EOF : int = 0
-	+{static} EOL : int = 1
+	+{static} keyword_EOF       : int = 0
+	+{static} EOL               : int = 1
 	+{static} keyword_startxref : int = 2
-	+{static} keyword_xref : int = 3
-	+{static} space : int = 4
+	+{static} keyword_xref      : int = 3
+	+{static} space             : int = 4
 }
 enum ignore_flag <<Enumeration>> {
 	<<Const, Flag>>
-	+{static} none : uint8_t = 0
-	+{static} null : uint8_t = 1
-	+{static} horizontal_tab : uint8_t = 2
-	+{static} line_feed : uint8_t = 4
-	+{static} form_feed : uint8_t = 8
+	+{static} none            : uint8_t = 0
+	+{static} null            : uint8_t = 1
+	+{static} horizontal_tab  : uint8_t = 2
+	+{static} line_feed       : uint8_t = 4
+	+{static} form_feed       : uint8_t = 8
 	+{static} carriage_return : uint8_t = 16
-	+{static} space : uint8_t = 32
-	+{static} comment : uint8_t = 64
-	+{static} EOL : uint8_t = line_feed | carriage_return
-	+{static} any_whitespace_characters : uint8_t = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
-	+{static} any_whitespace_characters_except_EOL : uint8_t = any_whitespace_characters & ~EOL
+	+{static} space           : uint8_t = 32
+	+{static} comment         : uint8_t = 64
+
+	+{static} EOL
+	 : uint8_t = line_feed | carriage_return
+	+{static} any_whitespace_characters
+	 : uint8_t = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
+	+{static} any_whitespace_characters_except_EOL
+	 : uint8_t = any_whitespace_characters & ~EOL
 }
 annotation parser_utility <<(N, yellow) unnamed namespace>> {
 	enum require_type
 	enum ignore_flag
-	seek_forward_head_of_line(inout istr : std::istream&) : void
-	take_xref_byte_offset(inout istr : std::istream&) : std::streamoff
-	take_xref_table(inout istr : std::istream&) : xref_table
+	seek_forward_head_of_line(inout istr : std::istream&)                    : void
+	take_xref_byte_offset(inout istr : std::istream&)                        : std::streamoff
+	take_xref_table(inout istr : std::istream&)                              : xref_table
 	take_xref_entry(inout istr : std::istream&, in object_number : object_t) : xref_entry
-	require(inout istr : std::istream&, in req_type : require_type) : void
-	ignore_if_present(inout istr : std::istream&, in flags : ignore_flag) : void
-	take_signed_integer<IntType>(inout istr : std::istream&) : IntType
-	take_unsigned_integer<IntType>(inout istr : std::istream&) : IntType
+	require(inout istr : std::istream&, in req_type : require_type)          : void
+	ignore_if_present(inout istr : std::istream&, in flags : ignore_flag)    : void
+	take_signed_integer<IntType>(inout istr : std::istream&)                 : IntType
+	take_unsigned_integer<IntType>(inout istr : std::istream&)               : IntType
 }
 parser_utility x..> require_type
 parser_utility x..> ignore_flag

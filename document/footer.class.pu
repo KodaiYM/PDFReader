@@ -3,7 +3,7 @@ hide empty members
 namespace pdfparser {
 class footer <<struct>> {
 	+xref_byte_offset : std::streamoff
-	+xref_table : xref_table
+	+xref_table       : xref_table
 
 	+footer(inout istr : std::istream&)
 }
