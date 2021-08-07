@@ -2,15 +2,24 @@
 hide empty members
 namespace pdfparser {
 class parser {
-	-m_stream : std::ifstream
-	-m_footer : std::unique_ptr<footer>
+	-m_stream_parser      : stream_parser
+	-m_trailer_dictionary : dictionary_object
+	-m_object_pool        : object_pool
 
 	+parser<FilenameT>(in filename : const FilenameT&)
-	+get_xref_table() : const xref_table&
+	-parse_footer() : void
 }
-parser "1" x--> "1" footer
+parser *-- stream_parser
+parser --> object_pool
+parser --> dictionary_object
 
-class footer <<struct>> {
-[[footer.class.pu]]
+class stream_parser {
+	[[stream_parser.class.pu]]
+}
+class object_pool {
+	[[object_pool.class.pu]]
+}
+class dictionary_object {
+	[[object_types.class.pu]]
 }
 @enduml

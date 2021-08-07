@@ -14,27 +14,25 @@ annotation object_types <<(N, yellow) namespace>> {
 	                     name_object, array_object,
 	                     dictionary_object, stream_object,
 	                     null_object>
-	+any_object
+	+any_direct_object_or_ref
 	 : typedef = variant<boolean_object, integer_object,
 	                     real_object, string_object,
 	                     name_object, array_object,
 	                     dictionary_object, stream_object,
 	                     null_object, indirect_reference>
+	+non_null_direct_object_or_ref
+	 : typedef = variant<boolean_object, integer_object,
+	                     real_object, string_object,
+	                     name_object, array_object,
+	                     dictionary_object, stream_object,
+	                     indirect_reference>
 	+boolean_object    : typedef = bool
 	+integer_object    : typedef = int
 	+real_object       : typedef = double
 	+string_object     : typedef = std::string
 	+name_object       : typedef = std::string
-	+array_object      : typedef = vector<any_object>
-
-	' mapped_type : any_object except null_object
-	+dictionary_object
-	 : typedef = unordered_map<name_object,
-	                           variant<boolean_object, integer_object,
-	                                   real_object, string_object,
-	                                   name_object, array_object,
-	                                   dictionary_object, stream_object,
-	                                   indirect_reference>>
+	+array_object      : typedef = vector<any_direct_object_or_ref>
+	+dictionary_object : typedef = unordered_map<name_object, variant<non_null_direct_object_or_ref>>
 }
 class stream_object {
 	-m_stream_dictionary : dictionary_object
@@ -45,14 +43,10 @@ class stream_object {
 
 	+get_decoded_data() : std::string
 }
-stream_object "1" x--> "1" dictionary_object
+stream_object --> dictionary_object
 
 class null_object {}
-class indirect_object<<struct>> {
-	+object_number : object_t
-	+generation_number : generation_t
-	+object : any_object
-}
+
 class indirect_reference<<struct>> {
 	+object_number : object_t
 	+generation_number : generation_t

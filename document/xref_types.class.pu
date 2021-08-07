@@ -66,11 +66,15 @@ class xref_table {
 	+erase(in erase_object_number : object_t)    : iterator
 
 	+at(in n : key_type) : const_reference
+	+at(in object_number : object_t, in generation_number : generation_t) : const_reference
+	+find(in n : key_type) : iterator
+	+find(in object_number : object_t, in generation_number : generation_t) : iterator
+	+contains(in object_number : object_t, in generation_number : generation_t) : bool
 
 	+operator==(in rhs : const xref_table&) : bool
 	+operator!=(in rhs : const xref_table&) : bool
 }
-xref_table "1" x--* "1..*" xref_entry
+xref_table "1" *-- "1..*" xref_entry
 xref_table <..> xref_table_iterator
 xref_table <..> xref_table_const_iterator
 
