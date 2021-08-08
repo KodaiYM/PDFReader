@@ -1,5 +1,3 @@
-' TOOD: Implement object pool! (random access and pooling by xref table)
-
 @startuml object_pool
 hide empty members
 namespace pdfparser {
