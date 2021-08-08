@@ -7,9 +7,6 @@
 namespace pdfparser_test {
 [TestClass] public ref class take_unsigned_integer_test {
 public:
-	[TestInitialize] void initialize();
-	[TestCleanup] void    cleanup();
-
 public:
 	[TestMethod] void test_unsigned();
 	[TestMethod] void test_max();
@@ -21,6 +18,6 @@ public:
 	[TestMethod] void test_max_plus1();
 
 private:
-	std::stringstream* m_ss;
+	pdfparser::stream_parser<std::stringstream>* stream;
 };
 } // namespace pdfparser_test

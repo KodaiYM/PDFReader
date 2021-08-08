@@ -1,15 +1,12 @@
 #pragma once
 
+#include "PDFParser.stream_parser.h"
 #include "testtool.h"
 
 #include <sstream>
 
 namespace pdfparser_test {
 [TestClass] public ref class seek_forward_head_of_line_test {
-public:
-	[TestInitialize] void initialize();
-	[TestCleanup] void    cleanup();
-
 public:
 	[TestMethod] void test_beginning_of_file();
 	[TestMethod] void test_beginning_of_line();
@@ -24,6 +21,6 @@ public:
 	[TestMethod] void test_CRLF_LFCRLF();
 
 private:
-	std::stringstream* m_ss;
+	pdfparser::stream_parser<std::stringstream>* stream;
 };
 } // namespace pdfparser_test

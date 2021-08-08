@@ -77,6 +77,11 @@ namespace pdfparser { namespace xref_types {
 		const_reverse_iterator crend() const;
 
 		const_reference at(key_type n) const;
+		const_reference at(object_t     object_number,
+		                   generation_t generation_number) const;
+		iterator        find(key_type n);
+		iterator find(object_t object_number, generation_t generation_number);
+		bool     contains(object_t object_number, generation_t generation_number);
 
 		void      insert(const value_type& insert_entry);
 		void      insert(value_type&& insert_entry);
@@ -134,7 +139,7 @@ namespace pdfparser { namespace xref_types {
 		using reference         = const value_type&;
 
 	public:
-		reference operator*() const;
+		reference            operator*() const;
 		xref_table_iterator& operator++();
 		xref_table_iterator  operator++(int);
 		xref_table_iterator& operator--();

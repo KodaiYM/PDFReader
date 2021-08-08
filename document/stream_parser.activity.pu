@@ -1,7 +1,8 @@
 @startuml stream_parser
-partition "stream_parser<FilenameT>(in filename : const FilenameT&)" {
+partition "stream_parser(in stream : InputStreamT&&)" {
 start
-	:m_stream = std::ifstream(filename, std::ios_base::binary);
+	:m_stream = std::move(stream);
+	:m_stream.clear();
 	:m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);
 stop
 }
@@ -255,7 +256,7 @@ start
 				if (次の2文字が8進2桁) then (y)
 					:name += 読み取った8進2桁の数値の表す文字;
 				else
-					:throw parse_error(name_invalid_hexadecimal_code);
+					:throw parse_error(name_invalid_octal_code);
 					stop
 				endif
 			else

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PDFParser.object_types.h"
 #include "PDFParser.xref_types.h"
 
 #include <fstream> // Intellisense
@@ -10,32 +11,22 @@
   Parser Class
  **************/
 namespace pdfparser {
+template <class InputStreamT>
 class parser final {
 public:
-	const xref_types::xref_table& get_xref_table() &;
-	xref_types::xref_table        get_xref_table() &&;
-
-public:
-	template <class FilenameT>
-	explicit parser(const FilenameT& filename);
+	explicit parser(InputStreamT&& stream);
+	parser(InputStreamT&)        = delete;
+	parser(const InputStreamT&&) = delete;
 
 private:
-	struct footer {
-	public:
-		explicit footer(std::istream& istr);
-
-	public:
-		std::streamoff xref_byte_offset;   // cross reference table byte offset
-		xref_types::xref_table xref_table; // cross reference table
-	};
-
-private:
-	std::ifstream           m_stream;
-	std::unique_ptr<footer> m_footer;
+	stream_parser<InputStreamT>     m_stream_parser;
+	object_types::dictionary_object m_trailer_dictionary;
+	object_pool<InputStreamT>       m_object_pool;
 };
 public
-ref class parser_tostring sealed { // C++/CLI execute parser and get xref_table by string
+ref class parser_tostring
+    sealed { // C++/CLI execute parser and get xref_table by string
 public:
-	static System::String ^ get(System::String^ filename);
+	static System::String ^ get(System::String ^ filename);
 };
 } // namespace pdfparser

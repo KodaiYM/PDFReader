@@ -23,6 +23,34 @@ static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 using namespace std::string_literals;
 
 namespace pdfparser {
+constexpr ignore_flag operator&(ignore_flag lhs, ignore_flag rhs) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(static_cast<int_type>(lhs) &
+	                                static_cast<int_type>(rhs));
+}
+constexpr ignore_flag operator|(ignore_flag lhs, ignore_flag rhs) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(static_cast<int_type>(lhs) |
+	                                static_cast<int_type>(rhs));
+}
+constexpr ignore_flag operator^(ignore_flag lhs, ignore_flag rhs) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(static_cast<int_type>(lhs) ^
+	                                static_cast<int_type>(rhs));
+}
+constexpr ignore_flag& operator&=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+	return lhs = lhs & rhs;
+}
+constexpr ignore_flag& operator|=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+	return lhs = lhs | rhs;
+}
+constexpr ignore_flag& operator^=(ignore_flag& lhs, ignore_flag rhs) noexcept {
+	return lhs = lhs ^ rhs;
+}
+constexpr ignore_flag operator~(ignore_flag operand) noexcept {
+	using int_type = std::underlying_type_t<ignore_flag>;
+	return static_cast<ignore_flag>(~static_cast<int_type>(operand));
+}
 /**************
   Parser Class
  **************/
@@ -71,78 +99,6 @@ System::String ^ parser_tostring::get(System::String ^ filename) {
 	}
 	return xref_table_str;
 }
-
-/****************
-  Parser Utility
- ****************/
-enum class require_type {
-	keyword_EOF,
-	EOL,
-	keyword_startxref,
-	keyword_xref,
-	space
-};
-
-enum class ignore_flag : uint8_t {
-	null                      = 1 << 0,
-	horizontal_tab            = 1 << 1,
-	line_feed                 = 1 << 2,
-	form_feed                 = 1 << 3,
-	carriage_return           = 1 << 4,
-	space                     = 1 << 5,
-	comment                   = 1 << 6,
-	EOL                       = line_feed | carriage_return,
-	any_whitespace_characters = null | horizontal_tab | line_feed | form_feed |
-	                            carriage_return | space | EOL,
-	any_whitespace_characters_except_EOL = any_whitespace_characters & ~EOL
-};
-constexpr static ignore_flag operator&(ignore_flag lhs,
-                                       ignore_flag rhs) noexcept {
-	using int_type = std::underlying_type_t<ignore_flag>;
-	return static_cast<ignore_flag>(static_cast<int_type>(lhs) &
-	                                static_cast<int_type>(rhs));
-}
-constexpr static ignore_flag operator|(ignore_flag lhs,
-                                       ignore_flag rhs) noexcept {
-	using int_type = std::underlying_type_t<ignore_flag>;
-	return static_cast<ignore_flag>(static_cast<int_type>(lhs) |
-	                                static_cast<int_type>(rhs));
-}
-constexpr static ignore_flag operator^(ignore_flag lhs,
-                                       ignore_flag rhs) noexcept {
-	using int_type = std::underlying_type_t<ignore_flag>;
-	return static_cast<ignore_flag>(static_cast<int_type>(lhs) ^
-	                                static_cast<int_type>(rhs));
-}
-constexpr static ignore_flag& operator&=(ignore_flag& lhs,
-                                         ignore_flag  rhs) noexcept {
-	return lhs = lhs & rhs;
-}
-constexpr static ignore_flag& operator|=(ignore_flag& lhs,
-                                         ignore_flag  rhs) noexcept {
-	return lhs = lhs | rhs;
-}
-constexpr static ignore_flag& operator^=(ignore_flag& lhs,
-                                         ignore_flag  rhs) noexcept {
-	return lhs = lhs ^ rhs;
-}
-constexpr static ignore_flag operator~(ignore_flag operand) noexcept {
-	using int_type = std::underlying_type_t<ignore_flag>;
-	return static_cast<ignore_flag>(~static_cast<int_type>(operand));
-}
-
-/* Forward declarations of internal functions */
-static void                   seek_forward_head_of_line(std::istream& istr);
-static std::streamoff         take_xref_byte_offset(std::istream& istr);
-static xref_types::xref_table take_xref_table(std::istream& istr);
-static xref_types::xref_entry
-    take_xref_entry(std::istream& istr, xref_types::object_t object_number);
-static void require(std::istream& istr, require_type req_type);
-static void ignore_if_present(std::istream& istr, ignore_flag flags);
-template <typename IntType>
-static IntType take_signed_integer(std::istream& istr);
-template <typename IntType>
-static IntType take_unsigned_integer(std::istream& istr);
 
 /* definitions of internal functions */
 /// <exception cref="std::ios_base::failure">
@@ -554,81 +510,6 @@ static void ignore_if_present(std::istream& istr, ignore_flag flags) {
 			}
 		}
 	}
-}
-
-/// <exception cref="pdfparser::error_types::syntax_error">
-/// thrown when istr cannot be interpreted as a signed integer
-/// </exception>
-/// <exception cref="std::overflow_error">
-/// thrown when the integer is overflow or underflow
-/// </exception>
-template <typename IntType>
-static IntType take_signed_integer(std::istream& istr) {
-	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(!istr.fail());
-
-	if (istr.eof()) {
-		throw syntax_error(syntax_error::signed_integer_not_found);
-	}
-
-	bool has_sign = false;
-	switch (istr.peek()) {
-		case std::decay_t<decltype(istr)>::traits_type::eof():
-			throw syntax_error(syntax_error::signed_integer_not_found);
-		case '+':
-		case '-':
-			has_sign = true;
-			// assert: noexcept
-			istr.seekg(1, std::ios_base::cur);
-			break;
-	}
-
-	// if istr does not begin with any of "0123456789"
-	if (istr.peek() == std::decay_t<decltype(istr)>::traits_type::eof() ||
-	    !std::isdigit(static_cast<unsigned char>(istr.peek()))) {
-		throw syntax_error(syntax_error::signed_integer_not_found);
-	}
-
-	if (has_sign) {
-		// assert: noexcept
-		istr.seekg(-1, std::ios_base::cur);
-	}
-
-	IntType integer;
-	try {
-		istr >> integer;
-	} catch (std::ios_base::failure&) { throw std::overflow_error("overflow"); }
-
-	return integer;
-}
-
-/// <exception cref="pdfparser::error_types::syntax_error">
-/// thrown when istr cannot be interpreted as an unsigned integer
-/// </exception>
-/// <exception cref="std::overflow_error">
-/// thrown when the integer is overflow
-/// </exception>
-template <typename IntType>
-static IntType take_unsigned_integer(std::istream& istr) {
-	assert(istr.exceptions() == (std::ios_base::badbit | std::ios_base::failbit));
-	assert(!istr.fail());
-
-	if (istr.eof()) {
-		throw syntax_error(syntax_error::unsigned_integer_not_found);
-	}
-
-	// if istr does not begin with any of "0123456789"
-	if (istr.peek() == std::decay_t<decltype(istr)>::traits_type::eof() ||
-	    !std::isdigit(static_cast<unsigned char>(istr.peek()))) {
-		throw syntax_error(syntax_error::unsigned_integer_not_found);
-	}
-
-	IntType integer;
-	try {
-		istr >> integer;
-	} catch (std::ios_base::failure&) { throw std::overflow_error("overflow"); }
-
-	return integer;
 }
 
 /**********************

@@ -31,7 +31,7 @@ class stream_parser<InputStreamT> {
 	-m_stream : InputStreamT
 
 	+stream_parser(inout stream : InputStreamT&&)
-	+stream_parser(InputStreamT&) = delete
+	+stream_parser(InputStreamT&)        = delete
 	+stream_parser(const InputStreamT&&) = delete
 	+seek_to_end()                                                : void
 	+tell()                                                       : std::streamoff

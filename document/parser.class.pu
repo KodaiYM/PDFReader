@@ -1,19 +1,21 @@
 @startuml parser
 hide empty members
 namespace pdfparser {
-class parser {
-	-m_stream_parser      : stream_parser
+class parser<InputStreamT> {
+	-m_stream_parser      : stream_parser<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
 	-m_object_pool        : object_pool
 
-	+parser<FilenameT>(in filename : const FilenameT&)
+	+parser(in stream : InputStreamT&&)
+	+parser(InputStreamT&)        = delete
+	+parser(const InputStreamT&&) = delete
 	-parse_footer() : void
 }
-parser *--> stream_parser
+parser *--> stream_parser<InputStreamT>
 parser --> object_pool
 parser --> dictionary_object
 
-class stream_parser {
+class stream_parser<InputStreamT> {
 	[[stream_parser.class.pu]]
 }
 class object_pool {

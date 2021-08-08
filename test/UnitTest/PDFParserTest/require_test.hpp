@@ -7,9 +7,6 @@
 namespace pdfparser_test {
 [TestClass] public ref class require_test {
 public:
-	[TestInitialize] void initialize();
-	[TestCleanup] void    cleanup();
-
 public:
 	[TestMethod] void test_EOF_EOF_EOL();
 	[TestMethod] void test_EOF_EOF_only();
@@ -37,6 +34,6 @@ public:
 	[TestMethod] void test_space_end_of_line();
 
 private:
-	std::stringstream* m_ss;
+	pdfparser::stream_parser<std::stringstream>* stream;
 };
 } // namespace pdfparser_test

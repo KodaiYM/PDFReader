@@ -7,10 +7,6 @@
 namespace pdfparser_test {
 [TestClass] public ref class ignore_if_present_test {
 public:
-	[TestInitialize] void initialize();
-	[TestCleanup] void    cleanup();
-
-public:
 	[TestMethod] void test_null_only();
 	[TestMethod] void test_line_feed_only();
 	[TestMethod] void test_form_feed_only();
@@ -24,6 +20,6 @@ public:
 	[TestMethod] void test_no_flags();
 
 private:
-	std::stringstream* m_ss;
+	pdfparser::stream_parser<std::stringstream>* stream;
 };
 } // namespace pdfparser_test
