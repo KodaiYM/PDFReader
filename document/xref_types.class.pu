@@ -74,7 +74,7 @@ class xref_table {
 	+operator==(in rhs : const xref_table&) : bool
 	+operator!=(in rhs : const xref_table&) : bool
 }
-xref_table "1" *-- "1..*" xref_entry
+xref_table "1" *--> "1..*" xref_entry
 xref_table <..> xref_table_iterator
 xref_table <..> xref_table_const_iterator
 

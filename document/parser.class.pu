@@ -9,7 +9,7 @@ class parser {
 	+parser<FilenameT>(in filename : const FilenameT&)
 	-parse_footer() : void
 }
-parser *-- stream_parser
+parser *--> stream_parser
 parser --> object_pool
 parser --> dictionary_object
 

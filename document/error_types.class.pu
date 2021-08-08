@@ -41,6 +41,6 @@ class parse_error {
 	+code() : error_code
 }
 parse_error --|> std::runtime_error
-parse_error x--> "1" error_code
+parse_error --> "1" error_code
 }
 @enduml
