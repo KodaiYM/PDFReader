@@ -18,7 +18,7 @@ void boolean_object_test::test_true() {
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_any_object_test(obj_pool);
+	auto          object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue(true == std::get<boolean_object>(object));
 }
 void boolean_object_test::test_false() {
@@ -29,6 +29,6 @@ void boolean_object_test::test_false() {
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_any_object_test(obj_pool);
+	auto          object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue(false == std::get<boolean_object>(object));
 }
