@@ -29,6 +29,10 @@ stop
 partition "seek(in byte_offset_from_beginning_of_file : std::streamoff)" {
 start
 	:m_stream.seekg(byte_offset_from_beginning_of_file, std::ios_base::beg);
+	if (失敗した) then (y)
+		:throw parse_error(failed_to_seek);
+		stop
+	endif
 stop
 }
 @enduml

@@ -2,8 +2,6 @@
 
 #include "testtool.h"
 
-#include <sstream>
-
 namespace pdfparser_test {
 [TestClass] public ref class take_signed_integer_test {
 public:

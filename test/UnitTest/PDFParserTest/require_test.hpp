@@ -2,11 +2,8 @@
 
 #include "testtool.h"
 
-#include <sstream>
-
 namespace pdfparser_test {
 [TestClass] public ref class require_test {
-public:
 public:
 	[TestMethod] void test_EOF_EOF_EOL();
 	[TestMethod] void test_EOF_EOF_only();
@@ -32,8 +29,5 @@ public:
 	[TestMethod] void test_space_space_only();
 	[TestMethod] void test_space_not_space();
 	[TestMethod] void test_space_end_of_line();
-
-private:
-	pdfparser::stream_parser<std::stringstream>* stream;
 };
 } // namespace pdfparser_test

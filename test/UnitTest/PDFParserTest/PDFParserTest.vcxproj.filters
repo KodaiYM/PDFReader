@@ -16,6 +16,18 @@
     <Filter Include="テストケース">
       <UniqueIdentifier>{fb13a780-bf50-49a0-824b-f7b7c487b724}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\stream_parser">
+      <UniqueIdentifier>{7454a9ba-2f9c-460e-a8a0-cf7559bb9c28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\stream_parser\take_any_object">
+      <UniqueIdentifier>{cd05d257-c62b-485a-a4be-cd0c9b688bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\stream_parser">
+      <UniqueIdentifier>{97fb2060-1ae8-4730-8c4d-a3c0600aa7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\stream_parser\take_any_object">
+      <UniqueIdentifier>{9a6b326c-6d91-49d5-815c-0b29f7c2131e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\helloworld.pdf">
@@ -23,37 +35,157 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="tests.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="seek_forward_head_of_line_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="take_xref_table_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="take_xref_entry_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="require_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="parser_test.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="testtool.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="take_signed_integer_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="take_any_object%40array_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_unsigned_integer_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="take_any_object%40boolean_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40literal_string_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40name_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
     <ClInclude Include="ignore_if_present_test.hpp">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
     </ClInclude>
+    <ClInclude Include="require_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="seek_forward_head_of_line_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="seek_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="seek_to_end_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_indirect_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_signed_integer_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_trailer_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_unsigned_integer_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_xref_entry_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_xref_table_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="tell_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40dictionary_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40stream_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40hexadecimal_string_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40null_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40indirect_reference_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40integer_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+    <ClInclude Include="take_any_object%40real_object_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="tests.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="parser_test.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ignore_if_present_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="require_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="seek_forward_head_of_line_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="seek_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="seek_to_end_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_indirect_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_signed_integer_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_trailer_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_unsigned_integer_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_xref_entry_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_xref_table_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="tell_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40stream_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40array_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40boolean.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40dictionary_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40hexadecimal_string.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40indirect_reference.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40integer_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40literal_string.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40name_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40null_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
+    <ClCompile Include="take_any_object_test%40real_object.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

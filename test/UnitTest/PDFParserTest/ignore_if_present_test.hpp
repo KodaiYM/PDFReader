@@ -2,8 +2,6 @@
 
 #include "testtool.h"
 
-#include <sstream>
-
 namespace pdfparser_test {
 [TestClass] public ref class ignore_if_present_test {
 public:
@@ -18,8 +16,5 @@ public:
 	[TestMethod] void test_all_whitespaces_including_comment();
 	[TestMethod] void test_nothing_to_ignore();
 	[TestMethod] void test_no_flags();
-
-private:
-	pdfparser::stream_parser<std::stringstream>* stream;
 };
 } // namespace pdfparser_test

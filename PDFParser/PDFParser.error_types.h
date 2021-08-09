@@ -10,6 +10,7 @@ namespace pdfparser { inline namespace error_types {
 	public:
 		enum error_code {
 			failed_to_seek_forward_head_of_line,
+			failed_to_seek,
 
 			// %%EOF not found
 			keyword_EOF_not_found,
