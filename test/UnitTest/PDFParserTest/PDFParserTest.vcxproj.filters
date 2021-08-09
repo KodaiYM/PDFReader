@@ -25,7 +25,7 @@
     <Filter Include="ソース ファイル\stream_parser">
       <UniqueIdentifier>{97fb2060-1ae8-4730-8c4d-a3c0600aa7f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\stream_parser\take_any_object">
+    <Filter Include="ソース ファイル\stream_parser\take_any_object_test">
       <UniqueIdentifier>{9a6b326c-6d91-49d5-815c-0b29f7c2131e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -41,16 +41,16 @@
     <ClInclude Include="testtool.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40array_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40array_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40boolean_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40boolean_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40literal_string_test.hpp">
+    <ClInclude Include="take_any_object_test%40literal_string_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40name_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40name_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
     <ClInclude Include="ignore_if_present_test.hpp">
@@ -89,25 +89,25 @@
     <ClInclude Include="tell_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40dictionary_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40dictionary_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40stream_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40stream_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40hexadecimal_string_test.hpp">
+    <ClInclude Include="take_any_object_test%40hexadecimal_string_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40null_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40null_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40indirect_reference_test.hpp">
+    <ClInclude Include="take_any_object_test%40indirect_reference_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40integer_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40integer_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
-    <ClInclude Include="take_any_object%40real_object_test.hpp">
+    <ClInclude Include="take_any_object_test%40real_object_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
   </ItemGroup>
@@ -154,38 +154,38 @@
     <ClCompile Include="tell_test.cpp">
       <Filter>ソース ファイル\stream_parser</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40stream_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40stream_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40array_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40array_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40boolean_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40boolean_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40dictionary_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40dictionary_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40hexadecimal_string_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40hexadecimal_string_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40indirect_reference_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40indirect_reference_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40integer_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40integer_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40literal_string_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40literal_string_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40name_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40name_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40null_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40null_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
-    <ClCompile Include="take_any_object%40real_object_test.cpp">
-      <Filter>ソース ファイル\stream_parser\take_any_object</Filter>
+    <ClCompile Include="take_any_object_test%40real_object_test.cpp">
+      <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
