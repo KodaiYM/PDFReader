@@ -257,10 +257,10 @@ start
 		:name : name_object;
 		while (1文字先読み != 空白類文字) is (y)
 			if (先読みした文字 == '#') then (y)
-				if (次の2文字が8進2桁) then (y)
-					:name += 読み取った8進2桁の数値の表す文字;
+				if (次の2文字が16進2桁) then (y)
+					:name += 読み取った16進2桁の数値の表す文字;
 				else
-					:throw parse_error(name_invalid_octal_code);
+					:throw parse_error(name_invalid_hexadecimal_code);
 					stop
 				endif
 			else

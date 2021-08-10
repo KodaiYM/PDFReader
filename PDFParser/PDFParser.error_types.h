@@ -45,7 +45,7 @@ namespace pdfparser { inline namespace error_types {
 			object_not_found,
 
 			// #xx: xx is not octal 2 digits
-			name_invalid_octal_code,
+			name_invalid_hexadecimal_code,
 
 			// Array lack of "]"
 			array_lack_of_right_square_bracket,

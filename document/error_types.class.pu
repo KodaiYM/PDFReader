@@ -21,7 +21,7 @@ enum error_code <<Enumeration>> {
 	+{static} literal_string_lack_of_right_parenthesis        : int = 16
 	+{static} unknown_character_detected                      : int = 17
 	+{static} object_not_found                                : int = 18
-	+{static} name_invalid_octal_code                         : int = 19
+	+{static} name_invalid_hexadecimal_code                         : int = 19
 	+{static} array_lack_of_right_square_bracket              : int = 20
 	+{static} hexadecimal_string_non_hexadecimal_digit_found  : int = 21
 	+{static} hexadecimal_string_lack_of_greater_than_sign    : int = 22
