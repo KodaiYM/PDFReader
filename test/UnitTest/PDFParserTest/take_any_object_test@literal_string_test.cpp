@@ -10,7 +10,7 @@ using namespace pdfparser_test;
 
 using namespace take_any_object_test;
 
-void literal_string_test::test_literal_string_sample() {
+void literal_string_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -24,7 +24,7 @@ void literal_string_test::test_literal_string_sample() {
 	               " characters (*!&}^% and so on). " ==
 	               std::get<string_object>(object));
 }
-void literal_string_test::test_literal_string_escape_sequence() {
+void literal_string_test::test_escape_sequence() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -35,7 +35,7 @@ void literal_string_test::test_literal_string_escape_sequence() {
 	auto          object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue("\n\r\r\n\t\b\f()\\\123" == std::get<string_object>(object));
 }
-void literal_string_test::test_literal_string_invalid_escape_sequence() {
+void literal_string_test::test_invalid_escape_sequence() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -46,7 +46,7 @@ void literal_string_test::test_literal_string_invalid_escape_sequence() {
 	auto          object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue("a" == std::get<string_object>(object));
 }
-void literal_string_test::test_literal_string_escaped_EOL() {
+void literal_string_test::test_escaped_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -60,7 +60,7 @@ are the same.))";
 	Assert::IsTrue("These two strings are the same." ==
 	               std::get<string_object>(object));
 }
-void literal_string_test::test_literal_string_EOL_unification() {
+void literal_string_test::test_EOL_unification() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -71,7 +71,7 @@ void literal_string_test::test_literal_string_EOL_unification() {
 	auto          object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue("\n\n\n" == std::get<string_object>(object));
 }
-void literal_string_test::test_literal_string_octal_overflow() {
+void literal_string_test::test_octal_overflow() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -82,7 +82,7 @@ void literal_string_test::test_literal_string_octal_overflow() {
 	auto          object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue("\377" == std::get<string_object>(object));
 }
-void literal_string_test::test_literal_string_lack_of_right_parenthesis() {
+void literal_string_test::test_lack_of_right_parenthesis() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
