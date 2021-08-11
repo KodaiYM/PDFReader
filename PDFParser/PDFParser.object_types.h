@@ -12,9 +12,9 @@
 namespace pdfparser::object_types {
 class boolean_object {
 public:
-	template <typename BoolT, std::enable_if_t<std::is_same_v<BoolT, bool>,
-	                                           std::nullptr_t> = nullptr>
-	constexpr boolean_object(BoolT value) noexcept : m_value(value) {}
+	template <typename BoolT = bool, std::enable_if_t<std::is_same_v<BoolT, bool>,
+	                                                  std::nullptr_t> = nullptr>
+	constexpr boolean_object(BoolT value = false) noexcept : m_value(value) {}
 	constexpr operator bool() const noexcept {
 		return m_value;
 	}
@@ -24,11 +24,11 @@ private:
 };
 class integer_object {
 public:
-	template <typename IntegerT,
+	template <typename IntegerT                = int,
 	          std::enable_if_t<std::is_integral_v<IntegerT> &&
 	                               !std::is_same_v<IntegerT, bool>,
 	                           std::nullptr_t> = nullptr>
-	constexpr integer_object(IntegerT value) noexcept : m_value(value) {}
+	constexpr integer_object(IntegerT value = 0) noexcept : m_value(value) {}
 	constexpr operator int() const noexcept {
 		return m_value;
 	}
@@ -38,9 +38,10 @@ private:
 };
 class real_object {
 public:
-	template <typename RealT, std::enable_if_t<std::is_floating_point_v<RealT>,
-	                                           std::nullptr_t> = nullptr>
-	constexpr real_object(RealT value) noexcept : m_value(value) {}
+	template <typename RealT = double,
+	          std::enable_if_t<std::is_floating_point_v<RealT>, std::nullptr_t> =
+	              nullptr>
+	constexpr real_object(RealT value = 0.0) noexcept : m_value(value) {}
 	constexpr operator double() const noexcept {
 		return m_value;
 	}
@@ -177,6 +178,6 @@ namespace pdfparser::object_types {
 template <class DictionaryT, class DataT>
 stream_object::stream_object(DictionaryT&& stream_dictionary,
                              DataT&&       encoded_data)
-    : m_stream_dictionary(std::forward(stream_dictionary)),
-      m_encoded_data(std::forward(encoded_data)) {}
+    : m_stream_dictionary(std::forward<DictionaryT>(stream_dictionary)),
+      m_encoded_data(std::forward<DataT>(encoded_data)) {}
 } // namespace pdfparser::object_types
