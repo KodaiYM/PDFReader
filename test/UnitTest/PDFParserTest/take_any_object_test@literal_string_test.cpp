@@ -86,7 +86,7 @@ void literal_string_test::test_lack_of_right_parenthesis() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream << "(abc(\)def)";
+	stream << "(abc(\\)def)";
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);

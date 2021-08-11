@@ -45,7 +45,7 @@ class stream_object {
 }
 stream_object --> dictionary_object
 
-class null_object {}
+class null_object<<struct>>  {}
 
 class indirect_reference<<struct>> {
 	+object_number : object_t

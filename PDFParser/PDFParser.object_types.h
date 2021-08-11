@@ -2,6 +2,7 @@
 
 #include "PDFParser.xref_types.h"
 
+#include <functional>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -9,16 +10,77 @@
 #include <vector>
 
 namespace pdfparser::object_types {
-using boolean_object = bool;
-using integer_object = int;
-using real_object    = double;
-using string_object  = std::string;
-using name_object    = std::string;
+class boolean_object {
+public:
+	template <typename BoolT, std::enable_if_t<std::is_same_v<BoolT, bool>,
+	                                           std::nullptr_t> = nullptr>
+	constexpr boolean_object(BoolT value) noexcept : m_value(value) {}
+	constexpr operator bool() const noexcept {
+		return m_value;
+	}
 
+private:
+	bool m_value;
+};
+class integer_object {
+public:
+	template <typename IntegerT,
+	          std::enable_if_t<std::is_integral_v<IntegerT> &&
+	                               !std::is_same_v<IntegerT, bool>,
+	                           std::nullptr_t> = nullptr>
+	constexpr integer_object(IntegerT value) noexcept : m_value(value) {}
+	constexpr operator int() const noexcept {
+		return m_value;
+	}
+
+private:
+	int m_value;
+};
+class real_object {
+public:
+	template <typename RealT, std::enable_if_t<std::is_floating_point_v<RealT>,
+	                                           std::nullptr_t> = nullptr>
+	constexpr real_object(RealT value) noexcept : m_value(value) {}
+	constexpr operator double() const noexcept {
+		return m_value;
+	}
+
+private:
+	double m_value;
+};
+
+class string_object: public std::string {
+private:
+	using base = std::string;
+
+public:
+	using base::base;
+};
+class name_object: public std::string {
+private:
+	using base = std::string;
+
+public:
+	using base::base;
+};
+} // namespace pdfparser::object_types
+
+namespace std {
+template <>
+struct hash<pdfparser::object_types::name_object>: public hash<std::string> {
+private:
+	using base = hash<std::string>;
+
+public:
+	using base::base;
+};
+} // namespace std
+
+namespace pdfparser::object_types {
 class array_object;
 class dictionary_object;
 class stream_object;
-class null_object;
+struct null_object;
 struct indirect_reference;
 
 using any_direct_object =
@@ -55,6 +117,8 @@ public:
 class stream_object {
 public:
 	std::string get_decoded_data() const;
+	inline bool operator==(const stream_object& rhs) const noexcept;
+	inline bool operator!=(const stream_object& rhs) const noexcept;
 
 public:
 	template <class DictionaryT = dictionary_object, class DataT = std::string>
@@ -65,11 +129,46 @@ private:
 	std::string       m_encoded_data;
 	std::string       m_decoded_data;
 };
-class null_object {};
+struct null_object {
+	constexpr bool operator==(const null_object& rhs) const noexcept;
+	constexpr bool operator!=(const null_object& rhs) const noexcept;
+};
 struct indirect_reference {
 	xref_types::object_t     object_number;
 	xref_types::generation_t generation_number;
+
+	constexpr bool operator==(const indirect_reference& rhs) const noexcept;
+	constexpr bool operator!=(const indirect_reference& rhs) const noexcept;
 };
+
+constexpr null_object null;
+} // namespace pdfparser::object_types
+
+// definition of inline functions
+namespace pdfparser::object_types {
+bool stream_object::operator==(const stream_object& rhs) const noexcept {
+	return std::tie(m_stream_dictionary, m_encoded_data, m_decoded_data) ==
+	       std::tie(rhs.m_stream_dictionary, rhs.m_encoded_data,
+	                rhs.m_decoded_data);
+}
+bool stream_object::operator!=(const stream_object& rhs) const noexcept {
+	return !(*this == rhs);
+}
+constexpr bool null_object::operator==(const null_object& rhs) const noexcept {
+	return true;
+}
+constexpr bool null_object::operator!=(const null_object& rhs) const noexcept {
+	return !(*this == rhs);
+}
+constexpr bool indirect_reference::operator==(
+    const indirect_reference& rhs) const noexcept {
+	return std::tie(object_number, generation_number) ==
+	       std::tie(rhs.object_number, rhs.generation_number);
+}
+constexpr bool indirect_reference::operator!=(
+    const indirect_reference& rhs) const noexcept {
+	return !(*this == rhs);
+}
 
 } // namespace pdfparser::object_types
 
