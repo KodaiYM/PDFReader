@@ -144,6 +144,7 @@
     <ClInclude Include="take_any_object_test%40null_object_test.hpp" />
     <ClInclude Include="take_any_object_test%40real_object_test.hpp" />
     <ClInclude Include="take_any_object_test%40stream_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40unknown_test.hpp" />
     <ClInclude Include="take_indirect_object_test.hpp" />
     <ClInclude Include="take_signed_integer_test.hpp" />
     <ClInclude Include="take_trailer_test.hpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="take_any_object_test%40null_object_test.cpp" />
     <ClCompile Include="take_any_object_test%40real_object_test.cpp" />
     <ClCompile Include="take_any_object_test%40stream_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40unknown_test.cpp" />
     <ClCompile Include="take_indirect_object_test.cpp" />
     <ClCompile Include="take_signed_integer_test.cpp" />
     <ClCompile Include="take_trailer_test.cpp" />
