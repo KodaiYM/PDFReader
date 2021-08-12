@@ -66,6 +66,7 @@ public:
 };
 } // namespace pdfparser::object_types
 
+// name_object can calculate hash
 namespace std {
 template <>
 struct hash<pdfparser::object_types::name_object>: public hash<std::string> {
@@ -170,7 +171,6 @@ constexpr bool indirect_reference::operator!=(
     const indirect_reference& rhs) const noexcept {
 	return !(*this == rhs);
 }
-
 } // namespace pdfparser::object_types
 
 // definition of template functions
