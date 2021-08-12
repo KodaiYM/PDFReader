@@ -135,6 +135,7 @@
     <ClInclude Include="take_any_object_test%40array_object_test.hpp" />
     <ClInclude Include="take_any_object_test%40boolean_object_test.hpp" />
     <ClInclude Include="take_any_object_test%40dictionary_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40eof_test.hpp" />
     <ClInclude Include="take_any_object_test%40hexadecimal_string_test.hpp" />
     <ClInclude Include="take_any_object_test%40indirect_reference_test.hpp" />
     <ClInclude Include="take_any_object_test%40integer_object_test.hpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="take_any_object_test%40array_object_test.cpp" />
     <ClCompile Include="take_any_object_test%40boolean_test.cpp" />
     <ClCompile Include="take_any_object_test%40dictionary_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40eof_test.cpp" />
     <ClCompile Include="take_any_object_test%40hexadecimal_string_test.cpp" />
     <ClCompile Include="take_any_object_test%40indirect_reference_test.cpp" />
     <ClCompile Include="take_any_object_test%40integer_object_test.cpp" />
