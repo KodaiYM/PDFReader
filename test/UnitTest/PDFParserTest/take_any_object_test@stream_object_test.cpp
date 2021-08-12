@@ -1,4 +1,5 @@
 #include "PDFParser.h"
+#include "literal_trim.hpp"
 #include "take_any_object_test@stream_object_test.hpp"
 
 #include <sstream>
@@ -46,11 +47,11 @@ void stream_object_test::test_indirect_reference_Length() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	// clang-format off
-	stream << "\
-1 0 obj" R"(
+	stream << R"(
+1 0 obj
  17
-endobj)";
+endobj
+)"_trimmed;
 	stream << R"(
 2 0 obj)";
 	auto beginning_of_stream = stream.tellp();
@@ -60,7 +61,6 @@ stream
  stream contents 
 endstream
 endobj)";
-	// clang-format on
 
 	stream.seekg(beginning_of_stream);
 	stream_parser str_parser(std::move(stream));
@@ -98,13 +98,12 @@ void stream_object_test::test_absence_of_Length_entry() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	// clang-format off
-	stream << "\
-<<>>" R"(
+	stream << R"(
+<<>>
 stream
  stream contents 
-endstream)";
-	// clang-format on
+endstream
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
@@ -123,13 +122,12 @@ void stream_object_test::test_data_is_shorter_than_Length() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	// clang-format off
-	stream << "\
-<</Length 30>>" R"(
+	stream << R"(
+<</Length 30>>
 stream
  stream contents 
-endstream)";
-	// clang-format on
+endstream
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
@@ -148,13 +146,12 @@ void stream_object_test::test_keyword_endstream_not_found() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	// clang-format off
-	stream << "\
-<</Length 16>>" R"(
+	stream << R"(
+<</Length 16>>
 stream
  stream contents 
-endstream)";
-	// clang-format on
+endstream
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);

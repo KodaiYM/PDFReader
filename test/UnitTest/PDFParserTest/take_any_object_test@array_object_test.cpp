@@ -1,4 +1,5 @@
 #include "PDFParser.h"
+#include "literal_trim.hpp"
 #include "take_any_object_test@array_object_test.hpp"
 
 #include <sstream>
@@ -14,9 +15,8 @@ void array_object_test::test_valid_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	// clang-format off
-	stream << "\
-[ << /test (test) " R"(
+	stream << R"(
+[ << /test (test) 
      /test2 (test2) >>
   [1 [2 3]]
   (str]ing])
@@ -28,8 +28,8 @@ void array_object_test::test_valid_array() {
   true
   false
   null
-])";
-	// clang-format on
+]
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);

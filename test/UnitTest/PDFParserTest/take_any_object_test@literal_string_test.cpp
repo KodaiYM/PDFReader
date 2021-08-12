@@ -1,4 +1,5 @@
 #include "PDFParser.h"
+#include "literal_trim.hpp"
 #include "take_any_object_test@literal_string_test.hpp"
 
 #include <sstream>
@@ -50,9 +51,11 @@ void literal_string_test::test_escaped_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream << R"((These \
+	stream << R"(
+(These \
 two strings \
-are the same.))";
+are the same.)
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);

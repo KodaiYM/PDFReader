@@ -116,6 +116,9 @@
     <ClInclude Include="take_any_object_test%40unknown_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser\take_any_object</Filter>
     </ClInclude>
+    <ClInclude Include="literal_trim.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tests.cpp">
@@ -198,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="take_any_object_test%40unknown_test.cpp">
       <Filter>ソース ファイル\stream_parser\take_any_object_test</Filter>
+    </ClCompile>
+    <ClCompile Include="literal_trim.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

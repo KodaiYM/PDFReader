@@ -1,4 +1,5 @@
 #include "PDFParser.h"
+#include "literal_trim.hpp"
 #include "take_any_object_test@dictionary_object_test.hpp"
 
 #include <sstream>
@@ -14,9 +15,8 @@ void dictionary_object_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	// clang-format off
-	stream << "\
-<< /Type /Example" R"(
+	stream << R"(
+<< /Type /Example
    /SubType /DictionaryExample
    /Version 0.01
    /IntegerItem 12
@@ -26,8 +26,8 @@ void dictionary_object_test::test_sample() {
                      /LastItem (not!)
                      /VeryLastItem (OK)
                   >>
->>)";
-	// clang-format on
+>>
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
