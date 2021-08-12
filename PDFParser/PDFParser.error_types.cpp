@@ -4,6 +4,6 @@
   Error Types
  **************/
 namespace pdfparser { inline namespace error_types {
-	syntax_error::syntax_error(error_code er_code)
-	    : runtime_error{"syntax error"}, m_error_code(er_code) {}
+	parse_error::parse_error(error_code er_code)
+	    : runtime_error{"parse error"}, m_error_code(er_code) {}
 }} // namespace pdfparser::error_types
