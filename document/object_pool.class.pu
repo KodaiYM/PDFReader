@@ -7,9 +7,9 @@ class object_pool {
 	-m_object_map : unordered_map<pair<object_t, generation_t>, any_direct_object>
 
 	+object_pool(parser : stream_parser<InputStreamT>&)
-	+add_xref_table(in referenced_xref_table : xref_table)
-	+dereference(in reference : indirect_reference)                               : any_direct_object
-	+dereference(in object : any_direct_object_or_ref)                            : any_direct_object
+	+add_xref_table(in referenced_xref_table : const xref_table&)                        : void
+	+dereference(in reference : const indirect_reference&)                               : any_direct_object
+	+dereference(in object : const any_direct_object_or_ref&)                            : any_direct_object
 	+get_object(in object_number : object_t, in generation_number : generation_t) : any_direct_object
 }
 object_pool <..> stream_parser<InputStreamT>

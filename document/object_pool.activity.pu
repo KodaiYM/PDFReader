@@ -1,5 +1,5 @@
 @startuml add_xref_table
-partition "add_xref_table(in referenced_xref_table : xref_table)" {
+partition "add_xref_table(in referenced_xref_table : const xref_table&)" {
 start
 	' HACK: change to add
 	:m_xref_table = referenced_xref_table;
@@ -8,18 +8,18 @@ stop
 @enduml
 
 @startuml dereference of reference
-partition "dereference(in reference : indirect_reference)" {
+partition "dereference(in reference : const indirect_reference&)" {
 start
-	:return get_object(referenced_stream, reference.object_number, reference.generation_number);
+	:return get_object(reference.object_number, reference.generation_number);
 stop
 }
 @enduml
 
 @startuml dereference of any
-partition "dereference(in object : any_direct_object_or_ref)" {
+partition "dereference(in object : const any_direct_object_or_ref&)" {
 start
 	if (object が indirect_reference) then (y)
-		:return dereference(referenced_stream, object as indirect_reference);
+		:return dereference(object as indirect_reference);
 	else
 		:return object as any_direct_object;
 	endif
@@ -35,8 +35,8 @@ start
 			:object_info : xref_inuse_entry = m_xref_table.at(object_number, generation_number);
 			:ストリーム位置を保存;
 			:ストリーム位置を先頭から object_info.byte_offset バイト目に移動;
-			:ignore_if_present(referenced_stream, any_whitespace_characters);
-			:object = take_indirect_object(referenced_stream, *this);
+			:ignore_if_present(any_whitespace_characters);
+			:object = take_indirect_object(*this, object_number, generation_number);
 			:ストリーム位置を復元;
 		else
 			:object = null;

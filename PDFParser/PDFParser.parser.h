@@ -3,7 +3,7 @@
 #include "PDFParser.object_types.h"
 #include "PDFParser.xref_types.h"
 
-#include <fstream> // Intellisense
+#include <fstream> // for IntelliSense
 #include <ios>
 #include <memory>
 
