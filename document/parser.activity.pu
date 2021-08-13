@@ -1,7 +1,7 @@
 @startuml parser
-partition "parser<FilenameT>(in filename : const FilenameT&)" {
+partition "parser(in stream : InputStreamT&&)" {
 start
-	:m_stream_parser = stream_parser(std::ifstream(filename));
+	:m_stream_parser = stream_parser(std::move(stream));
 	:m_object_pool = object_pool(m_stream_parser);
 	:parse_footer();
 stop

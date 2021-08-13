@@ -149,7 +149,7 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PDFParser.object_types.cpp" />
+    <ClCompile Include="PDFParser.object_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

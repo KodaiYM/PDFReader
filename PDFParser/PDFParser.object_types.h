@@ -156,7 +156,7 @@ bool stream_object::operator==(const stream_object& rhs) const noexcept {
 bool stream_object::operator!=(const stream_object& rhs) const noexcept {
 	return !(*this == rhs);
 }
-constexpr bool null_object::operator==(const null_object& rhs) const noexcept {
+constexpr bool null_object::operator==(const null_object&) const noexcept {
 	return true;
 }
 constexpr bool null_object::operator!=(const null_object& rhs) const noexcept {

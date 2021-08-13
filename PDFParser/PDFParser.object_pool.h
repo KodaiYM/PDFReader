@@ -8,12 +8,34 @@
 #include <unordered_map>
 #include <utility>
 
+// hash for object_pool::m_object_map
+namespace std {
+template <typename Key, typename Value>
+struct hash<std::pair<Key, Value>> {
+	constexpr std::size_t
+	    operator()(const std::pair<Key, Value>& pair) const noexcept {
+		auto key_hash   = std::hash<Key>{}(pair.first);
+		auto value_hash = std::hash<Value>{}(pair.second);
+
+		// NOTE: this code is from boost::hash_combine
+		std::size_t seed = 0;
+		seed ^= key_hash + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		seed ^= value_hash + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		return seed;
+	}
+};
+} // namespace std
+
 namespace pdfparser {
 template <class InputStreamT>
 class stream_parser;
 
 template <class InputStreamT>
 class object_pool {
+	static_assert(std::is_base_of_v<std::istream, InputStreamT>,
+	              "template parameter InputStreamT must be a derived class of "
+	              "std::istream");
+
 public:
 	/// <summary>
 	/// Add a new xref table to the internally held m_xref_table.
