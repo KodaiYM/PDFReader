@@ -56,9 +56,6 @@
     <ClInclude Include="ignore_if_present_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser</Filter>
     </ClInclude>
-    <ClInclude Include="require_test.hpp">
-      <Filter>ヘッダー ファイル\stream_parser</Filter>
-    </ClInclude>
     <ClInclude Include="seek_forward_head_of_line_test.hpp">
       <Filter>ヘッダー ファイル\stream_parser</Filter>
     </ClInclude>
@@ -119,6 +116,12 @@
     <ClInclude Include="literal_trim.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="attempt_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="take_footer_test.hpp">
+      <Filter>ヘッダー ファイル\stream_parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tests.cpp">
@@ -128,9 +131,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ignore_if_present_test.cpp">
-      <Filter>ソース ファイル\stream_parser</Filter>
-    </ClCompile>
-    <ClCompile Include="require_test.cpp">
       <Filter>ソース ファイル\stream_parser</Filter>
     </ClCompile>
     <ClCompile Include="seek_forward_head_of_line_test.cpp">
@@ -204,6 +204,12 @@
     </ClCompile>
     <ClCompile Include="literal_trim.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="attempt_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_footer_test.cpp">
+      <Filter>ソース ファイル\stream_parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

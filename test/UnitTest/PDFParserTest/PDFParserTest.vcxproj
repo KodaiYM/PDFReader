@@ -126,10 +126,10 @@
     <None Include="data\helloworld.pdf" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="attempt_test.hpp" />
     <ClInclude Include="ignore_if_present_test.hpp" />
     <ClInclude Include="literal_trim.hpp" />
     <ClInclude Include="parser_test.hpp" />
-    <ClInclude Include="require_test.hpp" />
     <ClInclude Include="seek_forward_head_of_line_test.hpp" />
     <ClInclude Include="seek_test.hpp" />
     <ClInclude Include="seek_to_end_test.hpp" />
@@ -146,6 +146,7 @@
     <ClInclude Include="take_any_object_test%40real_object_test.hpp" />
     <ClInclude Include="take_any_object_test%40stream_object_test.hpp" />
     <ClInclude Include="take_any_object_test%40unknown_test.hpp" />
+    <ClInclude Include="take_footer_test.hpp" />
     <ClInclude Include="take_indirect_object_test.hpp" />
     <ClInclude Include="take_signed_integer_test.hpp" />
     <ClInclude Include="take_trailer_test.hpp" />
@@ -156,10 +157,10 @@
     <ClInclude Include="testtool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="attempt_test.cpp" />
     <ClCompile Include="ignore_if_present_test.cpp" />
     <ClCompile Include="literal_trim.cpp" />
     <ClCompile Include="parser_test.cpp" />
-    <ClCompile Include="require_test.cpp" />
     <ClCompile Include="seek_forward_head_of_line_test.cpp" />
     <ClCompile Include="seek_test.cpp" />
     <ClCompile Include="seek_to_end_test.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="take_any_object_test%40real_object_test.cpp" />
     <ClCompile Include="take_any_object_test%40stream_object_test.cpp" />
     <ClCompile Include="take_any_object_test%40unknown_test.cpp" />
+    <ClCompile Include="take_footer_test.cpp" />
     <ClCompile Include="take_indirect_object_test.cpp" />
     <ClCompile Include="take_signed_integer_test.cpp" />
     <ClCompile Include="take_trailer_test.cpp" />
