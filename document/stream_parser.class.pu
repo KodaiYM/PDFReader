@@ -1,14 +1,6 @@
 @startuml stream_parser
 hide empty members
 namespace pdfparser {
-enum require_type <<Enumeration>> {
-	<<Const>>
-	+{static} keyword_EOF       : int = 0
-	+{static} EOL               : int = 1
-	+{static} keyword_startxref : int = 2
-	+{static} keyword_xref      : int = 3
-	+{static} space             : int = 4
-}
 enum ignore_flag <<Enumeration>> {
 	<<Const, Flag>>
 	+{static} none            : uint8_t = 0
@@ -33,22 +25,22 @@ class stream_parser<InputStreamT> {
 	+stream_parser(inout stream : InputStreamT&&)
 	+stream_parser(InputStreamT&)        = delete
 	+stream_parser(const InputStreamT&&) = delete
-	+seek_to_end()                                                : void
-	+tell()                                                       : std::streamoff
-	+seek(in byte_offset_from_beginning_of_file : std::streamoff) : void
-	+seek_forward_head_of_line()                                  : void
-	+take_xref_byte_offset()                                      : std::streamoff
-	+take_xref_table()                                            : xref_table
-	+take_xref_entry(in object_number : object_t)                 : xref_entry
+	+take_footer(inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
+	+seek_to_end()                                                   : void
+	+tell()                                                          : std::streamoff
+	+seek(in byte_offset_from_beginning_of_file : std::streamoff)    : void
+	+seek_forward_head_of_line()                                     : void
+	+take_xref_byte_offset()                                         : std::streamoff
+	+take_xref_table()                                               : xref_table
+	+take_xref_entry(in object_number : object_t)                    : xref_entry
 	+take_trailer(inout object_accessor : object_pool<InputStreamT>&)           : dictionary_object
 	+take_any_object(inout object_accessor : object_pool<InputStreamT>&)        : any_direct_object_or_ref
 	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_number : object_t, in generation_number : generation_t) : any_direct_object
-	+require(in req_type : require_type)                          : void
-	+ignore_if_present(in flags : ignore_flag)                    : void
-	+take_signed_integer<IntType>()                               : IntType
-	+take_unsigned_integer<IntType>()                             : IntType
+	+attempt(in attempt_str : string_view)                           : bool
+	+ignore_if_present(in flags : ignore_flag)                       : void
+	+take_signed_integer<IntType>()                                  : IntType
+	+take_unsigned_integer<IntType>()                                : IntType
 }
-stream_parser ..> require_type
 stream_parser ..> ignore_flag
 stream_parser ..> xref_types
 stream_parser ..> object_types

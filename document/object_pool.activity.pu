@@ -35,7 +35,7 @@ start
 			:object_info : xref_inuse_entry = m_xref_table.at(object_number, generation_number);
 			:ストリーム位置を保存;
 			:ストリーム位置を先頭から object_info.byte_offset バイト目に移動;
-			:ignore_if_present(any_whitespace_characters);
+			:ignore_if_present(any_whitespace_characters_except_EOL);
 			:object = take_indirect_object(*this, object_number, generation_number);
 			:ストリーム位置を復元;
 		else

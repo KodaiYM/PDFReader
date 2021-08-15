@@ -3,40 +3,7 @@ partition "parser(in stream : InputStreamT&&)" {
 start
 	:m_stream_parser = stream_parser(std::move(stream));
 	:m_object_pool = object_pool(m_stream_parser);
-	:parse_footer();
-stop
-}
-@enduml
-
-@startuml parse_footer
-partition "parse_footer()" {
-start
-	' %%EOF
-	:seek_to_end();
-	:seek_forward_head_of_line();
-	:before_EOF = m_stream_parser.tell();
-	:m_stream_parser.require(keyword_EOF);
-
-	' xref バイトオフセット
-	:m_stream_parser.seek(before_EOF);
-	:seek_forward_head_of_line();
-	:before_xref_byte_offset = m_stream_parser.tell();
-	:xref_byte_offset = m_stream_parser.take_xref_byte_offset();
-
-	' startxref
-	:m_stream_parser.seek(before_xref_byte_offset);
-	:seek_forward_head_of_line();
-	:m_stream_parser.require(keyword_startxref);
-
-	' Cross Reference Table
-	:m_stream_parser.seek(xref_byte_offset);
-	:xref_table = m_stream_parser.take_xref_table();
-
-	:m_stream_parser.ignore_if_present(any_whitespace_characters);
-
-	' Trailer
-	:m_object_pool.add_xref_table(xref_table);
-	:m_trailer_dictionary = m_stream_parser.take_trailer(m_object_pool);
+	:m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
 stop
 }
 @enduml

@@ -9,7 +9,6 @@ class parser<InputStreamT> {
 	+parser(in stream : InputStreamT&&)
 	+parser(InputStreamT&)        = delete
 	+parser(const InputStreamT&&) = delete
-	-parse_footer() : void
 }
 parser *--> stream_parser<InputStreamT>
 parser --> object_pool
