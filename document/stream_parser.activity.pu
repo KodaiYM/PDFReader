@@ -67,6 +67,18 @@ stop
 }
 @enduml
 
+@startuml eof
+partition "eof()" {
+start
+	if (ファイル終端) then (y)
+		:return true;
+	else
+		:return false;
+	endif
+stop
+}
+@enduml
+
 @startuml tell
 partition "tell()" {
 start
@@ -268,20 +280,28 @@ start
 		stop
 	endif
 
+	' Null Object
+	if (attempt("null"))
+		:return null;
+		stop
+	endif
+
 	' Literal String
 	if (attempt("(")) then (y)
 		:literal_string : string_object;
 		:number_of_left_parenthesis = 1;
 		:number_of_right_parenthesis = 0;
-		while (number_of_left_parenthesis != number_of_right_parenthesis && !ファイル終端) is (y)
+		while (!ファイル終端 && number_of_left_parenthesis != number_of_right_parenthesis) is (y)
 			switch (次の文字?)
 			case (()
 				:++number_of_left_parenthesis;
+				:literal_string += '(';
 			case ())
 				:++number_of_right_parenthesis;
+				:literal_string += ')';
 			case (\\ r)
-				:attempt("\\n");
 				:literal_string += '\\n';
+				:attempt("\\n");
 			case (\\  \\) /' for visibility. just means \\\\ '/
 				switch (次の文字?)
 				case (n)
@@ -300,6 +320,10 @@ start
 					:literal_string += ')';
 				case (\\  \\) /' for visibility. just means \\\\ '/
 					:literal_string += '\\\\';
+				case (\\ r)
+					:attempt("\\n");
+				case (\\ n)
+					:do nothing;
 				case (0-7)
 					:octal_character = 読み取ったcaseの数値 : uint8_t;
 					if (次の文字 == 0-7)
@@ -308,10 +332,6 @@ start
 							:octal_character = 8 * octal_character + 読み取ったifの数値;
 						endif
 					endif
-				case (\\ r)
-					:attempt("\\n");
-				case (\\ n)
-					:do nothing;
 				case (default)
 					:literal_string += 読み取った文字;
 				endswitch
@@ -332,7 +352,7 @@ start
 	' Name Object
 	if (attempt("/"))
 		:name : name_object;
-		while (1文字先読み != 空白類文字) is (y)
+		while (!ファイル終端 && 1文字先読み != 空白類文字) is (y)
 			if (先読みした文字 == '#') then (y)
 				if (次の2文字が16進2桁) then (y)
 					:name += 読み取った16進2桁の数値の表す文字;
@@ -353,16 +373,15 @@ start
 		:array : array_object;
 
 		:ignore_if_present(any_whitespace_characters | comment);
-		while (!ファイル終端 && 次の文字が ']' じゃない) is (y)
+		while (!attempt("]")) is (y)
+			if (eof()) then (y)
+				:throw parse_error(array_lack_of_right_square_bracket);
+				stop
+			endif
+
 			:array.push_back(take_any_object(object_accessor));
 			:ignore_if_present(any_whitespace_characters | comment);
 		endwhile
-
-		' ファイル終端と同義
-		if (!attempt("]")) then (y)
-			:throw parse_error(array_lack_of_right_square_bracket);
-			stop
-		endif
 
 		:return array;
 		stop
@@ -373,26 +392,27 @@ start
 		:dictionary : dictionary_object;
 
 		:ignore_if_present(any_whitespace_characters | comment);
-		while (!ファイル終端 && 次の2文字 != ">>") is (y)
+		while (!attempt(">>")) is (y)
+			if (eof()) then (y)
+				:throw parse_error(dictionary_lack_of_double_greater_than_sign);
+				stop
+			endif
+
 			:name = take_any_object(object_accessor);
 			if (name が name_object じゃない) then (y)
 				:throw parse_error(dictionary_key_is_not_name_object);
 			endif
-			:ignore_if_present(any_whitespace_characters | comment);
 
-			:value = take_any_object(object_accessor);
 			:ignore_if_present(any_whitespace_characters | comment);
+			:value = take_any_object(object_accessor);
 
 			if (value != null) then (y)
 				:dictionary.emplace(name, value);
 			endif
+
+			:ignore_if_present(any_whitespace_characters | comment);
 		endwhile
 
-		' ファイル終端と同義
-		if (!attempt(">>")) then (y)
-			:throw parse_error(dictionary_lack_of_double_greater_than_sign);
-			stop
-		endif
 		:ignore_if_present(any_whitespace_characters | comment);
 
 		' Dictionary Object
@@ -402,11 +422,7 @@ start
 		endif
 
 		' Stream Object
-		if (次の1文字 == LF) then (y)
-			:do nothing;
-		elseif (次の2文字 == CRLF) then (y)
-			:do nothing;
-		else
+		if (!(attempt("\r\n") || attempt("\n"))) then (y)
 			:throw parse_error(stream_CRLF_or_LF_not_found);
 			stop
 		endif
@@ -418,7 +434,7 @@ start
 
 		:stream_length = object_accessor.dereference(dictionary.at("Length"));
 		if (stream_length が integer_object じゃない)
-			:throw parse_error(stream_dictionary_absence_of_Length_entry);
+			:throw parse_error(stream_dictionary_Length_is_not_Integer);
 			stop
 		endif
 
@@ -448,46 +464,47 @@ start
 	if (attempt("<"))
 		:hexadecimal_string : string_object;
 
+		:character     : unsigned char = 0;
+		:hex_digit_pos : int           = 0;
 		:ignore_if_present(any_whitespace_characters | comment);
-		while (!ファイル終端 && 次の文字 != '>') is (y)
-			:character : unsigned char = 0;
+		while (!attempt(">")) is (y)
+			if (eof()) then (y)
+				:throw parse_error(hexadecimal_string_lack_of_greater_than_sign);
+				stop
+			endif
+			:++hex_digit_pos;
 
-			while (2回繰り返し(i : インデックス))
-				:hex_digit = 1文字読み取り;
-				if (hex_digit == '>') then (y)
-					:assert(i != 0);
-					:ストリーム位置を1文字分戻す;
-					break
-				elseif (hex_digit != 0-9, A-F, a-f) then (y)
-					:throw parse_error(hexadecimal_string_non_hexadecimal_digit_found);
-					stop
-				endif
+			:hex_digit = 1文字読み取り;
+			if (hex_digit != 0-9, A-F, a-f) then (y)
+				:throw parse_error(hexadecimal_string_non_hexadecimal_digit_found);
+				stop
+			endif
 
-				:character の i * 4 ビット目から4ビット分を hex_digit で埋める;
-				:ignore_if_present(any_whitespace_characters | comment);
-			endwhile
+			:character の (hex_digit_pos - 1) * 4 ビット目から4ビット分を hex_digit で埋める;
 
-			:hexadecimal_string.push_back(character);
+			if (2 == hex_digit_pos) then (y)
+				:hexadecimal_string.push_back(character);
+				:character = 0;
+				:hex_digit_pos = 0;
+			endif
+
+			:ignore_if_present(any_whitespace_characters | comment);
 		endwhile
-
-		' ファイル終端と同義
-		if (!attempt('>')) then (y)
-			:throw parse_error(hexadecimal_string_lack_of_greater_than_sign);
-			stop
+		if (1 == hex_digit_pos) then (y)
+			:hexadecimal_string.push_back(character);
 		endif
 
 		:return hexadecimal_string;
 		stop
 	endif
 
-	' Null Object
-	if (attempt("null"))
-		:return null;
-		stop
-	endif
-
 	' Indirect Reference or Numerical Object
-	if (数字が読み取れた)
+	if (数字, '.', '+', '-' が読み取れた)
+		if (小数点が読み取れたが、整数部分も実数部分も空の場合) then (y)
+			:throw parse_error(unknown_character_detected);
+			stop
+		endif
+
 		' Real Object
 		if (小数が読み取れた) then (y)
 			:return real_object(読み取った小数);

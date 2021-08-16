@@ -50,6 +50,33 @@ auto xref_table::crend() const -> const_reverse_iterator {
 auto xref_table::at(key_type n) const -> const_reference {
 	return m_table.at(n);
 }
+// NOTE: currently, generation_number is not used
+auto xref_table::at(object_t object_number,
+                    generation_t /* generation_number */) const
+    -> const_reference {
+	return at(object_number);
+}
+auto xref_table::find(key_type n) -> iterator {
+	return m_table.find(n);
+}
+auto xref_table::find(key_type n) const -> const_iterator {
+	return m_table.find(n);
+}
+// NOTE: currently, generation_number is not used
+auto xref_table::find(object_t object_number,
+                      generation_t /* generation_number */) -> iterator {
+	return m_table.find(object_number);
+}
+// NOTE: currently, generation_number is not used
+auto xref_table::find(object_t object_number,
+                      generation_t /* generation_number */) const
+    -> const_iterator {
+	return m_table.find(object_number);
+}
+bool xref_table::contains(object_t     object_number,
+                          generation_t generation_number) const {
+	return find(object_number, generation_number) != end();
+}
 
 void xref_table::insert(const value_type& insert_entry) {
 	object_t object_number = std::visit(

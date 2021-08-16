@@ -144,7 +144,8 @@ object_types::any_direct_object object_pool<InputStreamT>::get_object(
 			const auto prev_pos = m_parser.tell();
 
 			m_parser.seek(byte_offset);
-			m_parser.ignore_if_present(ignore_flag::any_whitespace_characters);
+			m_parser.ignore_if_present(
+			    ignore_flag::any_whitespace_characters_except_EOL);
 			new_object = m_parser.take_indirect_object(*this, object_number,
 			                                           generation_number);
 

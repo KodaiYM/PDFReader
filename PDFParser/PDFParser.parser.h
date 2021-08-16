@@ -25,9 +25,6 @@ public:
 	parser(const InputStreamT&&) = delete;
 
 private:
-	void parse_footer();
-
-private:
 	stream_parser<InputStreamT>     m_stream_parser;
 	object_types::dictionary_object m_trailer_dictionary;
 	object_pool<InputStreamT>       m_object_pool;
@@ -47,40 +44,6 @@ namespace pdfparser {
 template <class InputStreamT>
 parser<InputStreamT>::parser(InputStreamT&& stream)
     : m_stream_parser(std::move(stream)), m_object_pool(m_stream_parser) {
-	parse_footer();
-}
-
-template <class InputStreamT>
-void parser<InputStreamT>::parse_footer() {
-	// TODO: Implement!
-	// check %%EOF
-	m_stream_parser.seek_to_end();
-	m_stream_parser.seek_forward_head_of_line();
-	{
-		auto eof_pos = m_stream_parser.tell();
-		m_stream_parser.require(require_type::keyword_EOF);
-		m_stream_parser.seek(eof_pos);
-	}
-
-	// get cross-reference table byte offset
-	m_stream_parser.seek_forward_head_of_line();
-	std::streamoff xref_byte_offset;
-	{
-		auto xref_byte_offset_pos = m_stream_parser.tell();
-		xref_byte_offset          = m_stream_parser.take_xref_byte_offset();
-		m_stream_parser.seek(xref_byte_offset_pos);
-	}
-
-	// check keyword "startxref"
-	m_stream_parser.seek_forward_head_of_line();
-	m_stream_parser.require(require_type::keyword_startxref);
-
-	// get cross-reference table
-	m_stream_parser.seek(xref_byte_offset);
-	auto xref_table = m_stream_parser.take_xref_table();
-
-	// get trailer dictionary
-	m_object_pool.add_xref_table(xref_table);
-	m_trailer_dictionary = m_stream_parser.take_trailer(m_object_pool);
+	m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
 }
 } // namespace pdfparser

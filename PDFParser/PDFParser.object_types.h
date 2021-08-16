@@ -106,11 +106,9 @@ public:
 	using base::base;
 };
 class dictionary_object
-    : public std::unordered_map<name_object,
-                                std::variant<non_null_direct_object_or_ref>> {
+    : public std::unordered_map<name_object, non_null_direct_object_or_ref> {
 private:
-	using base = std::unordered_map<name_object,
-	                                std::variant<non_null_direct_object_or_ref>>;
+	using base = std::unordered_map<name_object, non_null_direct_object_or_ref>;
 
 public:
 	using base::base;

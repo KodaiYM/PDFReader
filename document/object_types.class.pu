@@ -32,7 +32,7 @@ annotation object_types <<(N, yellow) namespace>> {
 	+string_object     : typedef = std::string
 	+name_object       : typedef = std::string
 	+array_object      : typedef = vector<any_direct_object_or_ref>
-	+dictionary_object : typedef = unordered_map<name_object, variant<non_null_direct_object_or_ref>>
+	+dictionary_object : typedef = unordered_map<name_object, non_null_direct_object_or_ref>
 }
 class stream_object {
 	-m_stream_dictionary : dictionary_object

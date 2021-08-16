@@ -80,8 +80,11 @@ namespace pdfparser { namespace xref_types {
 		const_reference at(object_t     object_number,
 		                   generation_t generation_number) const;
 		iterator        find(key_type n);
-		iterator find(object_t object_number, generation_t generation_number);
-		bool     contains(object_t object_number, generation_t generation_number);
+		const_iterator  find(key_type n) const;
+		iterator       find(object_t object_number, generation_t generation_number);
+		const_iterator find(object_t     object_number,
+		                    generation_t generation_number) const;
+		bool contains(object_t object_number, generation_t generation_number) const;
 
 		void      insert(const value_type& insert_entry);
 		void      insert(value_type&& insert_entry);

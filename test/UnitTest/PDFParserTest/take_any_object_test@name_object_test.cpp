@@ -12,7 +12,6 @@ using namespace pdfparser_test;
 using namespace take_any_object_test;
 using namespace std::string_literals;
 
-// TODO: ŽÀ‘•
 void name_object_test::test_valid_name() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);

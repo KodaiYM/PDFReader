@@ -27,6 +27,7 @@ class stream_parser<InputStreamT> {
 	+stream_parser(const InputStreamT&&) = delete
 	+take_footer(inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
 	+seek_to_end()                                                   : void
+	+eof()                                                           : bool
 	+tell()                                                          : std::streamoff
 	+seek(in byte_offset_from_beginning_of_file : std::streamoff)    : void
 	+seek_forward_head_of_line()                                     : void

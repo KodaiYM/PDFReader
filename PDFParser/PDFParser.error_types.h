@@ -64,6 +64,7 @@ namespace pdfparser { inline namespace error_types {
 			stream_CRLF_or_LF_not_found,
 
 			stream_dictionary_absence_of_Length_entry,
+			stream_dictionary_Length_is_not_Integer,
 			stream_data_is_shorter_than_Length,
 			keyword_endstream_not_found,
 			trailer_dictionary_not_found,
