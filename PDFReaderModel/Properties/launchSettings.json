@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PDFReaderModel": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

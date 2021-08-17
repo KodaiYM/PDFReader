@@ -8,6 +8,9 @@ public:
 	[TestMethod] void test_beginning_of_file();
 	[TestMethod] void test_beginning_of_line();
 	[TestMethod] void test_middle_of_line();
+	[TestMethod] void test_CR_only();
+	[TestMethod] void test_LF_only();
+	[TestMethod] void test_CRLF_only();
 	[TestMethod] void test_CR();
 	[TestMethod] void test_LF();
 	[TestMethod] void test_CRLF();

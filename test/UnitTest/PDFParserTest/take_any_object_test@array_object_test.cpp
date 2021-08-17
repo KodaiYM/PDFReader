@@ -11,6 +11,18 @@ using namespace pdfparser_test;
 
 using namespace take_any_object_test;
 
+void array_object_test::test_simple_array() {
+	std::stringstream stream(std::ios_base::in | std::ios_base::out |
+	                         std::ios_base::binary);
+
+	stream << "[1 2 3]";
+
+	stream_parser str_parser(std::move(stream));
+	object_pool   obj_pool(str_parser);
+	auto          object = str_parser.take_any_object(obj_pool);
+
+	Assert::IsTrue(array_object{1, 2, 3} == std::get<array_object>(object));
+}
 void array_object_test::test_valid_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);

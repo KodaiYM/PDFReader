@@ -13,6 +13,11 @@
 #include <memory>
 #include <sstream>
 
+// tell test class
+namespace pdfparser_test {
+ref class tell_test;
+} // namespace pdfparser_test
+
 namespace pdfparser {
 template <class InputStreamT>
 class object_pool;
@@ -173,6 +178,9 @@ public:
 
 private:
 	InputStreamT m_stream;
+
+	// test class
+	friend ref class pdfparser_test::tell_test;
 };
 } // namespace pdfparser
 
@@ -233,7 +241,7 @@ constexpr object_types::dictionary_object
 			throw parse_error(parse_error::keyword_EOF_not_found);
 		}
 
-		if (!(attempt("\r\n") || attempt("\n") || attempt("\r"))) {
+		if (!(eof() || attempt("\r\n") || attempt("\n") || attempt("\r"))) {
 			throw parse_error(parse_error::EOL_not_found);
 		}
 
@@ -287,6 +295,7 @@ constexpr bool stream_parser<InputStreamT>::eof() {
 
 template <class InputStreamT>
 constexpr std::streamoff stream_parser<InputStreamT>::tell() {
+	m_stream.clear(m_stream.rdstate() & ~std::ios_base::eofbit);
 	return m_stream.tellg();
 }
 
@@ -521,7 +530,7 @@ constexpr object_types::dictionary_object
 
 	auto trailer_dictionary = take_any_object(object_accessor);
 
-	if (std::holds_alternative<object_types::dictionary_object>(
+	if (!std::holds_alternative<object_types::dictionary_object>(
 	        trailer_dictionary)) {
 		throw parse_error(parse_error::trailer_dictionary_not_found);
 	}
@@ -534,7 +543,9 @@ constexpr object_types::any_direct_object_or_ref
         object_pool<InputStreamT>& object_accessor) {
 	using namespace object_types;
 
-	if (attempt("true")) {
+	if (eof()) {
+		throw parse_error(parse_error::object_not_found);
+	} else if (attempt("true")) {
 		return boolean_object(true);
 	} else if (attempt("false")) {
 		return boolean_object(false);
@@ -555,7 +566,9 @@ constexpr object_types::any_direct_object_or_ref
 				break;
 			case ')':
 				++number_of_right_parenthesis;
-				literal_string.push_back(')');
+				if (number_of_left_parenthesis != number_of_right_parenthesis) {
+					literal_string.push_back(')');
+				}
 				break;
 			case '\r':
 				literal_string.push_back('\n');
@@ -605,13 +618,13 @@ constexpr object_types::any_direct_object_or_ref
 						    static_cast<uint8_t>(ch_after_backslash - '0');
 						if (!eof()) {
 							if (const auto second_digit = m_stream.get();
-							    '0' <= second_digit && '7' <= second_digit) {
-								octal_character += static_cast<decltype(octal_character)>(
+							    '0' <= second_digit && second_digit <= '7') {
+								octal_character = static_cast<decltype(octal_character)>(
 								    8 * octal_character + (second_digit - '0'));
 								if (!eof()) {
 									if (const auto third_digit = m_stream.get();
-									    '0' <= third_digit && '7' <= third_digit) {
-										octal_character += static_cast<decltype(octal_character)>(
+									    '0' <= third_digit && third_digit <= '7') {
+										octal_character = static_cast<decltype(octal_character)>(
 										    8 * octal_character + (third_digit - '0'));
 									}
 								}
@@ -829,6 +842,8 @@ constexpr object_types::any_direct_object_or_ref
 			return real_object{std::stod(integer_part + '.' + fractional_part)};
 		}
 
+		const auto after_first_integer_byte_offset = tell();
+
 		// determined not to be Real Object
 		const auto first_integer_str = integer_part;
 
@@ -848,6 +863,9 @@ constexpr object_types::any_direct_object_or_ref
 				} catch (std::ios_base::failure&) {
 					throw std::overflow_error("overflow");
 				}
+
+				// restore stream position
+				seek(after_first_integer_byte_offset);
 
 				return integer_object{integer};
 			} else {
@@ -879,9 +897,10 @@ constexpr object_types::any_direct_object_or_ref
 			istr >> integer;
 		} catch (std::ios_base::failure&) { throw std::overflow_error("overflow"); }
 
+		// restore stream position
+		seek(after_first_integer_byte_offset);
+
 		return integer_object{integer};
-	} else if (eof()) {
-		throw parse_error(parse_error::object_not_found);
 	} else {
 		throw parse_error(parse_error::unknown_character_detected);
 	}
@@ -937,7 +956,7 @@ constexpr object_types::any_direct_object
 template <class InputStreamT>
 constexpr bool
     stream_parser<InputStreamT>::attempt(std::string_view attempt_str) {
-	m_stream.setstate(~std::ios_base::eofbit);
+	m_stream.clear(m_stream.rdstate() & ~std::ios_base::eofbit);
 
 	const auto old_pos = m_stream.tellg();
 	for (auto attempt_char : attempt_str) {

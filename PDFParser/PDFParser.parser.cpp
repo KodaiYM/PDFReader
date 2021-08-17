@@ -71,7 +71,8 @@ static std::ostream&
 }
 System::String ^ parser_tostring::get(System::String ^ filename) {
 	parser PDFParser{
-	    std::ifstream(msclr::interop::marshal_as<std::string>(filename))};
+	    std::ifstream(msclr::interop::marshal_as<std::string>(filename),
+	                  std::ios_base::in | std::ios_base::binary)};
 
 	auto              trailer_dictionary = PDFParser.m_trailer_dictionary;
 	std::stringstream ss;

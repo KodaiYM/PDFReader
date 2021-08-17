@@ -25,12 +25,8 @@ void seek_to_end_test::test_at_EOF() {
 	                         std::ios_base::binary);
 
 	stream_parser str_parser(std::move(stream));
-	try {
-		str_parser.seek_to_end();
-		str_parser.seek_to_end();
 
-		// success
-		return;
-	} catch (...) {}
-	Assert::Fail();
+	// check if no-throw
+	str_parser.seek_to_end();
+	str_parser.seek_to_end();
 }

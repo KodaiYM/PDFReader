@@ -16,7 +16,7 @@ void take_footer_test::test_sample() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -39,7 +39,7 @@ void take_footer_test::test_EOF_EOF_EOL() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -62,7 +62,7 @@ void take_footer_test::test_EOF_EOF_only() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -84,7 +84,7 @@ void take_footer_test::test_EOF_EOF_not_EOL() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -113,7 +113,7 @@ void take_footer_test::test_EOF_not_EOF() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -143,7 +143,7 @@ void take_footer_test::test_EOF_SP_EOF() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -194,7 +194,7 @@ void take_footer_test::test_startxref_SP_startxref_comment_EOL() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -222,7 +222,7 @@ void take_footer_test::test_startxref_startxref_not_EOL() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -237,7 +237,7 @@ startxref 0
 	try {
 		str_parser.take_footer(obj_pool);
 	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::EOL_not_found == parse_e.code());
+		Assert::IsTrue(parse_error::xref_byte_offset_not_found == parse_e.code());
 
 		// success
 		return;
@@ -251,7 +251,7 @@ void take_footer_test::test_startxref_not_startxref() {
 	stream << R"(
 xref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -284,7 +284,7 @@ void take_footer_test::test_xref_SP_xref_comment_EOL() {
 	          "comment.\r\n";
 	stream << R"(
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -306,7 +306,7 @@ void take_footer_test::test_xref_xref_not_EOL() {
 
 	stream << R"(
 xref 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer
@@ -336,7 +336,7 @@ void take_footer_test::test_xref_not_xref() {
 	stream << R"(
 xxref
 0 1
-0000000000 65535  f
+0000000000 65535 f 
 )"_trimmed;
 	stream << R"(
 trailer

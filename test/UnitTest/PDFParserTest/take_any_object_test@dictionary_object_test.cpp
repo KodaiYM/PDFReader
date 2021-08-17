@@ -93,7 +93,7 @@ void dictionary_object_test::test_lack_of_double_greater_than_sign() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream << "<</key (value)> >";
+	stream << "<</key (value)";
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);

@@ -40,7 +40,7 @@ void literal_string_test::test_invalid_escape_sequence() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream << "(\a)";
+	stream << "(\\a)";
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);

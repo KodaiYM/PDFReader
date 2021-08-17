@@ -1,4 +1,5 @@
 #include "PDFParser.h"
+#include "literal_trim.hpp"
 #include "take_trailer_test.hpp"
 
 #include <sstream>
@@ -11,26 +12,22 @@ using namespace pdfparser_test;
 void take_trailer_test::test_sample_trailer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
-	// clang-format off
-	stream << "\
-trailer" R"(
+	stream << R"(
+trailer
 	<< /Size 22
 	   /Root 2 0 R
 	   /Info 1 0 R
 	   /ID [ <81b14aafa313db63dbd6f981e49f94f4>
 	         <81b14aafa313db63dbd6f981e49f94f4>
 	       ]
-	>>)"; // clang-format on
+	>>
+)"_trimmed;
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	try {
-		str_parser.take_trailer(obj_pool);
 
-		// success
-		return;
-	} catch (...) {}
-	Assert::Fail();
+	// check if no-throw
+	str_parser.take_trailer(obj_pool);
 }
 void take_trailer_test::test_no_white_space_after_keyword_trailer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -39,13 +36,9 @@ void take_trailer_test::test_no_white_space_after_keyword_trailer() {
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	try {
-		str_parser.take_trailer(obj_pool);
 
-		// success
-		return;
-	} catch (...) {}
-	Assert::Fail();
+	// check if no-throw
+	str_parser.take_trailer(obj_pool);
 }
 void take_trailer_test::test_white_space_before_keyword_trailer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

@@ -36,8 +36,8 @@ endobj
 	std::streamoff offset_of_objnum8 = stream.tellp();
 	stream << R"(
 8 0 obj
-)";
-	stream << '\t' << stream_contents.length();
+)"_trimmed;
+	stream << '\n' << '\t' << stream_contents.length();
 	stream << R"(
 endobj
 )";
@@ -48,8 +48,7 @@ endobj
 	    xref_table{xref_inuse_entry{8, 0, offset_of_objnum8}});
 	auto object = str_parser.take_indirect_object(obj_pool, 7, 0);
 	Assert::IsTrue(
-	    stream_object{dictionary_object{
-	                      {"Length", static_cast<int>(stream_contents.length())}},
+	    stream_object{dictionary_object{{"Length", indirect_reference{8, 0}}},
 	                  stream_contents} == std::get<stream_object>(object));
 }
 void take_indirect_object_test::test_inconsistent_object_number() {

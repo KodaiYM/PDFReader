@@ -20,7 +20,7 @@ start
 		stop
 	endif
 
-	if (!(attempt("\r\n") || attempt("\n") || attempt("\r"))) then (y)
+	if (!(eof() || attempt("\r\n") || attempt("\n") || attempt("\r"))) then (y)
 		:throw parse_error(EOL_not_found);
 		stop
 	endif
@@ -271,6 +271,12 @@ stop
 @startuml take_any_object
 partition "take_any_object(inout object_accessor : object_pool&)" {
 start
+
+	if (ファイル終端) then (y)
+		:throw parse_error(object_not_found);
+		stop
+	endif
+
 	if (attempt("true")) then (y)
 		:return boolean_object(true);
 		stop
@@ -298,7 +304,9 @@ start
 				:literal_string += '(';
 			case ())
 				:++number_of_right_parenthesis;
-				:literal_string += ')';
+				if (number_of_left_parenthesis != number_of_right_parenthesis) then (y)
+					:literal_string += ')';
+				endif
 			case (\\ r)
 				:literal_string += '\\n';
 				:attempt("\\n");
@@ -512,10 +520,12 @@ start
 		endif
 
 		:first_integer = take_signed_integer<integer_object>();
+		:after_first_integer_byte_offset = tell();
 		:ignore_if_present(any_whitespace_characters | comment);
 
 		' Integer Object
 		if (数字が読み取れなかった) then (y)
+			:seek(after_first_integer_byte_offset);
 			:return integer_object(first_integer);
 			stop
 		endif
@@ -530,12 +540,8 @@ start
 		endif
 
 		' Integer Object
+		:seek(after_first_integer_byte_offset);
 		:return integer_object(first_integer);
-		stop
-	endif
-
-	if (ファイル終端) then (y)
-		:throw parse_error(object_not_found);
 		stop
 	endif
 

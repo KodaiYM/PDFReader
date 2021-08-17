@@ -53,14 +53,16 @@ void stream_object_test::test_indirect_reference_Length() {
 endobj
 )"_trimmed;
 	stream << R"(
-2 0 obj)";
+2 0 obj
+)";
 	auto beginning_of_stream = stream.tellp();
 	stream << R"(
 <</Length 1 0 R>>
 stream
  stream contents 
 endstream
-endobj)";
+endobj
+)"_trimmed;
 
 	stream.seekg(beginning_of_stream);
 	stream_parser str_parser(std::move(stream));
@@ -70,8 +72,8 @@ endobj)";
 
 	auto object = str_parser.take_any_object(obj_pool);
 	Assert::IsTrue(
-	    stream_object{dictionary_object{{"Length", 17}}, " stream contents "} ==
-	    std::get<stream_object>(object));
+	    stream_object{dictionary_object{{"Length", indirect_reference{1, 0}}},
+	                  " stream contents "} == std::get<stream_object>(object));
 }
 void stream_object_test::test_stream_CR() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -149,8 +151,8 @@ void stream_object_test::test_keyword_endstream_not_found() {
 	stream << R"(
 <</Length 16>>
 stream
- stream contents 
-endstream
+ stream contents
+endstreeam
 )"_trimmed;
 
 	stream_parser str_parser(std::move(stream));

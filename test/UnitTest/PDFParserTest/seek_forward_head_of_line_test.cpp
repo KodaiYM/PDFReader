@@ -84,12 +84,11 @@ void seek_forward_head_of_line_test::test_middle_of_line() {
  * CR | ‚ÌŽž‚É
  * | CR ‚É‚È‚é‚©
  */
-void seek_forward_head_of_line_test::test_CR() {
+void seek_forward_head_of_line_test::test_CR_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	std::streamoff expected = stream.tellp();
-
 	stream << "\r";
 	stream.seekg(stream.tellp());
 
@@ -101,12 +100,11 @@ void seek_forward_head_of_line_test::test_CR() {
  * LF | ‚ÌŽž‚É
  * | LF ‚É‚È‚é‚©
  */
-void seek_forward_head_of_line_test::test_LF() {
+void seek_forward_head_of_line_test::test_LF_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	std::streamoff expected = stream.tellp();
-
 	stream << "\n";
 	stream.seekg(stream.tellp());
 
@@ -118,13 +116,60 @@ void seek_forward_head_of_line_test::test_LF() {
  * CRLF | ‚ÌŽž‚É
  * | CRLF ‚É‚È‚é‚©
  */
+void seek_forward_head_of_line_test::test_CRLF_only() {
+	std::stringstream stream(std::ios_base::in | std::ios_base::out |
+	                         std::ios_base::binary);
+
+	std::streamoff expected = stream.tellp();
+	stream << "\r\n";
+	stream.seekg(stream.tellp());
+
+	stream_parser str_parser(std::move(stream));
+	str_parser.seek_forward_head_of_line();
+	Assert::IsTrue(expected == str_parser.tell());
+}
+/**
+ * CR | ‚ÌŽž‚É
+ * | CR ‚É‚È‚é‚©
+ */
+void seek_forward_head_of_line_test::test_CR() {
+	std::stringstream stream(std::ios_base::in | std::ios_base::out |
+	                         std::ios_base::binary);
+
+	std::streamoff expected = stream.tellp();
+	stream << "xxx\r";
+	stream.seekg(stream.tellp());
+
+	stream_parser str_parser(std::move(stream));
+	str_parser.seek_forward_head_of_line();
+	Assert::IsTrue(expected == str_parser.tell());
+}
+/**
+ * xxx LF | ‚ÌŽž‚É
+ * | xxx LF ‚É‚È‚é‚©
+ */
+void seek_forward_head_of_line_test::test_LF() {
+	std::stringstream stream(std::ios_base::in | std::ios_base::out |
+	                         std::ios_base::binary);
+
+	std::streamoff expected = stream.tellp();
+	stream << "xxx\n";
+	stream.seekg(stream.tellp());
+
+	stream_parser str_parser(std::move(stream));
+	str_parser.seek_forward_head_of_line();
+	Assert::IsTrue(expected == str_parser.tell());
+}
+/**
+ * xxx CRLF | ‚ÌŽž‚É
+ * | xxx CRLF ‚É‚È‚é‚©
+ */
 void seek_forward_head_of_line_test::test_CRLF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	std::streamoff expected = stream.tellp();
-
-	stream << "\r\n";
+	stream << "xxx\r\n";
 	stream.seekg(stream.tellp());
 
 	stream_parser str_parser(std::move(stream));
