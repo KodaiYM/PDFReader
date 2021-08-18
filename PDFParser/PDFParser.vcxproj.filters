@@ -36,6 +36,15 @@
     <ClInclude Include="PDFParser.xref_types.h">
       <Filter>ヘッダー ファイル\PDFParser</Filter>
     </ClInclude>
+    <ClInclude Include="PDFParser.stream_parser.h">
+      <Filter>ヘッダー ファイル\PDFParser</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFParser.object_types.h">
+      <Filter>ヘッダー ファイル\PDFParser</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFParser.object_pool.h">
+      <Filter>ヘッダー ファイル\PDFParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -48,6 +57,9 @@
       <Filter>ソース ファイル\PDFParser</Filter>
     </ClCompile>
     <ClCompile Include="PDFParser.xref_types.cpp">
+      <Filter>ソース ファイル\PDFParser</Filter>
+    </ClCompile>
+    <ClCompile Include="PDFParser.object_types.cpp">
       <Filter>ソース ファイル\PDFParser</Filter>
     </ClCompile>
   </ItemGroup>

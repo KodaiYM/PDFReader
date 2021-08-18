@@ -1,0 +1,50 @@
+@startuml add_xref_table
+partition "add_xref_table(in referenced_xref_table : const xref_table&)" {
+start
+	' HACK: change to add
+	:m_xref_table = referenced_xref_table;
+stop
+}
+@enduml
+
+@startuml dereference of reference
+partition "dereference(in reference : const indirect_reference&)" {
+start
+	:return get_object(reference.object_number, reference.generation_number);
+stop
+}
+@enduml
+
+@startuml dereference of any
+partition "dereference(in object : const any_direct_object_or_ref&)" {
+start
+	if (object が indirect_reference) then (y)
+		:return dereference(object as indirect_reference);
+	else
+		:return object as any_direct_object;
+	endif
+stop
+}
+@enduml
+
+@startuml get_object
+partition "get_object(in object_number : object_t, in generation_number : generation_t)" {
+start
+	if (!m_object_map.contains(pair{object_number, generation_number})) then (y)
+		if (m_xref_table.contains(object_number, generation_number) && m_xref_table.at(object_number, generation_number) は xref_inuse_entry) then (y)
+			:object_info : xref_inuse_entry = m_xref_table.at(object_number, generation_number);
+			:ストリーム位置を保存;
+			:ストリーム位置を先頭から object_info.byte_offset バイト目に移動;
+			:ignore_if_present(any_whitespace_characters_except_EOL);
+			:object = take_indirect_object(*this, object_number, generation_number);
+			:ストリーム位置を復元;
+		else
+			:object = null;
+		endif
+		:m_object_map.emplace(pair{object_number, generation_number}, object);
+	endif
+
+	:return m_object_map.at(pair{object_number, generation_number});
+stop
+}
+@enduml

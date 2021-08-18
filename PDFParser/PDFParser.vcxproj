@@ -127,11 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="PDFParser.object_pool.h" />
     <ClInclude Include="PDFParser.error_types.h" />
     <ClInclude Include="PDFParser.h" />
+    <ClInclude Include="PDFParser.object_types.h" />
     <ClInclude Include="PDFParser.parser.h" />
     <ClInclude Include="PDFParser.xref_types.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="PDFParser.stream_parser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -144,6 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PDFParser.object_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

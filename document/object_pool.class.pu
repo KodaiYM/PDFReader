@@ -1,0 +1,30 @@
+@startuml object_pool
+hide empty members
+namespace pdfparser<InputStreamT> {
+class object_pool {
+	-m_parser     : stream_parser<InputStreamT>&
+	-m_xref_table : xref_table
+	-m_object_map : unordered_map<pair<object_t, generation_t>, any_direct_object>
+
+	+object_pool(parser : stream_parser<InputStreamT>&)
+	+add_xref_table(in referenced_xref_table : const xref_table&)                        : void
+	+dereference(in reference : const indirect_reference&)                               : any_direct_object
+	+dereference(in object : const any_direct_object_or_ref&)                            : any_direct_object
+	+get_object(in object_number : object_t, in generation_number : generation_t) : any_direct_object
+}
+object_pool <..> stream_parser<InputStreamT>
+object_pool --> xref_table
+object_pool --> any_direct_object
+
+class stream_parser<InputStreamT> {
+	[[stream_parser.class.pu]]
+}
+class xref_table {
+	[[xref_types.class.pu]]
+}
+class any_direct_object  {
+	[[object_types.class.pu]]
+}
+
+}
+@enduml

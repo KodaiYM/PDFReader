@@ -123,21 +123,69 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="tests.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="data\helloworld.pdf" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="attempt_test.hpp" />
     <ClInclude Include="ignore_if_present_test.hpp" />
+    <ClInclude Include="literal_trim.hpp" />
     <ClInclude Include="parser_test.hpp" />
-    <ClInclude Include="require_test.hpp" />
     <ClInclude Include="seek_forward_head_of_line_test.hpp" />
+    <ClInclude Include="seek_test.hpp" />
+    <ClInclude Include="seek_to_end_test.hpp" />
+    <ClInclude Include="take_any_object_test%40array_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40boolean_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40dictionary_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40eof_test.hpp" />
+    <ClInclude Include="take_any_object_test%40hexadecimal_string_test.hpp" />
+    <ClInclude Include="take_any_object_test%40indirect_reference_test.hpp" />
+    <ClInclude Include="take_any_object_test%40integer_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40literal_string_test.hpp" />
+    <ClInclude Include="take_any_object_test%40name_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40null_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40real_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40stream_object_test.hpp" />
+    <ClInclude Include="take_any_object_test%40unknown_test.hpp" />
+    <ClInclude Include="take_footer_test.hpp" />
+    <ClInclude Include="take_indirect_object_test.hpp" />
     <ClInclude Include="take_signed_integer_test.hpp" />
+    <ClInclude Include="take_trailer_test.hpp" />
     <ClInclude Include="take_unsigned_integer_test.hpp" />
     <ClInclude Include="take_xref_entry_test.hpp" />
     <ClInclude Include="take_xref_table_test.hpp" />
+    <ClInclude Include="tell_test.hpp" />
     <ClInclude Include="testtool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="attempt_test.cpp" />
+    <ClCompile Include="ignore_if_present_test.cpp" />
+    <ClCompile Include="literal_trim.cpp" />
+    <ClCompile Include="parser_test.cpp" />
+    <ClCompile Include="seek_forward_head_of_line_test.cpp" />
+    <ClCompile Include="seek_test.cpp" />
+    <ClCompile Include="seek_to_end_test.cpp" />
+    <ClCompile Include="take_any_object_test%40array_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40boolean_test.cpp" />
+    <ClCompile Include="take_any_object_test%40dictionary_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40eof_test.cpp" />
+    <ClCompile Include="take_any_object_test%40hexadecimal_string_test.cpp" />
+    <ClCompile Include="take_any_object_test%40indirect_reference_test.cpp" />
+    <ClCompile Include="take_any_object_test%40integer_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40literal_string_test.cpp" />
+    <ClCompile Include="take_any_object_test%40name_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40null_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40real_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40stream_object_test.cpp" />
+    <ClCompile Include="take_any_object_test%40unknown_test.cpp" />
+    <ClCompile Include="take_footer_test.cpp" />
+    <ClCompile Include="take_indirect_object_test.cpp" />
+    <ClCompile Include="take_signed_integer_test.cpp" />
+    <ClCompile Include="take_trailer_test.cpp" />
+    <ClCompile Include="take_unsigned_integer_test.cpp" />
+    <ClCompile Include="take_xref_entry_test.cpp" />
+    <ClCompile Include="take_xref_table_test.cpp" />
+    <ClCompile Include="tell_test.cpp" />
+    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
