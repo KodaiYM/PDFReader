@@ -1,42 +1,31 @@
 @startuml error_types
 hide empty members
 namespace pdfparser::error_types {
-enum error_code <<Enumeration>> {
+enum parse_error::error_code <<Enumeration>> {
 	<<Const>>
 	+{static} failed_to_seek_forward_head_of_line             : int = 0
 	+{static} failed_to_seek                                  : int = 1
 	+{static} keyword_EOF_not_found                           : int = 2
-	+{static} xref_byte_offset_not_found                      : int = 3
-	+{static} keyword_startxref_not_found                     : int = 4
-	+{static} EOL_not_found                                   : int = 5
-	+{static} signed_integer_not_found                        : int = 6
-	+{static} unsigned_integer_not_found                      : int = 7
-	+{static} keyword_xref_not_found                          : int = 8
-	+{static} space_not_found                                 : int = 9
-	+{static} xref_entry_first_10_digits_invalid              : int = 10
-	+{static} xref_entry_second_5_digits_invalid              : int = 11
-	+{static} xref_entry_keyword_invalid                      : int = 12
-	+{static} xref_entry_last_2_bytes_invalid                 : int = 13
-	+{static} keyword_trailer_not_found                       : int = 14
-	+{static} literal_string_lack_of_right_parenthesis        : int = 16
-	+{static} unknown_character_detected                      : int = 17
-	+{static} object_not_found                                : int = 18
-	+{static} name_invalid_hexadecimal_code                         : int = 19
-	+{static} array_lack_of_right_square_bracket              : int = 20
-	+{static} hexadecimal_string_non_hexadecimal_digit_found  : int = 21
-	+{static} hexadecimal_string_lack_of_greater_than_sign    : int = 22
-	+{static} dictionary_key_is_not_name_object               : int = 23
-	+{static} dictionary_lack_of_double_greater_than_sign     : int = 24
-	+{static} stream_CRLF_or_LF_not_found                     : int = 25
-	+{static} stream_dictionary_absence_of_Length_entry       : int = 26
-	+{static} stream_dictionary_Length_is_not_Integer         : int = 27
-	+{static} stream_data_is_shorter_than_Length              : int = 28
-	+{static} keyword_endstream_not_found                     : int = 29
-	+{static} trailer_dictionary_not_found                    : int = 30
-	+{static} indirect_object_is_inconsistent_with_xref_table : int = 31
-	+{static} keyword_obj_not_found                           : int = 32
-	+{static} indirect_object_refers_indirect_reference       : int = 33
-	+{static} keyword_endobj_not_found                        : int = 34
+	+{static} keyword_startxref_not_found                     : int = 3
+	+{static} EOL_not_found                                   : int = 4
+	+{static} keyword_xref_not_found                          : int = 5
+	+{static} xref_entry_keyword_invalid                      : int = 6
+	+{static} keyword_trailer_not_found                       : int = 7
+	+{static} literal_string_lack_of_right_parenthesis        : int = 8
+	+{static} array_lack_of_right_square_bracket              : int = 9
+	+{static} array_invalid_element                           : int = 10
+	+{static} hexadecimal_string_non_hexadecimal_digit_found  : int = 11
+	+{static} hexadecimal_string_lack_of_greater_than_sign    : int = 12
+	+{static} dictionary_lack_of_double_greater_than_sign     : int = 13
+	+{static} dictionary_invalid_key                          : int = 14
+	+{static} dictionary_invalid_value                        : int = 15
+	+{static} stream_CRLF_or_LF_not_found                     : int = 16
+	+{static} stream_dictionary_absence_of_Length_entry       : int = 17
+	+{static} stream_data_is_shorter_than_Length              : int = 18
+	+{static} keyword_endstream_not_found                     : int = 19
+	+{static} indirect_object_is_inconsistent_with_xref_table : int = 20
+	+{static} keyword_obj_not_found                           : int = 21
+	+{static} keyword_endobj_not_found                        : int = 22
 }
 class parse_error {
 	+enum error_code
@@ -46,6 +35,33 @@ class parse_error {
 	+code() : error_code
 }
 parse_error --|> std::runtime_error
-parse_error --> "1" error_code
+parse_error --> "1" parse_error::error_code
+
+enum object_not_found_error::error_code <<Enumeration>> {
+	<<Const>>
+	+{static} boolean_object_not_found     : int = 0
+	+{static} integer_object_not_found     : int = 1
+	+{static} real_object_not_found        : int = 2
+	+{static} string_object_not_found      : int = 3
+	+{static} name_object_not_found        : int = 4
+	+{static} array_object_not_found       : int = 5
+	+{static} dictionary_object_not_found  : int = 6
+	+{static} stream_object_not_found      : int = 7
+	+{static} null_object_not_found        : int = 8
+	+{static} indirect_reference_not_found : int = 9
+	+{static} any_object_not_found         : int = 10
+}
+class object_not_found_error {
+	+enum error_code
+	-m_error_code : const error_code
+
+	+object_not_found_error(in er_code : error_code)
+	+code() : error_code
+}
+object_not_found_error --|> std::runtime_error
+object_not_found_error --> "1" object_not_found_error::error_code
+
+class type_mismatch {}
+type_mismatch --|> std::runtime_error
 }
 @enduml

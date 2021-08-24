@@ -33,13 +33,12 @@
 | Indirec Object | オブジェクト番号(整数) 世代番号(整数) "obj" <br> オブジェクト <br> "endobj" | 任意のオブジェクトに対して、(オブジェクト番号, 世代番号)の組で一意な識別を可能にする |
 | Indirect Reference | オブジェクト番号(整数) 世代番号(整数) "R" | (オブジェクト番号, 世代番号)の組に対応する Indirect オブジェクトへの参照 |
 
-
-## クラス一覧
+## 公開クラス一覧
 - [メインクラス図](parser.class.pu)
 - [クロスリファレンス関連クラス図](xref_types.class.pu)
 - [例外クラス図](error_types.class.pu)
 
-## フローチャート
+## 主要フローチャート
 - [メインアクティビティ図](parser.activity.pu)
 - [オブジェクトプールアクティビティ図](object_pool.activity.pu)
 - [ストリーム解析アクティビティ図](stream_parser.activity.pu)

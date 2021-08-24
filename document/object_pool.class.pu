@@ -1,20 +1,33 @@
 @startuml object_pool
 hide empty members
-namespace pdfparser<InputStreamT> {
-class object_pool {
+namespace pdfparser {
+class object_pool<InputStreamT> {
 	-m_parser     : stream_parser<InputStreamT>&
 	-m_xref_table : xref_table
 	-m_object_map : unordered_map<pair<object_t, generation_t>, any_direct_object>
 
 	+object_pool(parser : stream_parser<InputStreamT>&)
-	+add_xref_table(in referenced_xref_table : const xref_table&)                        : void
-	+dereference(in reference : const indirect_reference&)                               : any_direct_object
-	+dereference(in object : const any_direct_object_or_ref&)                            : any_direct_object
-	+get_object(in object_number : object_t, in generation_number : generation_t) : any_direct_object
+
+	+add_xref_table(in referenced_xref_table : const xref_table&) : void
+
+	+dereference<...ObjectTypes>(in object : const any_direct_object_or_ref&) : decltype(get_object<ObjectTypes...>(declval<object_t>(), declval<generation_t>()))
+
+	+dereference<...ObjectTypes>     (in reference : const indirect_reference&) : decltype(get_object<ObjectTypes...>(declval<object_t>(), declval<generation_t>()))
+	+dereference<boolean_object>     (in reference : const indirect_reference&) : boolean_object
+	+dereference<integer_object>     (in reference : const indirect_reference&) : integer_object
+	+dereference<real_object>        (in reference : const indirect_reference&) : real_object
+	+dereference<string_object>      (in reference : const indirect_reference&) : string_object
+	+dereference<name_object>        (in reference : const indirect_reference&) : name_object
+	+dereference<array_object>       (in reference : const indirect_reference&) : array_object
+	+dereference<dictionary_object>  (in reference : const indirect_reference&) : dictionary_object
+	+dereference<stream_object>      (in reference : const indirect_reference&) : stream_object
+	+dereference<null_object>        (in reference : const indirect_reference&) : null_object
+	+dereference<indirect_reference> (in reference : const indirect_reference&) : indirect_reference
 }
 object_pool <..> stream_parser<InputStreamT>
 object_pool --> xref_table
 object_pool --> any_direct_object
+object_pool ..> type_mismatch
 
 class stream_parser<InputStreamT> {
 	[[stream_parser.class.pu]]
@@ -25,6 +38,8 @@ class xref_table {
 class any_direct_object  {
 	[[object_types.class.pu]]
 }
-
+class type_mismatch {
+	[[error_types.class.pu]]
+}
 }
 @enduml

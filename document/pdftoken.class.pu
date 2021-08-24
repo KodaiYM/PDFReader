@@ -1,0 +1,20 @@
+@startuml token_types
+hide empty members
+namespace pdfparser {
+enum token_type <<Enumeration>> {
+	<<Const>>
+	+{static} delimiter_token  : int = 0
+
+	' A token comprised of a sequence of consecutive regular characters
+	+{static} regular_token    : int = 1
+}
+class pdftoken <<struct>> {
+	+enum token_type
+	+type        : const token_type
+	-m_token_str : const std::string
+	+pdftoken(type : token_type, token_str : std::string)
+	+operator std::string()
+}
+pdftoken --> "1" token_type
+}
+@enduml

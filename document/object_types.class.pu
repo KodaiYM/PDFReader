@@ -34,6 +34,8 @@ annotation object_types <<(N, yellow) namespace>> {
 	+array_object      : typedef = vector<any_direct_object_or_ref>
 	+dictionary_object : typedef = unordered_map<name_object, non_null_direct_object_or_ref>
 }
+class null_object<<struct>>  {}
+
 class stream_object {
 	-m_stream_dictionary : dictionary_object
 	-m_encoded_data      : std::string
@@ -44,8 +46,6 @@ class stream_object {
 	+get_decoded_data() : std::string
 }
 stream_object --> dictionary_object
-
-class null_object<<struct>>  {}
 
 class indirect_reference<<struct>> {
 	+object_number : object_t
