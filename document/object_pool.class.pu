@@ -1,6 +1,9 @@
 @startuml object_pool
 hide empty members
 namespace pdfparser {
+class type_mismatch {}
+type_mismatch --|> std::runtime_error
+
 class object_pool<InputStreamT> {
 	-m_parser     : stream_parser<InputStreamT>&
 	-m_xref_table : xref_table
@@ -24,7 +27,7 @@ class object_pool<InputStreamT> {
 	+dereference<null_object>        (in reference : const indirect_reference&) : null_object
 	+dereference<indirect_reference> (in reference : const indirect_reference&) : indirect_reference
 }
-object_pool <..> stream_parser<InputStreamT>
+object_pool <..> stream_parser
 object_pool --> xref_table
 object_pool --> any_direct_object
 object_pool ..> type_mismatch
@@ -37,9 +40,6 @@ class xref_table {
 }
 class any_direct_object  {
 	[[object_types.class.pu]]
-}
-class type_mismatch {
-	[[error_types.class.pu]]
 }
 }
 @enduml

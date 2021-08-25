@@ -1,0 +1,74 @@
+@startuml tokenizer
+partition "tokenizer(in stream : InputStreamT&&)" {
+start
+	:istream_extended(std::move(stream));
+stop
+}
+@enduml
+
+@startuml attempt_token
+partition "attempt_token(in attempt_token : string_view)" {
+start
+	:before_take_token_pos = tell();
+	if (attempt_token == take_token()) then (y)
+		:return true;
+		stop
+	else
+		:seek(before_take_token_pos);
+		:return false;
+		stop
+	endif
+'stop
+}
+@enduml
+
+@startuml promise_token
+partition "promise_token(in promise_token_list : initializer_list<string_view>)" {
+start
+	while (attempt_token in promise_token_list) is (y)
+		if (attempt_token(attempt_token)) then (y)
+			stop
+		endif
+	endwhile
+
+	:throw tokenize_error(promise_token_failed);
+stop
+}
+@enduml
+
+@startuml take_token
+partition "take_token()" {
+start
+	:ignore_if_present(any_whitespace_characters | comment);
+	if (eof()) then (y)
+		:return nullopt;
+		stop
+	endif
+
+	' delimiter token
+	if (attempt("<<")) then (y)
+		:return pdftoken(delimiter_token, "<<");
+		stop
+	endif
+	if (attempt(">>")) then (y)
+		:return pdftoken(delimiter_token, ">>");
+		stop
+	endif
+
+	' % はあり得ない
+	if (delimiter == get_character_type(peek())) then (y)
+		++*this;
+		:return pdftoken(delimiter_token, 先読みした文字);
+	endif
+
+	' regular token
+	:regular_characters : std::string;
+	while (regular == get_character_type(peek())) then (y)
+		:++m_stream;
+		:regular_characters.push_back(先読みした文字);
+	endwhile
+	' 少なくとも1文字は読み取れているはず
+	:return pdftoken(regular_token, regular_characters);
+stop
+}
+@enduml

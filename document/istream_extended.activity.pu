@@ -1,0 +1,143 @@
+@startuml istream_extended
+partition "istream_extended(in stream : InputStreamT&&)" {
+start
+	:m_stream = std::move(stream);
+	:m_stream.clear();
+	:m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+stop
+}
+@enduml
+
+@startuml peek
+partition "peek()" {
+start
+	if (eof()) then (y)
+		:return nullopt;
+	endif
+
+	:return m_stream.peek();
+stop
+}
+@enduml
+
+@startuml eof
+partition "eof()" {
+start
+	if (ファイル終端) then (y)
+		:return true;
+	else
+		:return false;
+	endif
+stop
+}
+@enduml
+
+@startuml tell
+partition "tell()" {
+start
+	:return m_stream.tellg();
+stop
+}
+@enduml
+
+@startuml seek
+partition "seek(in byte_offset_from_beginning_of_file : std::streamoff)" {
+start
+	:m_stream.seekg(byte_offset_from_beginning_of_file, std::ios_base::beg);
+	if (失敗した) then (y)
+		:throw istream_extended_error(failed_to_seek);
+		stop
+	endif
+stop
+}
+@enduml
+
+@startuml seek_to_end
+partition "seek_to_end()" {
+start
+	' NOTE: undefined behaviour on ISO C but it will go well on Windows
+	:m_stream.seekg(0, std::ios_base::end);
+stop
+}
+@enduml
+
+@startuml seek_forward_head_of_line
+partition "seek_forward_head_of_line()" {
+start
+	:1バイト戻る;
+	if (戻れなかった) then (y)
+		:throw istream_extended_error(failed_to_seek_forward_head_of_line);
+		stop
+	endif
+	switch (1バイト先読み?)
+	case ('\\r')
+		:何もしない;
+	case ('\\n')
+		:1バイト戻る;
+		if (戻れなかった) then (y)
+			stop
+		endif
+
+		if (1バイト先読み != '\\r') then (y)
+			:1バイト進む;
+		endif
+	endswitch
+
+	repeat
+		:1バイト戻る;
+		if (戻れなかった) then (y)
+			stop
+		endif
+	repeat while (1バイト先読み != '\\r', '\\n')
+	:1バイト進む;
+stop
+}
+@enduml
+
+@startuml operator++
+partition "operator++()" {
+start
+	:m_stream.seekg(1, std::ios_base::cur);
+	if (失敗した) then (y)
+		:throw istream_extended_error(failed_to_seek);
+		stop
+	endif
+	:return *this;
+stop
+}
+@enduml
+
+@startuml attempt
+partition "attempt(in attempt_str : string_view)" {
+start
+	if (ストリームから attempt_str が読み取れた) then (y)
+		:return true;
+		stop
+	else
+		:return false;
+		stop
+	endif
+'stop
+}
+
+@startuml promise
+partition "promise(in promise_list : initializer_list<string_view>)" {
+start
+	while (promise_str in promise_list) is (y)
+		if (attempt(promise_str)) then (y)
+			stop
+		endif
+	endwhile
+
+	:throw istream_extended_error(promise_failed);
+stop
+}
+@enduml
+
+@startuml ignore_if_present
+partition "ignore_if_present(flags : ignore_flag)" {
+start
+	:flagsに指定のある空白類のみ読み飛ばす;
+stop
+}
+@enduml

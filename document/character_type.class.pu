@@ -1,0 +1,15 @@
+@startuml character_type
+hide empty members
+namespace pdfparser {
+enum character_type <<Enumeration>> {
+	<<Const>>
+	+{static} whitespace : int = 0
+	+{static} delimiter  : int = 1
+	+{static} regular    : int = 2
+}
+
+annotation character_type_functions <<(N, yellow) unnamed namespace>> {
+	+get_character_type(character : char) : character_type
+}
+}
+@enduml
