@@ -1,7 +1,8 @@
 #pragma once
 
-#include "PDFParser.xref_types.h"
+#include "pdfparser.xref_types.hpp"
 
+#include <cassert>
 #include <functional>
 #include <string>
 #include <unordered_map>
@@ -24,17 +25,48 @@ private:
 };
 class integer_object {
 public:
-	template <typename IntegerT                = int,
+	using int_type = long long;
+
+	template <typename IntegerT,
 	          std::enable_if_t<std::is_integral_v<IntegerT> &&
 	                               !std::is_same_v<IntegerT, bool>,
 	                           std::nullptr_t> = nullptr>
-	constexpr integer_object(IntegerT value = 0) noexcept : m_value(value) {}
-	constexpr operator int() const noexcept {
-		return m_value;
+	constexpr operator IntegerT() const {
+		if (m_value >= 0) {
+			if (m_value > std::numeric_limits<IntegerT>::max()) {
+				throw std::overflow_error("overflow");
+			}
+		} else {
+			assert(m_value < 0);
+			if (m_value < std::numeric_limits<IntegerT>::min()) {
+				throw std::overflow_error("overflow");
+			}
+		}
+
+		return static_cast<IntegerT>(m_value);
+	}
+
+public:
+	template <typename IntegerT,
+	          std::enable_if_t<std::is_integral_v<IntegerT> &&
+	                               !std::is_same_v<IntegerT, bool>,
+	                           std::nullptr_t> = nullptr>
+	constexpr integer_object(IntegerT value = 0) {
+		if (value >= 0) {
+			if (value > std::numeric_limits<int_type>::max()) {
+				throw std::overflow_error("overflow");
+			}
+		} else {
+			assert(value < 0);
+			if (value < std::numeric_limits<int_type>::min()) {
+				throw std::overflow_error("overflow");
+			}
+		}
+		m_value = value;
 	}
 
 private:
-	int m_value;
+	int_type m_value;
 };
 class real_object {
 public:

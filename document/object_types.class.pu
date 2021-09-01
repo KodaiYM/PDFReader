@@ -27,7 +27,7 @@ annotation object_types <<(N, yellow) namespace>> {
 	                     dictionary_object, stream_object,
 	                     indirect_reference>
 	+boolean_object    : typedef = bool
-	+integer_object    : typedef = int
+	+integer_object    : typedef = long long
 	+real_object       : typedef = double
 	+string_object     : typedef = std::string
 	+name_object       : typedef = std::string
