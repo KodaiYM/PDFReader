@@ -20,6 +20,16 @@ stop
 }
 @enduml
 
+@startuml get
+partition "get()" {
+start
+	:next_ch = peek();
+	++*this;
+	:return next_ch.value();
+stop
+}
+@enduml
+
 @startuml eof
 partition "eof()" {
 start
@@ -35,15 +45,15 @@ stop
 @startuml tell
 partition "tell()" {
 start
-	:return m_stream.tellg();
+	:return m_stream.rdbuf()->pubseekoff(0, std::ios_base::cur, std::ios_base::in);
 stop
 }
 @enduml
 
 @startuml seek
-partition "seek(in byte_offset_from_beginning_of_file : std::streamoff)" {
+partition "seek(in byte_offset : InputStreamT::off_type)" {
 start
-	:m_stream.seekg(byte_offset_from_beginning_of_file, std::ios_base::beg);
+	:m_stream.seekg(byte_offset, std::ios_base::beg);
 	if (失敗した) then (y)
 		:throw istream_extended_error(failed_to_seek);
 		stop

@@ -1,37 +1,24 @@
 @startuml stream_parser
 hide empty members
 namespace pdfparser {
-enum istream_extended_error::error_code <<Enumeration>> {
-	<<Const>>
-	+{static} failed_to_seek                      : int = 0
-	+{static} failed_to_seek_forward_head_of_line : int = 1
-	+{static} promise_failed                      : int = 2
-}
-class istream_extended_error {
-	+enum error_code
-	-m_error_code : const error_code
-
-	+istream_extended_error(in er_code : error_code)
-	+code() : error_code
-}
-istream_extended_error --> "1" istream_extended_error::error_code
-
 class istream_extended<InputStreamT> {
 	-m_stream : InputStreamT
 
 	+istream_extended(inout stream : InputStreamT&&)
-	+istream_extended(InputStreamT&)        = delete
 	+istream_extended(const InputStreamT&&) = delete
+	+istream_extended(InputStreamT&)        = delete
 
 	+peek() : optional<InputStreamT::char_type>
+	+get()  : InputStreamT::char_type
 	+eof()  : bool
 
-	+tell()                                                       : std::streamoff
-	+seek(in byte_offset_from_beginning_of_file : std::streamoff) : void
-	+seek_to_end()                                                : void
-	+seek_forward_head_of_line()                                  : void
-	+operator++()                                                 : istream_extended&
+	+tell()                                        : InputStreamT::off_type
+	+seek(in byte_offset : InputStreamT::off_type) : void
+	+seek_to_end()                                 : void
+	+seek_forward_head_of_line()                   : void
+	+operator++()                                  : istream_extended&
 
+	// TODO: これが空白類限定なのをやめたい
 	+ignore_if_present(in flags : whitespace_flags)           : void
 	+attempt(in attempt_str : string_view)                    : bool
 	+promise(in promise_list : initializer_list<string_view>) : void
@@ -42,6 +29,9 @@ istream_extended ..> istream_extended_error
 
 enum whitespace_flags <<Enumeration>> {
 	[[whitespace_flags.class.pu]]
+}
+class istream_extended_error {
+	[[istream_extended_error.class.pu]]
 }
 }
 @enduml
