@@ -18,7 +18,7 @@ class istream_extended<InputStreamT> {
 	+seek_forward_head_of_line()                   : void
 	+operator++()                                  : istream_extended&
 
-	// TODO: これが空白類限定なのをやめたい
+	' TODO: これが空白類限定なのをやめたい
 	+ignore_if_present(in flags : whitespace_flags)           : void
 	+attempt(in attempt_str : string_view)                    : bool
 	+promise(in promise_list : initializer_list<string_view>) : void

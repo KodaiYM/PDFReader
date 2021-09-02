@@ -24,7 +24,7 @@ stop
 partition "get()" {
 start
 	:next_ch = peek();
-	++*this;
+	:++*this;
 	:return next_ch.value();
 stop
 }
@@ -129,6 +129,7 @@ start
 	endif
 'stop
 }
+@enduml
 
 @startuml promise
 partition "promise(in promise_list : initializer_list<string_view>)" {
