@@ -46,6 +46,15 @@ public:
 		return static_cast<IntegerT>(m_value);
 	}
 
+	[[nodiscard]] constexpr bool
+	    operator==(const integer_object& rhs) const noexcept {
+		return m_value == rhs.m_value;
+	}
+	[[nodiscard]] constexpr bool
+	    operator!=(const integer_object& rhs) const noexcept {
+		return !(*this == rhs);
+	}
+
 public:
 	template <typename IntegerT,
 	          std::enable_if_t<std::is_integral_v<IntegerT> &&
