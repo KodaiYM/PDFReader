@@ -98,70 +98,70 @@ start
 	if ((constexpr) ObjectTypes に boolean_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_boolean_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(boolean_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に real_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_real_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(real_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に string_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_string_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(string_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に name_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_name_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(name_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に array_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_array_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(array_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に null_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_null_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(null_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に stream_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_stream_object(object_accessor);
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(stream_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に indirect_reference がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_indirect_reference();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(indirect_reference_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に integer_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_integer_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(integer_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に dictionary_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
 		:return take_dictionary_object();
-		if (object_not_found_error が出た) then (y)
+		if (object_not_found_error(dictionary_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
@@ -171,7 +171,7 @@ start
 		stop
 	endif
 
-	:throw object_not_found_error(any_object_not_found);
+	:throw object_not_found_error(specified_object_not_found);
 stop
 }
 @enduml
@@ -367,7 +367,7 @@ start
 			endif
 
 			:element = take_object(object_accessor);
-			if (object_not_found_error が出た) then (y)
+			if (object_not_found_error(specified_object_not_found) が出た) then (y)
 				:throw parse_error(array_invalid_element);
 			endif
 			:array.push_back(element);
@@ -408,12 +408,12 @@ start
 			endif
 
 			:name = take_name_object();
-			if (object_not_found_error が出た) then (y)
+			if (object_not_found_error(name_object_not_found) が出た) then (y)
 				:throw parse_error(dictionary_invalid_key);
 			endif
 
 			:value = take_object(object_accessor);
-			if (object_not_found_error が出た) then (y)
+			if (object_not_found_error(specified_object_not_found) が出た) then (y)
 				:throw parse_error(dictionary_invalid_value);
 			endif
 			if (value != null) then (y)
@@ -433,7 +433,7 @@ stop
 partition "take_stream_object(inout object_accessor : object_pool<InputStreamT>&)" {
 start
 	:dictionary = take_dictionary_object();
-	if (object_not_found_error が出た) then (y)
+	if (object_not_found_error(dictionary_object_not_found) が出た) then (y)
 		:throw object_not_found_error(stream_object_not_found);
 		stop
 	endif
@@ -475,7 +475,7 @@ partition "take_indirect_reference()" {
 start
 	:first_integer  = take_integer_object();
 	:second_integer = take_integer_object();
-	if (object_not_found_error が上のどちらかで出た) then (y)
+	if (object_not_found_error(integer_object_not_found) が上のどちらかで出た) then (y)
 		:throw object_not_found_error(indirect_reference_not_found);
 	endif
 
