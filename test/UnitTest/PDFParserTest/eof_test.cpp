@@ -1,41 +1,31 @@
+#include "eof_test.hpp"
 #include "pdfparser.istream_extended.hpp"
-#include "tell_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace pdfparser_test;
 
-void tell_test::test_MIX_EOL() {
+void eof_test::test_not_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream << "\r\n"
-	       << "\n"
-	       << "\r\r"
-	       << "\r\n";
-	stream.ignore();
-	stream.ignore();
-	stream.ignore();
-	stream.ignore();
-	stream.ignore();
-	stream.ignore();
-
+	stream << "s";
 	istream_extended str_extended(std::move(stream));
-	Assert::IsTrue(6 == str_extended.tell());
+	Assert::IsFalse(str_extended.eof());
 }
-void tell_test::test_tell_at_EOF() {
+void eof_test::test_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	istream_extended str_extended(std::move(stream));
-	Assert::IsTrue(0 == str_extended.tell());
+	Assert::IsTrue(str_extended.eof());
 }
-void tell_test::test_tell_with_eofbit_ON() {
+void eof_test::test_with_eofbit_ON() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	istream_extended str_extended(std::move(stream));
 	(void)str_extended.eof(); // setstate std::ios_base::eofbit
-	Assert::IsTrue(0 == str_extended.tell());
+	Assert::IsTrue(str_extended.eof());
 }

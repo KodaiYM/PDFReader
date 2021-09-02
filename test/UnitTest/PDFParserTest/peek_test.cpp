@@ -1,30 +1,23 @@
 #include "pdfparser.istream_extended.hpp"
-#include "seek_to_end_test.hpp"
+#include "peek_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace pdfparser_test;
 
-void seek_to_end_test::test_MIX_EOL() {
+void peek_test::test_not_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream << "\r\n"
-	       << "\n"
-	       << "\r\r";
-
+	stream << "s";
 	istream_extended str_extended(std::move(stream));
-	str_extended.seek_to_end();
-	Assert::IsTrue(5 == str_extended.tell());
+	Assert::IsFalse('s' == str_extended.peek());
 }
-void seek_to_end_test::test_at_EOF() {
+void peek_test::test_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	istream_extended str_extended(std::move(stream));
-
-	// check if no-throw
-	str_extended.seek_to_end();
-	str_extended.seek_to_end();
+	Assert::IsTrue(!str_extended.peek().has_value());
 }

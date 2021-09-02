@@ -1,11 +1,10 @@
-#include "PDFParser.h"
+#include "pdfparser.istream_extended.hpp"
+#include "pdfparser.istream_extended_error.hpp"
 #include "seek_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
-using namespace error_types;
-using namespace object_types;
 using namespace pdfparser_test;
 
 void seek_test::test_to_between_CRLF() {
@@ -17,9 +16,9 @@ void seek_test::test_to_between_CRLF() {
 	       << "\r\r"
 	       << "\r\n";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.seek(6);
-	Assert::IsTrue(6 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.seek(6);
+	Assert::IsTrue(6 == str_extended.tell());
 }
 void seek_test::test_to_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -27,9 +26,9 @@ void seek_test::test_to_EOF() {
 
 	stream << "test";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.seek(4);
-	Assert::IsTrue(4 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.seek(4);
+	Assert::IsTrue(4 == str_extended.tell());
 }
 void seek_test::test_over_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -37,11 +36,11 @@ void seek_test::test_over_EOF() {
 
 	stream << "test";
 
-	stream_parser str_parser(std::move(stream));
+	istream_extended str_extended(std::move(stream));
 	try {
-		str_parser.seek(5);
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::failed_to_seek == parse_e.code());
+		str_extended.seek(5);
+	} catch (const istream_extended_error& parse_e) {
+		Assert::IsTrue(istream_extended_error::failed_to_seek == parse_e.code());
 
 		// success
 		return;
