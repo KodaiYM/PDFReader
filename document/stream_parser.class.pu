@@ -1,90 +1,41 @@
 @startuml stream_parser
 hide empty members
 namespace pdfparser {
-enum parse_error::error_code <<Enumeration>> {
-	<<Const>>
-	+{static} xref_entry_keyword_invalid                      : int = 0
-	+{static} literal_string_lack_of_right_parenthesis        : int = 1
-	+{static} array_lack_of_right_square_bracket              : int = 2
-	+{static} array_invalid_element                           : int = 3
-	+{static} hexadecimal_string_non_hexadecimal_digit_found  : int = 4
-	+{static} hexadecimal_string_lack_of_greater_than_sign    : int = 5
-	+{static} dictionary_lack_of_double_greater_than_sign     : int = 6
-	+{static} dictionary_invalid_key                          : int = 7
-	+{static} dictionary_invalid_value                        : int = 8
-	+{static} stream_dictionary_absence_of_Length_entry       : int = 9
-	+{static} stream_data_is_shorter_than_Length              : int = 10
-	+{static} indirect_object_is_inconsistent_with_xref_table : int = 11
-}
-class parse_error {
-	+enum error_code
-	-m_error_code : const error_code
-
-	+parse_error(in er_code : error_code)
-	+code() : error_code
-}
-parse_error --|> std::runtime_error
-parse_error --> "1" parse_error::error_code
-
-enum object_not_found_error::error_code <<Enumeration>> {
-	<<Const>>
-	+{static} boolean_object_not_found     : int = 0
-	+{static} integer_object_not_found     : int = 1
-	+{static} real_object_not_found        : int = 2
-	+{static} string_object_not_found      : int = 3
-	+{static} name_object_not_found        : int = 4
-	+{static} array_object_not_found       : int = 5
-	+{static} dictionary_object_not_found  : int = 6
-	+{static} stream_object_not_found      : int = 7
-	+{static} null_object_not_found        : int = 8
-	+{static} indirect_reference_not_found : int = 9
-	+{static} any_object_not_found         : int = 10
-}
-class object_not_found_error {
-	+enum error_code
-	-m_error_code : const error_code
-
-	+object_not_found_error(in er_code : error_code)
-	+code() : error_code
-}
-object_not_found_error --|> std::runtime_error
-object_not_found_error --> "1" object_not_found_error::error_code
-
 class stream_parser<InputStreamT> {
 	-m_tokenizer : tokenizer
 
 	+stream_parser(inout stream : InputStreamT&&)
-	+stream_parser(InputStreamT&)        = delete
 	+stream_parser(const InputStreamT&&) = delete
+	+stream_parser(InputStreamT&)        = delete
 
 	+take_footer(inout object_accessor : object_pool<InputStreamT>&)  : dictionary_object
 	+take_xref_table()                                                : xref_table
 	+take_xref_entry(in object_number : object_t)                     : xref_entry
 	+take_trailer(inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
 
-	+take_object                    (inout object_accessor : object_pool<InputStreamT>&) : variant<any_direct_object_or_ref の型リスト>
-	+take_object<...ObjectTypes>    (inout object_accessor : object_pool<InputStreamT>& (ObjectTypes に stream_object がある場合のみ)) : variant<ObjectTypes...>
-	+take_object<boolean_object>    () : boolean_object
-	+take_object<integer_object>    () : integer_object
-	+take_object<real_object>       () : real_object
-	+take_object<string_object>     () : string_object
-	+take_object<name_object>       () : name_object
-	+take_object<array_object>      () : array_object
-	+take_object<dictionary_object> () : dictionary_object
-	+take_object<stream_object>     (inout object_accessor : object_pool<InputStreamT>&) : stream_object
-	+take_object<null_object>       () : null_object
-	+take_object<indirect_reference>() : indirect_reference
+	+take_object<variant<...>>() : variant<...>
+	+take_object<variant<...>>(inout object_accessor : object_pool<InputStreamT>&) : variant<...>
+	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
+	+take_object<...ObjectTypes>(inout object_accessor : object_pool<InputStreamT>&) : variant<ObjectTypes...>
+	+take_boolean_object    () : boolean_object
+	+take_integer_object    () : integer_object
+	+take_real_object       () : real_object
+	+take_string_object     () : string_object
+	+take_name_object       () : name_object
+	+take_array_object      (inout object_accessor : object_pool<InputStreamT>&) : array_object
+	+take_dictionary_object (inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
+	+take_stream_object     (inout object_accessor : object_pool<InputStreamT>&) : stream_object
+	+take_null_object       () : null_object
+	+take_indirect_reference() : indirect_reference
 
 	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&) : any_direct_object
 }
 stream_parser --> "1" tokenizer
-stream_parser ..> ignore_flag
 stream_parser ..> xref_types
 stream_parser ..> object_types
 stream_parser <..> object_pool
 stream_parser ..> parse_error
 stream_parser ..> object_not_found_error
-stream_parser ..> pdftoken
 
 class tokenizer {
 	[[tokenizer.class.pu]]
@@ -98,8 +49,11 @@ annotation object_types <<(N, yellow) namespace>> {
 class object_pool<InputStreamT> {
 	[[object_pool.class.pu]]
 }
-class pdftoken <<struct>> {
-	[[pdftoken.class.pu]]
+class parse_error {
+	[[parse_error.class.pu]]
+}
+class object_not_found_error {
+	[[object_not_found_error.class.pu]]
 }
 }
 @enduml

@@ -15,17 +15,17 @@ start
 	:seek_forward_head_of_line();
 
 	' startxref
-	promise_token("startxref");
+	:promise_token("startxref");
 
 	' xref バイトオフセット
-	:xref_byte_offset = take_object<integer_object>() : std::streamoff;
+	:xref_byte_offset = take_integer_object() : std::streamoff;
 
 	' %%EOF
 	:m_tokenizer.promise({"\r\n", "\n", "\r"});
 	:m_tokenizer.promise("%%EOF");
 
 	' Cross Reference Table
-	:seek(xref_byte_offset);
+	:m_tknizer.seek(xref_byte_offset);
 	:xref_table = take_xref_table();
 
 	' Trailer
@@ -39,10 +39,10 @@ stop
 partition "take_xref_table()" {
 start
 	:this_xref_table : xref_table;
-	promise_token("xref");
+	:promise_token("xref");
 
-	:first_object_number = take_object<integer_object>() : object_t;
-	:number_of_entries = take_object<integer_object>() : object_t;
+	:first_object_number = take_integer_object() : object_t;
+	:number_of_entries = take_integer_object() : object_t;
 
 	if (first_object_number + number_of_entries - 1 がオーバーフロー) then (y)
 		:throw std::overflow_error("overflow");
@@ -62,8 +62,8 @@ stop
 @startuml take_xref_entry
 partition "take_xref_entry(in object_number : object_t)" {
 start
-	:first_integer = take_object<integer_object>();
-	:second_integer = take_object<integer_object>() : generation_t;
+	:first_integer = take_integer_object();
+	:second_integer = take_integer_object() : generation_t;
 
 	:keyword = take_token();
 
@@ -82,95 +82,87 @@ stop
 @enduml
 
 @startuml take_trailer
-partition "take_trailer(inout object_accessor : object_pool&)" {
+partition "take_trailer(inout object_accessor : object_pool<InputStreamT>&)" {
 start
-	promise_token("trailer");
+	:promise_token("trailer");
 
-	:trailer_dictionary = take_object<dictionary_object>();
+	:trailer_dictionary = take_dictionary_object();
 	:return trailer_dictionary;
 stop
 }
 @enduml
 
-@startuml take_object_default
-partition "take_object(inout object_accessor : object_pool&)" {
-start
-	:return take_object<any_direct_object_or_ref の型リスト>(object_accessor);
-stop
-}
-@enduml
-
 @startuml take_object
-partition "take_object<...ObjectTypes>(inout object_accessor : object_pool& (ObjectTypes に stream_object がある場合のみ))" {
+partition "take_object<...ObjectTypes>([inout object_accessor : object_pool<InputStreamT>&])" {
 start
 	if ((constexpr) ObjectTypes に boolean_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<boolean_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_boolean_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に real_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<real_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_real_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に string_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<string_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_string_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に name_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<name_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_name_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に array_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<array_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_array_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に null_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<null_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_null_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に stream_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<stream_object>(object_accessor);
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_stream_object(object_accessor);
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に indirect_reference がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<indirect_reference>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_indirect_reference();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に integer_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<integer_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_integer_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に dictionary_object がある場合) then (y)
-		:before_take_object_pos = tell();
-		:return take_object<dictionary_object>();
+		:before_take_object_pos = m_tknizer.tell();
+		:return take_dictionary_object();
 		if (object_not_found_error が出た) then (y)
-			seek(before_take_object_pos);
+			:m_tknizer.seek(before_take_object_pos);
 		endif
 	endif
 
@@ -184,8 +176,8 @@ stop
 }
 @enduml
 
-@startuml take_object_boolean
-partition "take_object<boolean_object>()" {
+@startuml take_boolean_object
+partition "take_boolean_object()" {
 start
 	if (attempt_token("true")) then (y)
 		:return boolean_object(true);
@@ -200,8 +192,8 @@ stop
 }
 @enduml
 
-@startuml take_object_integer
-partition "take_object<integer_object>()" {
+@startuml take_integer_object
+partition "take_integer_object()" {
 start
 	:front_token = take_token();
 
@@ -215,8 +207,8 @@ stop
 }
 @enduml
 
-@startuml take_object_real
-partition "take_object<real_object>()" {
+@startuml take_real_object
+partition "take_real_object()" {
 start
 	:front_token = take_token();
 
@@ -230,8 +222,8 @@ stop
 }
 @enduml
 
-@startuml take_object_string
-partition "take_object<string_object>()" {
+@startuml take_string_object
+partition "take_string_object()" {
 start
 	' Literal String
 	if (attempt_token("(")) then (y)
@@ -304,17 +296,17 @@ start
 		:character     : unsigned char = 0;
 		:hex_digit_pos : int           = 0;
 		while ((hex_token = m_tokenizer.take_token()) != ">") is (y)
-			if (eof()) then (y)
+			if (!hex_token.has_value()) then (y)
 				:throw parse_error(hexadecimal_string_lack_of_greater_than_sign);
 				stop
 			endif
 
-			:token_queue = hex_token : string_view;
-			while (!token_queue.empty()) is (y)
+			:hex_view = hex_token : string_view;
+			while (!hex_view.empty()) is (y)
 				:++hex_digit_pos;
 
-				:hex_digit = token_queue.front();
-				:token_queue.remove_prefix(1);
+				:hex_digit = hex_view.front();
+				:hex_view.remove_prefix(1);
 				if (hex_digit != 0-9, A-F, a-f) then (y)
 					:throw parse_error(hexadecimal_string_non_hexadecimal_digit_found);
 					stop
@@ -342,11 +334,11 @@ stop
 }
 @enduml
 
-@startuml take_object_name
-partition "take_object<name_object>()" {
+@startuml take_name_object
+partition "take_name_object()" {
 start
 	if (attempt_token("/")) then (y)
-		if (regular != get_character_type(m_tokenizer.peek())) then (y)
+		if (!is_regular(m_tokenizer.peek())) then (y)
 			:return name_object();
 			stop
 		else
@@ -362,14 +354,14 @@ stop
 }
 @enduml
 
-@startuml take_object_array
-partition "take_object<array_object>()" {
+@startuml take_array_object
+partition "take_array_object()" {
 start
 	if (attempt_token("[")) then (y)
 		:array : array_object;
 
 		while (!attempt_token("]")) is (y)
-			if (eof()) then (y)
+			if (no_token()) then (y)
 				:throw parse_error(array_lack_of_right_square_bracket);
 				stop
 			endif
@@ -390,8 +382,8 @@ stop
 }
 @enduml
 
-@startuml take_object_null
-partition "take_object<null_object>()" {
+@startuml take_null_object
+partition "take_null_object()" {
 start
 	if (attempt_token("null")) then (y)
 		:return null;
@@ -403,19 +395,19 @@ stop
 }
 @enduml
 
-@startuml take_object_dictionary
-partition "take_object<dictionary_object>()" {
+@startuml take_dictionary_object
+partition "take_dictionary_object()" {
 start
 	if (attempt_token("<<")) then (y)
 		:dictionary : dictionary_object;
 
 		while (!attempt_token(">>")) is (y)
-			if (eof()) then (y)
+			if (no_token()) then (y)
 				:throw parse_error(dictionary_lack_of_double_greater_than_sign);
 				stop
 			endif
 
-			:name = take_object<name_object>();
+			:name = take_name_object();
 			if (object_not_found_error が出た) then (y)
 				:throw parse_error(dictionary_invalid_key);
 			endif
@@ -437,10 +429,10 @@ stop
 }
 @enduml
 
-@startuml take_object_stream
-partition "take_object<stream_object>(inout object_accessor : object_pool<InputStreamT>&)" {
+@startuml take_stream_object
+partition "take_stream_object(inout object_accessor : object_pool<InputStreamT>&)" {
 start
-	:dictionary = take_object<dictionary_object>();
+	:dictionary = take_dictionary_object();
 	if (object_not_found_error が出た) then (y)
 		:throw object_not_found_error(stream_object_not_found);
 		stop
@@ -478,11 +470,11 @@ stop
 }
 @enduml
 
-@startuml take_object_indirect_reference
-partition "take_object<indirect_reference>()" {
+@startuml take_indirect_reference
+partition "take_indirect_reference()" {
 start
-	:first_integer  = take_object<integer_object>();
-	:second_integer = take_object<integer_object>();
+	:first_integer  = take_integer_object();
+	:second_integer = take_integer_object();
 	if (object_not_found_error が上のどちらかで出た) then (y)
 		:throw object_not_found_error(indirect_reference_not_found);
 	endif
@@ -500,11 +492,11 @@ stop
 @startuml take_indirect_object
 partition "take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&)" {
 start
-	:before_take_indirect_object_pos = tell();
-	:seek(object_info.byte_offset);
+	:before_take_indirect_object_pos = m_tknizer.tell();
+	:m_tknizer.seek(object_info.byte_offset);
 
-	:first_integer = take_object<integer_object>() : object_t;
-	:second_integer = take_object<integer_object>() : generation_t;
+	:first_integer = take_integer_object() : object_t;
+	:second_integer = take_integer_object() : generation_t;
 
 	if (first_integer != object_info.object_number || second_integer != object_info.generation_number) then (y)
 		:throw parse_error(indirect_object_is_inconsistent_with_xref_table);
@@ -513,11 +505,11 @@ start
 
 	:promise_token("obj");
 
-	:object = take_object<any_direct_object>(object_accessor);
+	:object = take_any_direct_object(object_accessor);
 
 	:promise_token("endobj");
 
-	:seek(before_take_indirect_object_pos);
+	:m_tknizer.seek(before_take_indirect_object_pos);
 
 	:return object;
 stop
