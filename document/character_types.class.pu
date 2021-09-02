@@ -1,0 +1,10 @@
+@startuml character_types
+hide empty members
+namespace pdfparser {
+annotation character_types <<(N, yellow) unnamed namespace>> {
+	+is_whitespace(character : char) : bool
+	+is_delimiter(character : char)  : bool
+	+is_regular(character : char)    : bool
+}
+}
+@enduml
