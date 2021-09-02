@@ -8,7 +8,7 @@ stop
 @enduml
 
 @startuml dereference of any
-partition "dereference<...ObjectTypes>(in object : const any_direct_object_or_ref&)" {
+partition "dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&)" {
 start
 	if (object が indirect_reference) then (y)
 		:return dereference<ObjectTypes...>(object as indirect_reference);

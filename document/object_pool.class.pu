@@ -1,7 +1,9 @@
 @startuml object_pool
 hide empty members
 namespace pdfparser {
-class type_mismatch {}
+class type_mismatch {
+	+type_mismatch()
+}
 type_mismatch --|> std::runtime_error
 
 class object_pool<InputStreamT> {
@@ -13,19 +15,16 @@ class object_pool<InputStreamT> {
 
 	+add_xref_table(in referenced_xref_table : const xref_table&) : void
 
-	+dereference<...ObjectTypes>(in object : const any_direct_object_or_ref&) : decltype(get_object<ObjectTypes...>(declval<object_t>(), declval<generation_t>()))
+	' NOTE: variant 版は必要になったら実装
+	+dereference<variant<...>>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
+	+dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
 
-	+dereference<...ObjectTypes>     (in reference : const indirect_reference&) : decltype(get_object<ObjectTypes...>(declval<object_t>(), declval<generation_t>()))
-	+dereference<boolean_object>     (in reference : const indirect_reference&) : boolean_object
-	+dereference<integer_object>     (in reference : const indirect_reference&) : integer_object
-	+dereference<real_object>        (in reference : const indirect_reference&) : real_object
-	+dereference<string_object>      (in reference : const indirect_reference&) : string_object
-	+dereference<name_object>        (in reference : const indirect_reference&) : name_object
-	+dereference<array_object>       (in reference : const indirect_reference&) : array_object
-	+dereference<dictionary_object>  (in reference : const indirect_reference&) : dictionary_object
-	+dereference<stream_object>      (in reference : const indirect_reference&) : stream_object
-	+dereference<null_object>        (in reference : const indirect_reference&) : null_object
-	+dereference<indirect_reference> (in reference : const indirect_reference&) : indirect_reference
+	' NOTE: variant 版は必要になったら実装
+	+dereference<variant<...>>  (in reference : const indirect_reference&) : variant<...>
+	+dereference<...ObjectTypes>(in reference : const indirect_reference&) : variant<ObjectTypes...>
+
+	+dereference<ObjectType>(in reference : const std::variant<...ObjectTypesContainingRef>&) : Object
+	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
 }
 object_pool <..> stream_parser
 object_pool --> xref_table
