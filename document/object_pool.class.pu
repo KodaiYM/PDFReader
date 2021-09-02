@@ -28,7 +28,7 @@ class object_pool<InputStreamT> {
 }
 object_pool <..> stream_parser
 object_pool --> xref_table
-object_pool --> any_direct_object
+object_pool --> object_types
 object_pool ..> type_mismatch
 
 class stream_parser<InputStreamT> {
@@ -37,7 +37,7 @@ class stream_parser<InputStreamT> {
 class xref_table {
 	[[xref_types.class.pu]]
 }
-class any_direct_object  {
+annotation object_types <<(N, yellow) namespace>> {
 	[[object_types.class.pu]]
 }
 }
