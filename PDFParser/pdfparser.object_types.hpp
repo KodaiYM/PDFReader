@@ -56,11 +56,12 @@ public:
 	}
 
 public:
+	constexpr integer_object() noexcept : m_value(0) {}
 	template <typename IntegerT,
 	          std::enable_if_t<std::is_integral_v<IntegerT> &&
 	                               !std::is_same_v<IntegerT, bool>,
 	                           std::nullptr_t> = nullptr>
-	constexpr integer_object(IntegerT value = 0) {
+	constexpr integer_object(IntegerT value) {
 		if (value >= 0) {
 			if (value > std::numeric_limits<int_type>::max()) {
 				throw std::overflow_error("overflow");
