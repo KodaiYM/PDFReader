@@ -1,17 +1,15 @@
-#include "PDFParser.h"
 #include "literal_trim.hpp"
-#include "take_any_object_test@array_object_test.hpp"
+#include "pdfparser.object_pool.hpp"
+#include "pdfparser.stream_parser.hpp"
+#include "take_array_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
-using namespace error_types;
 using namespace object_types;
 using namespace pdfparser_test;
 
-using namespace take_any_object_test;
-
-void array_object_test::test_simple_array() {
+void take_array_object_test::test_simple_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -19,11 +17,10 @@ void array_object_test::test_simple_array() {
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_any_object(obj_pool);
-
-	Assert::IsTrue(array_object{1, 2, 3} == std::get<array_object>(object));
+	auto          object = str_parser.take_array_object(obj_pool);
+	Assert::IsTrue(array_object{1, 2, 3} == object);
 }
-void array_object_test::test_valid_array() {
+void take_array_object_test::test_valid_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -45,7 +42,7 @@ void array_object_test::test_valid_array() {
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_any_object(obj_pool);
+	auto          object = str_parser.take_array_object(obj_pool);
 
 	Assert::IsTrue(
 	    array_object{
@@ -61,9 +58,9 @@ void array_object_test::test_valid_array() {
 	        boolean_object{true},                                 //
 	        boolean_object{false},                                //
 	        null                                                  //
-	    } == std::get<array_object>(object));
+	    } == object);
 }
-void array_object_test::test_empty_array() {
+void take_array_object_test::test_empty_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -71,10 +68,10 @@ void array_object_test::test_empty_array() {
 
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_any_object(obj_pool);
-	Assert::IsTrue(array_object{} == std::get<array_object>(object));
+	auto          object = str_parser.take_array_object(obj_pool);
+	Assert::IsTrue(array_object{} == object);
 }
-void array_object_test::test_lack_of_right_square_bracket() {
+void take_array_object_test::test_lack_of_right_square_bracket() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
@@ -83,7 +80,7 @@ void array_object_test::test_lack_of_right_square_bracket() {
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
 	try {
-		str_parser.take_any_object(obj_pool);
+		str_parser.take_array_object(obj_pool);
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::array_lack_of_right_square_bracket ==
 		               parse_e.code());
