@@ -1,5 +1,5 @@
-#include "PDFParser.error_types.h"
-#include "PDFParser.parser.h"
+#include "pdfparser.parse_error.hpp"
+#include "pdfparser.parser.hpp"
 
 #include <msclr/marshal_cppstd.h>
 #include <sstream>
@@ -51,6 +51,11 @@ static std::ostream& operator<<(std::ostream&                         os,
 		os << '\t' << key_value.first << ": " << key_value.second << ",\n";
 	}
 	os << "}";
+	return os;
+}
+static std::ostream& operator<<(std::ostream&                       os,
+                                const object_types::integer_object& integer) {
+	os << static_cast<object_types::integer_object::int_type>(integer);
 	return os;
 }
 static std::ostream& operator<<(std::ostream& os,

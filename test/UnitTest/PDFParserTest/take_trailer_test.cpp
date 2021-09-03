@@ -1,13 +1,13 @@
-#include "PDFParser.h"
 #include "literal_trim.hpp"
+#include "pdfparser.object_pool.hpp"
+#include "pdfparser.stream_parser.hpp"
 #include "take_trailer_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
-using namespace error_types;
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test;
 
 void take_trailer_test::test_sample_trailer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -39,55 +39,4 @@ void take_trailer_test::test_no_white_space_after_keyword_trailer() {
 
 	// check if no-throw
 	str_parser.take_trailer(obj_pool);
-}
-void take_trailer_test::test_white_space_before_keyword_trailer() {
-	std::stringstream stream(std::ios_base::in | std::ios_base::out |
-	                         std::ios_base::binary);
-	stream << " trailer<<>>";
-
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	try {
-		str_parser.take_trailer(obj_pool);
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::keyword_trailer_not_found == parse_e.code());
-
-		// success
-		return;
-	}
-	Assert::Fail();
-}
-void take_trailer_test::test_no_dictionary_object() {
-	std::stringstream stream(std::ios_base::in | std::ios_base::out |
-	                         std::ios_base::binary);
-	stream << "trailer <deadbeef>";
-
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	try {
-		str_parser.take_trailer(obj_pool);
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::trailer_dictionary_not_found == parse_e.code());
-
-		// success
-		return;
-	}
-	Assert::Fail();
-}
-void take_trailer_test::test_no_keyword_trailer() {
-	std::stringstream stream(std::ios_base::in | std::ios_base::out |
-	                         std::ios_base::binary);
-	stream << "traile<<>>";
-
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	try {
-		str_parser.take_trailer(obj_pool);
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::keyword_trailer_not_found == parse_e.code());
-
-		// success
-		return;
-	}
-	Assert::Fail();
 }

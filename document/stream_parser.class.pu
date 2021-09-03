@@ -1,53 +1,45 @@
 @startuml stream_parser
 hide empty members
 namespace pdfparser {
-enum ignore_flag <<Enumeration>> {
-	<<Const, Flag>>
-	+{static} none            : uint8_t = 0
-	+{static} null            : uint8_t = 1
-	+{static} horizontal_tab  : uint8_t = 2
-	+{static} line_feed       : uint8_t = 4
-	+{static} form_feed       : uint8_t = 8
-	+{static} carriage_return : uint8_t = 16
-	+{static} space           : uint8_t = 32
-	+{static} comment         : uint8_t = 64
-
-	+{static} EOL
-	 : uint8_t = line_feed | carriage_return
-	+{static} any_whitespace_characters
-	 : uint8_t = null | horizontal_tab | line_feed | form_feed | carriage_return | space | EOL
-	+{static} any_whitespace_characters_except_EOL
-	 : uint8_t = any_whitespace_characters & ~EOL
-}
 class stream_parser<InputStreamT> {
-	-m_stream : InputStreamT
+	-m_tokenizer : tokenizer
 
 	+stream_parser(inout stream : InputStreamT&&)
-	+stream_parser(InputStreamT&)        = delete
 	+stream_parser(const InputStreamT&&) = delete
-	+take_footer(inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
-	+seek_to_end()                                                   : void
-	+eof()                                                           : bool
-	+tell()                                                          : std::streamoff
-	+seek(in byte_offset_from_beginning_of_file : std::streamoff)    : void
-	+seek_forward_head_of_line()                                     : void
-	+take_xref_byte_offset()                                         : std::streamoff
-	+take_xref_table()                                               : xref_table
-	+take_xref_entry(in object_number : object_t)                    : xref_entry
-	+take_trailer(inout object_accessor : object_pool<InputStreamT>&)           : dictionary_object
-	+take_any_object(inout object_accessor : object_pool<InputStreamT>&)        : any_direct_object_or_ref
-	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_number : object_t, in generation_number : generation_t) : any_direct_object
-	+attempt(in attempt_str : string_view)                           : bool
-	+ignore_if_present(in flags : ignore_flag)                       : void
-	+take_signed_integer<IntType>()                                  : IntType
-	+take_unsigned_integer<IntType>()                                : IntType
+	+stream_parser(InputStreamT&)        = delete
+
+	+take_footer(inout object_accessor : object_pool<InputStreamT>&)  : dictionary_object
+	+take_xref_table()                                                : xref_table
+	+take_xref_entry(in object_number : object_t)                     : xref_entry
+	+take_trailer(inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
+
+	+take_object<variant<...>>() : variant<...>
+	+take_object<variant<...>>(inout object_accessor : object_pool<InputStreamT>&) : variant<...>
+	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
+	+take_object<...ObjectTypes>(inout object_accessor : object_pool<InputStreamT>&) : variant<ObjectTypes...>
+	+take_boolean_object    () : boolean_object
+	+take_integer_object    () : integer_object
+	+take_real_object       () : real_object
+	+take_string_object     () : string_object
+	+take_name_object       () : name_object
+	+take_array_object      (inout object_accessor : object_pool<InputStreamT>&) : array_object
+	+take_dictionary_object (inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
+	+take_stream_object     (inout object_accessor : object_pool<InputStreamT>&) : stream_object
+	+take_null_object       () : null_object
+	+take_indirect_reference() : indirect_reference
+
+	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&) : any_direct_object
 }
-stream_parser ..> ignore_flag
+stream_parser --> "1" tokenizer
 stream_parser ..> xref_types
 stream_parser ..> object_types
-stream_parser <..> object_pool<InputStreamT>
+stream_parser <..> object_pool
 stream_parser ..> parse_error
+stream_parser ..> object_not_found_error
 
+class tokenizer {
+	[[tokenizer.class.pu]]
+}
 annotation xref_types <<(N, yellow) namespace>> {
 	[[xref_types.class.pu]]
 }
@@ -58,7 +50,10 @@ class object_pool<InputStreamT> {
 	[[object_pool.class.pu]]
 }
 class parse_error {
-	[[error_types.class.pu]]
+	[[parse_error.class.pu]]
+}
+class object_not_found_error {
+	[[object_not_found_error.class.pu]]
 }
 }
 @enduml

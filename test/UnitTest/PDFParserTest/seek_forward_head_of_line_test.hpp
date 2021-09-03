@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace pdfparser_test {
+namespace istream_extended_test {
 [TestClass] public ref class seek_forward_head_of_line_test {
 public:
 	[TestMethod] void test_beginning_of_file();
@@ -20,4 +20,4 @@ public:
 	[TestMethod] void test_CRLF_CRCRLF();
 	[TestMethod] void test_CRLF_LFCRLF();
 };
-} // namespace pdfparser_test
+} // namespace istream_extended_test

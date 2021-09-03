@@ -1,12 +1,10 @@
-#include "PDFParser.h"
 #include "ignore_if_present_test.hpp"
+#include "pdfparser.istream_extended.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
-using namespace error_types;
-using namespace object_types;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 void ignore_if_present_test::test_null_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -14,9 +12,9 @@ void ignore_if_present_test::test_null_only() {
 
 	stream << '\0' << " \t\n\f\r ";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::null);
-	Assert::IsTrue(1 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::null);
+	Assert::IsTrue(1 == str_extended.tell());
 }
 void ignore_if_present_test::test_line_feed_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -24,9 +22,9 @@ void ignore_if_present_test::test_line_feed_only() {
 
 	stream << "\n\r";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::line_feed);
-	Assert::IsTrue(1 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::line_feed);
+	Assert::IsTrue(1 == str_extended.tell());
 }
 void ignore_if_present_test::test_form_feed_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -34,9 +32,9 @@ void ignore_if_present_test::test_form_feed_only() {
 
 	stream << '\f' << " \t\n\f\r ";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::form_feed);
-	Assert::IsTrue(1 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::form_feed);
+	Assert::IsTrue(1 == str_extended.tell());
 }
 void ignore_if_present_test::test_carriage_return_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -44,9 +42,9 @@ void ignore_if_present_test::test_carriage_return_only() {
 
 	stream << "\r\n";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::carriage_return);
-	Assert::IsTrue(1 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::carriage_return);
+	Assert::IsTrue(1 == str_extended.tell());
 }
 void ignore_if_present_test::test_space_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -54,9 +52,9 @@ void ignore_if_present_test::test_space_only() {
 
 	stream << ' ' << "\t\n\f\r ";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::space);
-	Assert::IsTrue(1 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::space);
+	Assert::IsTrue(1 == str_extended.tell());
 }
 void ignore_if_present_test::test_comment_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -67,9 +65,9 @@ void ignore_if_present_test::test_comment_only() {
 
 	stream << "\n\r ";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::comment);
-	Assert::IsTrue(expected == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::comment);
+	Assert::IsTrue(expected == str_extended.tell());
 }
 void ignore_if_present_test::test_EOL_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -77,9 +75,9 @@ void ignore_if_present_test::test_EOL_only() {
 
 	stream << "\r\n ";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::EOL);
-	Assert::IsTrue(2 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::EOL);
+	Assert::IsTrue(2 == str_extended.tell());
 }
 void ignore_if_present_test::test_any_whitespace_characters() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -88,9 +86,9 @@ void ignore_if_present_test::test_any_whitespace_characters() {
 	stream << '\0' << "\t\n\f\r ";
 	std::streamoff expected = stream.tellp();
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::any_whitespace_characters);
-	Assert::IsTrue(expected == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::any_whitespace_characters);
+	Assert::IsTrue(expected == str_extended.tell());
 }
 void ignore_if_present_test::test_all_whitespaces_including_comment() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -101,10 +99,10 @@ void ignore_if_present_test::test_all_whitespaces_including_comment() {
 	       << "% last comment !\n ";
 	std::streamoff expected = stream.tellp();
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::any_whitespace_characters |
-	                             ignore_flag::comment);
-	Assert::IsTrue(expected == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                               whitespace_flags::comment);
+	Assert::IsTrue(expected == str_extended.tell());
 }
 void ignore_if_present_test::test_nothing_to_ignore() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -112,10 +110,10 @@ void ignore_if_present_test::test_nothing_to_ignore() {
 
 	stream << "don't ignore\r\n";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::any_whitespace_characters |
-	                             ignore_flag::comment);
-	Assert::IsTrue(0 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                               whitespace_flags::comment);
+	Assert::IsTrue(0 == str_extended.tell());
 }
 void ignore_if_present_test::test_no_flags() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -123,7 +121,8 @@ void ignore_if_present_test::test_no_flags() {
 
 	stream << '\0' << "\t\n\f\r ";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.ignore_if_present(ignore_flag::null & ~ignore_flag::null);
-	Assert::IsTrue(0 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.ignore_if_present(whitespace_flags::null &
+	                               ~whitespace_flags::null);
+	Assert::IsTrue(0 == str_extended.tell());
 }

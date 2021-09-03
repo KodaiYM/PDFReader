@@ -1,12 +1,10 @@
-#include "PDFParser.h"
+#include "pdfparser.istream_extended.hpp"
 #include "seek_to_end_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
-using namespace error_types;
-using namespace object_types;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 void seek_to_end_test::test_MIX_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -16,17 +14,17 @@ void seek_to_end_test::test_MIX_EOL() {
 	       << "\n"
 	       << "\r\r";
 
-	stream_parser str_parser(std::move(stream));
-	str_parser.seek_to_end();
-	Assert::IsTrue(5 == str_parser.tell());
+	istream_extended str_extended(std::move(stream));
+	str_extended.seek_to_end();
+	Assert::IsTrue(5 == str_extended.tell());
 }
 void seek_to_end_test::test_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream_parser str_parser(std::move(stream));
+	istream_extended str_extended(std::move(stream));
 
 	// check if no-throw
-	str_parser.seek_to_end();
-	str_parser.seek_to_end();
+	str_extended.seek_to_end();
+	str_extended.seek_to_end();
 }

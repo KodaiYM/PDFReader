@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace pdfparser_test {
+namespace istream_extended_test {
 [TestClass] public ref class ignore_if_present_test {
 public:
 	[TestMethod] void test_null_only();
@@ -17,4 +17,4 @@ public:
 	[TestMethod] void test_nothing_to_ignore();
 	[TestMethod] void test_no_flags();
 };
-} // namespace pdfparser_test
+} // namespace istream_extended_test

@@ -1,12 +1,11 @@
-#include "PDFParser.h"
+#include "pdfparser.stream_parser.hpp"
 #include "take_xref_table_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
-using namespace error_types;
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test;
 
 // test largest xref table
 void take_xref_table_test::test_maximum_xref_table() {
@@ -19,14 +18,11 @@ void take_xref_table_test::test_maximum_xref_table() {
 	stream_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_xref_table();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::xref_entry_first_10_digits_invalid ==
-		               parse_e.code());
-
+	} catch (std::overflow_error&) {
+		Assert::Fail(); // overflow error -> fail
+	} catch (...) {
 		// success
-		return;
 	}
-	Assert::Fail();
 }
 // test too large xref table (which occurs std::overflow_error)
 void take_xref_table_test::test_overflow() {

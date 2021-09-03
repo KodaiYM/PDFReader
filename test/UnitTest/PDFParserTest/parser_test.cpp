@@ -1,12 +1,10 @@
-#include "PDFParser.h"
 #include "parser_test.hpp"
+#include "pdfparser.parser.hpp"
 
 #include <filesystem>
 #include <fstream>
 
 using namespace pdfparser;
-using namespace error_types;
-using namespace object_types;
 using namespace pdfparser_test;
 
 /**

@@ -4,13 +4,13 @@ namespace pdfparser {
 class parser<InputStreamT> {
 	-m_stream_parser      : stream_parser<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
-	-m_object_pool        : object_pool
+	-m_object_pool        : object_pool<InputStreamT>
 
 	+parser(in stream : InputStreamT&&)
-	+parser(InputStreamT&)        = delete
 	+parser(const InputStreamT&&) = delete
+	+parser(InputStreamT&)        = delete
 }
-parser *--> stream_parser<InputStreamT>
+parser *--> stream_parser
 parser --> object_pool
 parser --> dictionary_object
 

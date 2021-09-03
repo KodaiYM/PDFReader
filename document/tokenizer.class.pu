@@ -1,0 +1,29 @@
+@startuml tokenizer
+hide empty members
+namespace pdfparser {
+class tokenizer<InputStreamT> {
+	+tokenizer(inout stream : InputStreamT&&)
+	+tokenizer(const InputStreamT&&) = delete
+	+tokenizer(InputStreamT&)        = delete
+
+	+no_token() : bool
+
+	+attempt_token(in attempt_token : string_view)                        : bool
+	+promise_token(in promise_token_list : initializer_list<string_view>) : void
+	+take_token()                                                         : optional<pdftoken>
+}
+tokenizer --|> istream_extended
+tokenizer ..> pdftoken
+tokenizer ..> tokenize_error
+
+class istream_extended<InputStreamT> {
+	[[istream_extended.class.pu]]
+}
+class pdftoken <<struct>> {
+	[[pdftoken.class.pu]]
+}
+class tokenize_error {
+	[[tokenize_error.class.pu]]
+}
+}
+@enduml

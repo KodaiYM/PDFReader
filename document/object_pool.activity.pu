@@ -7,44 +7,46 @@ stop
 }
 @enduml
 
-@startuml dereference of reference
-partition "dereference(in reference : const indirect_reference&)" {
-start
-	:return get_object(reference.object_number, reference.generation_number);
-stop
-}
-@enduml
-
 @startuml dereference of any
-partition "dereference(in object : const any_direct_object_or_ref&)" {
+partition "dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&)" {
 start
 	if (object が indirect_reference) then (y)
-		:return dereference(object as indirect_reference);
+		:return dereference<ObjectTypes...>(object as indirect_reference);
+		stop
 	else
-		:return object as any_direct_object;
+		if (object が ObjectTypes のいずれかの型を持つ) then (y)
+			:return object;
+			stop
+		else
+			:throw type_mismatch();
+			stop
+		endif
 	endif
-stop
+'stop
 }
 @enduml
 
-@startuml get_object
-partition "get_object(in object_number : object_t, in generation_number : generation_t)" {
+@startuml dereference of reference
+partition "dereference<...ObjectTypes>(in reference : const indirect_reference&)" {
 start
-	if (!m_object_map.contains(pair{object_number, generation_number})) then (y)
-		if (m_xref_table.contains(object_number, generation_number) && m_xref_table.at(object_number, generation_number) は xref_inuse_entry) then (y)
-			:object_info : xref_inuse_entry = m_xref_table.at(object_number, generation_number);
-			:ストリーム位置を保存;
-			:ストリーム位置を先頭から object_info.byte_offset バイト目に移動;
-			:ignore_if_present(any_whitespace_characters_except_EOL);
-			:object = take_indirect_object(*this, object_number, generation_number);
-			:ストリーム位置を復元;
+	if (!m_object_map.contains(pair{reference.object_number, reference.generation_number})) then (y)
+		if (m_xref_table.contains(reference.object_number, reference.generation_number) && m_xref_table.at(reference.object_number, reference.generation_number) は xref_inuse_entry) then (y)
+			:new_object = take_indirect_object(*this, m_xref_table.at(reference.object_number, reference.generation_number));
 		else
-			:object = null;
+			:new_object = null;
 		endif
-		:m_object_map.emplace(pair{object_number, generation_number}, object);
+
+		:m_object_map.emplace(pair{reference.object_number, reference.generation_number}, new_object);
 	endif
 
-	:return m_object_map.at(pair{object_number, generation_number});
-stop
+	:object = m_object_map.at(pair{reference.object_number, reference.generation_number});
+	if (object が ObjectTypes のいずれかの型を持つ)
+		:return object;
+		stop
+	else
+		:throw type_mismatch();
+		stop
+	endif
+'stop
 }
 @enduml
