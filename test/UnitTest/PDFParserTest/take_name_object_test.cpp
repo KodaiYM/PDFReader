@@ -6,7 +6,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test::take_object_test;
 
 using namespace std::string_literals;
 

@@ -5,7 +5,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test;
 
 // test largest xref table
 void take_xref_table_test::test_maximum_xref_table() {

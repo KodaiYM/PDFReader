@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 void peek_test::test_not_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

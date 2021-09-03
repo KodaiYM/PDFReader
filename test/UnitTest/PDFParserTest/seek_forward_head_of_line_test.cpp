@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 /**
  * | abc

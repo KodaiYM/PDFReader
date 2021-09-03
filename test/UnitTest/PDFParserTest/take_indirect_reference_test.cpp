@@ -6,7 +6,7 @@
 using namespace pdfparser;
 
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test::take_object_test;
 
 void take_indirect_reference_test::test_unsigned() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

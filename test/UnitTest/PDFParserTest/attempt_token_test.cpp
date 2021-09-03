@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace tokenizer_test;
 
 void attempt_token_test::test_when_true() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test::take_object_test;
 
 void take_object_test::test_any_direct_object_boolean() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

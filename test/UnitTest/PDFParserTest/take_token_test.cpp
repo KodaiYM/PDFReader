@@ -6,7 +6,7 @@
 #include <string_view>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace tokenizer_test;
 using namespace std::string_view_literals;
 
 void take_token_test::test_sp_separated_regular_token() {

@@ -5,7 +5,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace pdfparser_test;
+using namespace stream_parser_test::take_object_test;
 
 void take_integer_object_test::test_unsigned_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

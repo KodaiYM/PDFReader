@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 void tell_test::test_MIX_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

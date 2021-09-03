@@ -5,7 +5,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 void seek_test::test_to_between_CRLF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

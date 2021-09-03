@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace istream_extended_test;
 
 void ignore_if_present_test::test_null_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

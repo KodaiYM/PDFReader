@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace pdfparser_test {
+namespace tokenizer_test {
 [TestClass] public ref class take_token_test {
 public:
 	[TestMethod] void test_sp_separated_regular_token();
@@ -17,4 +17,4 @@ public:
 	[TestMethod] void test_whitespace_eof();
 	[TestMethod] void test_at_eof();
 };
-} // namespace pdfparser_test
+} // namespace tokenizer_test

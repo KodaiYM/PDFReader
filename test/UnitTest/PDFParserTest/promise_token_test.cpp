@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace tokenizer_test;
 
 void promise_token_test::test_when_nothrow() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
