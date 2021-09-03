@@ -127,20 +127,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="PDFParser.object_pool.h" />
-    <ClInclude Include="PDFParser.error_types.h" />
-    <ClInclude Include="PDFParser.h" />
-    <ClInclude Include="PDFParser.object_types.h" />
-    <ClInclude Include="PDFParser.parser.h" />
-    <ClInclude Include="PDFParser.xref_types.h" />
+    <ClInclude Include="character_types.hpp" />
+    <ClInclude Include="pdfparser.object_not_found_error.hpp" />
+    <ClInclude Include="pdfparser.istream_extended_error.hpp" />
+    <ClInclude Include="pdfparser.istream_extended.hpp" />
+    <ClInclude Include="pdfparser.object_pool.hpp" />
+    <ClInclude Include="pdfparser.parse_error.hpp" />
+    <ClInclude Include="pdfparser.object_types.hpp" />
+    <ClInclude Include="pdfparser.parser.hpp" />
+    <ClInclude Include="pdfparser.xref_types.hpp" />
+    <ClInclude Include="pdfparser.pdftoken.hpp" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="PDFParser.stream_parser.h" />
+    <ClInclude Include="pdfparser.stream_parser.hpp" />
+    <ClInclude Include="pdfparser.whitespace_flags.hpp" />
+    <ClInclude Include="pdfparser.tokenizer.hpp" />
+    <ClInclude Include="pdfparser.tokenize_error.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="PDFParser.error_types.cpp" />
-    <ClCompile Include="PDFParser.parser.cpp" />
-    <ClCompile Include="PDFParser.xref_types.cpp" />
+    <ClCompile Include="pdfparser.object_not_found_error.cpp" />
+    <ClCompile Include="pdfparser.parse_error.cpp" />
+    <ClCompile Include="pdfparser.istream_extended_error.cpp" />
+    <ClCompile Include="pdfparser.parser.cpp" />
+    <ClCompile Include="pdfparser.pdftoken.cpp" />
+    <ClCompile Include="pdfparser.xref_types.cpp" />
+    <ClCompile Include="pdfparser.tokenize_error.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
@@ -149,7 +160,7 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PDFParser.object_types.cpp" />
+    <ClCompile Include="pdfparser.object_types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
