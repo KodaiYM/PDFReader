@@ -29,7 +29,7 @@ void take_object_test::test_any_direct_object_integer() {
 	stream_parser str_parser(std::move(stream));
 	object_pool   obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
-	Assert::IsTrue(10 == std::get<integer_object>(object));
+	Assert::IsTrue(10 == static_cast<int>(std::get<integer_object>(object)));
 }
 void take_object_test::test_any_direct_object_real() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

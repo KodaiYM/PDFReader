@@ -15,8 +15,8 @@ void take_integer_object_test::test_unsigned_integer() {
 
 	stream_parser str_parser(std::move(stream));
 
-	auto object = str_parser.take_integer_object();
-	Assert::IsTrue(123 == object);
+	integer_object object = str_parser.take_integer_object();
+	Assert::AreEqual(123, static_cast<int>(object));
 }
 void take_integer_object_test::test_plus_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -26,8 +26,8 @@ void take_integer_object_test::test_plus_integer() {
 
 	stream_parser str_parser(std::move(stream));
 
-	auto object = str_parser.take_integer_object();
-	Assert::IsTrue(123 == object);
+	integer_object object = str_parser.take_integer_object();
+	Assert::AreEqual(123, static_cast<int>(object));
 }
 void take_integer_object_test::test_minus_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -37,14 +37,15 @@ void take_integer_object_test::test_minus_integer() {
 
 	stream_parser str_parser(std::move(stream));
 
-	auto object = str_parser.take_integer_object();
-	Assert::IsTrue(-123 == object);
+	integer_object object = str_parser.take_integer_object();
+	Assert::AreEqual(-123, static_cast<int>(object));
 }
 void take_integer_object_test::test_max() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	constexpr auto max = std::numeric_limits<integer_object::int_type>::max();
+	constexpr integer_object::int_type max =
+	    std::numeric_limits<decltype(max)>::max();
 	stream << max;
 	std::streamoff expected = stream.tellp();
 
@@ -56,7 +57,8 @@ void take_integer_object_test::test_min() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	constexpr auto min = std::numeric_limits<integer_object::int_type>::min();
+	constexpr integer_object::int_type min =
+	    std::numeric_limits<decltype(min)>::min();
 	stream << min;
 	std::streamoff expected = stream.tellp();
 
