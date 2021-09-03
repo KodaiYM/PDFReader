@@ -4,18 +4,19 @@
 #include <type_traits>
 
 namespace pdfparser {
-enum class [[deprecated]] whitespace_flags : uint8_t{
-    null                      = 1 << 0,
-    horizontal_tab            = 1 << 1,
-    line_feed                 = 1 << 2,
-    form_feed                 = 1 << 3,
-    carriage_return           = 1 << 4,
-    space                     = 1 << 5,
-    comment                   = 1 << 6,
-    EOL                       = line_feed | carriage_return,
-    any_whitespace_characters = null | horizontal_tab | line_feed | form_feed |
-                                carriage_return | space | EOL,
-    any_whitespace_characters_except_EOL = any_whitespace_characters & ~EOL};
+enum class whitespace_flags : uint8_t {
+	null                      = 1 << 0,
+	horizontal_tab            = 1 << 1,
+	line_feed                 = 1 << 2,
+	form_feed                 = 1 << 3,
+	carriage_return           = 1 << 4,
+	space                     = 1 << 5,
+	comment                   = 1 << 6,
+	EOL                       = line_feed | carriage_return,
+	any_whitespace_characters = null | horizontal_tab | line_feed | form_feed |
+	                            carriage_return | space | EOL,
+	any_whitespace_characters_except_EOL = any_whitespace_characters & ~EOL
+};
 }
 
 /// <summary>
