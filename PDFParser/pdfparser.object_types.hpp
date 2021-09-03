@@ -32,13 +32,18 @@ public:
 	                               !std::is_same_v<IntegerT, bool>,
 	                           std::nullptr_t> = nullptr>
 	constexpr operator IntegerT() const {
-		if (m_value >= 0) {
-			if (m_value > std::numeric_limits<IntegerT>::max()) {
+		if constexpr (std::is_signed_v<IntegerT>) {
+			if (!(std::numeric_limits<IntegerT>::min() <= m_value &&
+			      m_value <= std::numeric_limits<IntegerT>::max())) {
 				throw std::overflow_error("overflow");
 			}
 		} else {
-			assert(m_value < 0);
-			if (m_value < std::numeric_limits<IntegerT>::min()) {
+			static_assert(std::is_unsigned_v<IntegerT>);
+
+			const std::make_unsigned_t<int_type> m_value_u = m_value;
+
+			if (m_value < 0 || !(std::numeric_limits<IntegerT>::min() <= m_value_u &&
+			                     m_value_u <= std::numeric_limits<IntegerT>::max())) {
 				throw std::overflow_error("overflow");
 			}
 		}
