@@ -1,4 +1,4 @@
-﻿#include "PDFParser.xref_types.h"
+﻿#include "pdfparser.xref_types.hpp"
 
 #include <cassert>
 
