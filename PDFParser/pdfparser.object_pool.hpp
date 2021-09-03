@@ -205,11 +205,14 @@ template <class InputStreamT>
 template <class ObjectType, class... ObjectTypesContainingRef>
 ObjectType object_pool<InputStreamT>::dereference(
     const std::variant<ObjectTypesContainingRef...>& object) {
-	static_assert((... || std::is_same_v<object_types::indirect_reference,
-	                                     ObjectTypesContainingRef>));
+	using namespace object_types;
+	static_assert(
+	    (... || std::is_same_v<indirect_reference, ObjectTypesContainingRef>));
 
 	if (std::holds_alternative<ObjectType>(object)) {
 		return std::get<ObjectType>(object);
+	} else if (std::holds_alternative<indirect_reference>(object)) {
+		return dereference<ObjectType>(std::get<indirect_reference>(object));
 	} else {
 		throw type_mismatch();
 	}
@@ -232,10 +235,11 @@ std::variant<ObjectTypes...>
 	if (auto object_it = m_object_map.find(
 	        {reference.object_number, reference.generation_number});
 	    object_it != m_object_map.end()) {
-		target_object = *object_it;
+		target_object = object_it->second;
 	} else {
 		decltype(m_object_map)::mapped_type new_object = object_types::null;
-		if (auto xref_info = m_xref_table.find(object_number, generation_number);
+		if (auto xref_info = m_xref_table.find(reference.object_number,
+		                                       reference.generation_number);
 		    xref_info != m_xref_table.end() &&
 		    std::holds_alternative<xref_types::xref_inuse_entry>(*xref_info)) {
 			new_object = m_parser.take_indirect_object(

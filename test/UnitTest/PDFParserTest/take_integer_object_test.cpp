@@ -165,7 +165,7 @@ void take_integer_object_test::test_max_plus1() {
 	stream_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_integer_object();
-	} catch (std::range_error&) {
+	} catch (std::out_of_range&) {
 		// success
 		return;
 	}
@@ -181,7 +181,7 @@ void take_integer_object_test::test_min_minus1() {
 	stream_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_integer_object();
-	} catch (std::range_error&) {
+	} catch (std::out_of_range&) {
 		// success
 		return;
 	}

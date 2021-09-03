@@ -846,7 +846,7 @@ object_types::integer_object
 	auto front_token = m_tknizer.take_token();
 
 	if (front_token.has_value()) {
-		std::regex       integer_re("[+-][0-9]+");
+		std::regex       integer_re("[+-]?[0-9]+");
 		std::string_view front_view = front_token.value();
 
 		if (std::regex_match(front_view.begin(), front_view.end(), integer_re)) {
@@ -867,7 +867,7 @@ object_types::real_object stream_parser<InputStreamT>::take_real_object() {
 	auto front_token = m_tknizer.take_token();
 
 	if (front_token.has_value()) {
-		std::regex       real_re("[+-]([0-9]*)\\.([0-9]*)");
+		std::regex       real_re("[+-]?([0-9]*)\\.([0-9]*)");
 		std::string_view front_view = front_token.value();
 
 		if (std::match_results<std::string_view::const_iterator> result;
@@ -950,11 +950,13 @@ object_types::string_object stream_parser<InputStreamT>::take_string_object() {
 						if (const auto second_digit = m_tknizer.peek();
 						    second_digit.has_value() && '0' <= second_digit &&
 						    second_digit <= '7') {
+							++m_tknizer;
 							octal_character = static_cast<decltype(octal_character)>(
 							    8 * octal_character + (second_digit.value() - '0'));
 							if (const auto third_digit = m_tknizer.peek();
 							    third_digit.has_value() && '0' <= third_digit &&
 							    third_digit <= '7') {
+								++m_tknizer;
 								octal_character = static_cast<decltype(octal_character)>(
 								    8 * octal_character + (third_digit.value() - '0'));
 							}
@@ -1038,12 +1040,17 @@ object_types::name_object stream_parser<InputStreamT>::take_name_object() {
 			std::string_view name_view{name_token};
 			std::regex       hex_re("#([0-9abcdefABCDEF]{2})");
 			std::string      name_str;
-			for (std::regex_iterator it(name_view.begin(), name_view.end(), hex_re),
-			     end = decltype(it){};
-			     it != end; ++it) {
-				name_str += it->prefix();
-				name_str.push_back(decltype(name_str)::traits_type::to_char_type(
-				    std::stoi(it->str(1), nullptr, 16)));
+			if (std::regex_iterator it(name_view.begin(), name_view.end(), hex_re),
+			    end = decltype(it){};
+			    it != end) {
+				name_str = it->prefix();
+				for (; it != end; ++it) {
+					name_str.push_back(decltype(name_str)::traits_type::to_char_type(
+					    std::stoi(it->str(1), nullptr, 16)));
+					name_str += it->suffix();
+				}
+			} else {
+				name_str = name_token;
 			}
 			return name_object{name_str};
 		} else {

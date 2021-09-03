@@ -90,9 +90,10 @@ void take_footer_test::test_xref_byte_offset_not_found() {
 
 	try {
 		str_parser.take_footer(obj_pool);
-	} catch (const object_not_found_error& obj_e) {
-		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
-		               obj_e.code());
+	} catch (const istream_extended_error& istr_ext_e) {
+		Assert::IsTrue(
+		    istream_extended_error::failed_to_seek_forward_head_of_line ==
+		    istr_ext_e.code());
 
 		// success
 		return;
