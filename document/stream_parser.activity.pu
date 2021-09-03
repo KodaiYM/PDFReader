@@ -197,7 +197,7 @@ partition "take_integer_object()" {
 start
 	:front_token = take_token();
 
-	if (front_token が [+-]10進整数 の形) then (y)
+	if (front_token が [+-]?10進整数 の形) then (y)
 		:first_integer = front_token を解釈した整数;
 		:return first_integer;
 	endif
@@ -212,7 +212,7 @@ partition "take_real_object()" {
 start
 	:front_token = take_token();
 
-	if (front_token が [+-]10進整数.10進整数 の形（但し、10進整数のどちらかは空でも良い）) then (y)
+	if (front_token が [+-]?10進整数.10進整数 の形（但し、10進整数のどちらかは空でも良い）) then (y)
 		:return real_object(front_token を解釈した小数);
 		stop
 	endif
