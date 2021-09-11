@@ -1,0 +1,7 @@
+@startuml document_error
+hide empty members
+namespace pdfparser {
+class document_error {
+}
+}
+@enduml

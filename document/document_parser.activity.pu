@@ -1,0 +1,58 @@
+@startuml document_parser
+partition "document_parser(in stream : InputStreamT&&)" {
+start
+	:m_stream_parser = stream_parser(std::move(stream));
+	:m_object_pool = object_pool(m_stream_parser);
+	:m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
+stop
+}
+@enduml
+
+@startuml GetPages
+partition "GetPages()" {
+start
+	if (mPages が null じゃない) then (y)
+		:return mPages;
+		stop
+	endif
+
+	:root_dictionary = m_object_pool.dereference<dictionary_object>(m_trailer_dictionary.at("Root"));
+	:return GetPages(root_dictionary, {});
+stop
+}
+@enduml
+
+@startuml GetPages_recursive
+partition "GetPages(page_node : const dictionary_object&, inherited_attributes : const dictionary_object&)" {
+start
+	if ("Pages" == page_node.at("Type")) then (y)
+		:new_inherited_attributes = inherited_attributes;
+		while (entry in page_node) is (y)
+			' Resources, MediaBox, CropBox, Rotate
+			if (継承できるキー(entry->first)) then (y)
+				:new_inherited_attributes.insert_or_assign(entry->first, entry->second);
+			endif
+		endwhile
+
+		:pages = List<PDFPage>;
+		while (kid in complete_page_node.at("Kids")) is (y)
+			:pages.AddRanges(GetPages(kid, new_inherited_attributes));
+		endwhile
+		:return pages;
+		stop
+	elseif ("Page" == page_node.at("Type")) then (y)
+		:complete_page_node = page_node;
+		:complete_page_node.insert(inherited_attributes.begin(), inherited_attributes.end());
+
+		:media_box = rectangle_data(m_object_pool.dereference<array_object>(complete_page_node.at("MediaBox")));
+		:page : PDFPage;
+		:page.width  = media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
+		:page.height = media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
+		:return page;
+	else
+		:throw document_error();
+		stop
+	endif
+stop
+}
+@enduml
