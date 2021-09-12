@@ -1,5 +1,5 @@
+#include "pdfparser.document_parser.hpp"
 #include "pdfparser.parse_error.hpp"
-#include "pdfparser.parser.hpp"
 
 #include <msclr/marshal_cppstd.h>
 #include <sstream>

@@ -134,7 +134,7 @@
     <ClInclude Include="pdfparser.object_pool.hpp" />
     <ClInclude Include="pdfparser.parse_error.hpp" />
     <ClInclude Include="pdfparser.object_types.hpp" />
-    <ClInclude Include="pdfparser.parser.hpp" />
+    <ClInclude Include="pdfparser.document_parser.hpp" />
     <ClInclude Include="pdfparser.xref_types.hpp" />
     <ClInclude Include="pdfparser.pdftoken.hpp" />
     <ClInclude Include="Resource.h" />
@@ -148,7 +148,7 @@
     <ClCompile Include="pdfparser.object_not_found_error.cpp" />
     <ClCompile Include="pdfparser.parse_error.cpp" />
     <ClCompile Include="pdfparser.istream_extended_error.cpp" />
-    <ClCompile Include="pdfparser.parser.cpp" />
+    <ClCompile Include="pdfparser.document_parser.cpp" />
     <ClCompile Include="pdfparser.pdftoken.cpp" />
     <ClCompile Include="pdfparser.xref_types.cpp" />
     <ClCompile Include="pdfparser.tokenize_error.cpp" />

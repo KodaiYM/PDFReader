@@ -1,5 +1,5 @@
-#include "parser_test.hpp"
-#include "pdfparser.parser.hpp"
+#include "document_parser_test.hpp"
+#include "pdfparser.document_parser.hpp"
 
 #include <filesystem>
 #include <fstream>

@@ -22,9 +22,6 @@
     <Filter Include="pdfparser\object_types">
       <UniqueIdentifier>{f13b5421-662f-4180-af25-5dc3776b75a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\parser">
-      <UniqueIdentifier>{469ca825-74ae-4d07-917a-534d8c1cde23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="pdfparser\stream_parser">
       <UniqueIdentifier>{ed7b18f4-4990-41d6-ae62-ba883c209bbb}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,9 @@
     <Filter Include="pdfparser\pdftoken">
       <UniqueIdentifier>{2a6b0465-8233-4804-9579-a9203e9a9fda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pdfparser\document_parser">
+      <UniqueIdentifier>{469ca825-74ae-4d07-917a-534d8c1cde23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -57,8 +57,8 @@
     <ClInclude Include="pdfparser.object_types.hpp">
       <Filter>pdfparser\object_types</Filter>
     </ClInclude>
-    <ClInclude Include="pdfparser.parser.hpp">
-      <Filter>pdfparser\parser</Filter>
+    <ClInclude Include="pdfparser.document_parser.hpp">
+      <Filter>pdfparser\document_parser</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.stream_parser.hpp">
       <Filter>pdfparser\stream_parser</Filter>
@@ -101,8 +101,8 @@
     <ClCompile Include="pdfparser.object_types.cpp">
       <Filter>pdfparser\object_types</Filter>
     </ClCompile>
-    <ClCompile Include="pdfparser.parser.cpp">
-      <Filter>pdfparser\parser</Filter>
+    <ClCompile Include="pdfparser.document_parser.cpp">
+      <Filter>pdfparser\document_parser</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.xref_types.cpp">
       <Filter>pdfparser\xref_types</Filter>
