@@ -2,8 +2,8 @@
 hide empty members
 namespace pdfparser::data_types {
 class coordinates<<struct>> {
-	+x : long long
-	+y : long long
+	+x : double
+	+y : double
 }
 class rectangle_data<<struct>> {
 	+less_coordinates    : coordinates

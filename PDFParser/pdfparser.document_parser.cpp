@@ -75,7 +75,7 @@ static std::ostream&
 	return os;
 }
 System::String ^ parser_tostring::get(System::String ^ filename) {
-	parser PDFParser{
+	document_parser PDFParser{
 	    std::ifstream(msclr::interop::marshal_as<std::string>(filename),
 	                  std::ios_base::in | std::ios_base::binary)};
 

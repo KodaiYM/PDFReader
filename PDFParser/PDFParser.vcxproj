@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="character_types.hpp" />
+    <ClInclude Include="pdfparser.data_types.hpp" />
     <ClInclude Include="pdfparser.object_not_found_error.hpp" />
     <ClInclude Include="pdfparser.istream_extended_error.hpp" />
     <ClInclude Include="pdfparser.istream_extended.hpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="pdfparser.parse_error.hpp" />
     <ClInclude Include="pdfparser.object_types.hpp" />
     <ClInclude Include="pdfparser.document_parser.hpp" />
+    <ClInclude Include="pdfparser.PDFPage.hpp" />
     <ClInclude Include="pdfparser.xref_types.hpp" />
     <ClInclude Include="pdfparser.pdftoken.hpp" />
     <ClInclude Include="Resource.h" />

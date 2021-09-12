@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pdfparser.PDFPage.hpp"
 #include "pdfparser.object_pool.hpp"
 #include "pdfparser.object_types.hpp"
 #include "pdfparser.stream_parser.hpp"
@@ -11,7 +12,10 @@
 
 namespace pdfparser {
 template <class InputStreamT>
-class parser final {
+class document_parser final {
+public:
+	System::Collections::Generic::List<PDFPage> ^ GetPages();
+
 public:
 	static_assert(std::is_base_of_v<std::istream, InputStreamT>,
 	              "template parameter InputStreamT must be a derived class of "
@@ -25,13 +29,13 @@ public:
 	/// <exception>
 	/// move constructor of InputStreamT may throw an exception.
 	/// </exception>
-	explicit parser(InputStreamT&& stream);
+	explicit document_parser(InputStreamT&& stream);
 
 	/// <summary>prohibit to move from const rvalue/summary>
-	parser(const InputStreamT&&) = delete;
+	document_parser(const InputStreamT&&) = delete;
 
 	/// <summary>prohibit to copy from lvalue</summary>
-	parser(InputStreamT&) = delete;
+	document_parser(InputStreamT&) = delete;
 
 private:
 	stream_parser<InputStreamT>     m_stream_parser;
@@ -43,7 +47,7 @@ private:
 };
 public
 ref class parser_tostring
-    sealed { // C++/CLI execute parser and get xref_table by string
+    sealed { // C++/CLI execute document_parser and get xref_table by string
 public:
 	static System::String ^ get(System::String ^ filename);
 };
@@ -52,7 +56,14 @@ public:
 // definition of template functions
 namespace pdfparser {
 template <class InputStreamT>
-parser<InputStreamT>::parser(InputStreamT&& stream)
+    System::Collections::Generic::List<PDFPage> ^
+    document_parser<InputStreamT>::GetPages() {
+	throw gcnew  System::NotImplementedException();
+	return gcnew System::Collections::Generic::List<PDFPage>();
+}
+
+template <class InputStreamT>
+document_parser<InputStreamT>::document_parser(InputStreamT&& stream)
     : m_stream_parser(std::move(stream)), m_object_pool(m_stream_parser) {
 	m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
 }

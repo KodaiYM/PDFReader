@@ -5,7 +5,6 @@ class document_parser<InputStreamT> {
 	-m_stream_parser      : stream_parser<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
 	-m_object_pool        : object_pool<InputStreamT>
-	-mPages               : List<PDFPage>
 
 	+document_parser(in stream : InputStreamT&&)
 	+document_parser(const InputStreamT&&) = delete
