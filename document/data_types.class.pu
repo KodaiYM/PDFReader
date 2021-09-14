@@ -9,7 +9,7 @@ class rectangle_data<<struct>> {
 	+less_coordinates    : coordinates
 	+greater_coordinates : coordinates
 
-	+rectangle_data(rectangle_array : const array_object&)
+	+rectangle_data(inout object_accessor : object_pool<InputStreamT>&, diagonal_coordinates : const array_object&)
 }
 }
 @enduml

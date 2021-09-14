@@ -144,6 +144,8 @@ using non_null_direct_object_or_ref =
     std::variant<boolean_object, integer_object, real_object, string_object,
                  name_object, array_object, dictionary_object, stream_object,
                  indirect_reference>;
+using number_object = std::variant<integer_object, real_object>;
+double number_to_double(const number_object& number_obj) noexcept;
 
 class array_object: public std::vector<any_direct_object_or_ref> {
 private:

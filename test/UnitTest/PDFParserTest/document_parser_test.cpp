@@ -23,5 +23,5 @@ void document_parser_test::test_GetPages_helloworld() {
 	System::Collections::Generic::List<PDFPage> expected_pages;
 	expected_pages.Add(PDFPage{596, 843});
 
-	Assert::AreEqual(% expected_pages, main_parser.GetPages());
+	CollectionAssert::AreEqual(% expected_pages, main_parser.GetPages());
 }

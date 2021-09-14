@@ -2,6 +2,7 @@
 
 #include "pdfparser.object_types.hpp"
 #include "pdfparser.xref_types.hpp"
+#include "type_traits_extended.hpp"
 
 #include <cassert>
 #include <fstream> // for IntelliSense
@@ -50,6 +51,16 @@ public:
 	/// <param name="referenced_xref_table">new xref table</param>
 	void add_xref_table(
 	    const xref_types::xref_table& referenced_xref_table) noexcept;
+
+	template <class Variant, class... ObjectTypesContainingRef,
+	          std::enable_if_t<is_same_template_v<std::variant, Variant>,
+	                           std::nullptr_t> = nullptr>
+	Variant dereference(const std::variant<ObjectTypesContainingRef...>& object);
+
+	template <class Variant,
+	          std::enable_if_t<is_same_template_v<std::variant, Variant>,
+	                           std::nullptr_t> = nullptr>
+	Variant dereference(const object_types::indirect_reference& reference);
 
 	/// <summary>
 	/// If object is an indirect_reference, call dereference(object) and return
@@ -117,7 +128,9 @@ public:
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	template <class ObjectType, class... ObjectTypesContainingRef>
+	template <class ObjectType, class... ObjectTypesContainingRef,
+	          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
+	                           std::nullptr_t> = nullptr>
 	ObjectType
 	    dereference(const std::variant<ObjectTypesContainingRef...>& object);
 
@@ -136,7 +149,9 @@ public:
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	template <class ObjectType>
+	template <class ObjectType,
+	          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
+	                           std::nullptr_t> = nullptr>
 	ObjectType dereference(const object_types::indirect_reference& reference);
 
 public:
@@ -150,6 +165,17 @@ private:
 	    m_object_map;
 
 private:
+	template <class Variant, class... ObjectTypesContainingRef,
+	          std::size_t... Seq>
+	Variant dereference_Variant_impl(
+	    std::index_sequence<Seq...>,
+	    const std::variant<ObjectTypesContainingRef...>&);
+
+	template <class Variant, std::size_t... Seq>
+	Variant dereference_Variant_impl(
+	    std::index_sequence<Seq...>,
+	    const object_types::indirect_reference& reference);
+
 	template <class... ObjectTypes>
 	std::variant<ObjectTypes...> dereference_variant_fixed(
 	    const object_types::indirect_reference& reference);
@@ -170,12 +196,32 @@ void object_pool<InputStreamT>::add_xref_table(
 }
 
 template <class InputStreamT>
+template <
+    class Variant, class... ObjectTypesContainingRef,
+    std::enable_if_t<is_same_template_v<std::variant, Variant>, std::nullptr_t>>
+Variant object_pool<InputStreamT>::dereference(
+    const std::variant<ObjectTypesContainingRef...>& object) {
+	return dereference_Variant_impl<Variant>(
+	    std::make_index_sequence<std::variant_size_v<Variant>>(), object);
+}
+
+template <class InputStreamT>
+template <
+    class Variant,
+    std::enable_if_t<is_same_template_v<std::variant, Variant>, std::nullptr_t>>
+Variant object_pool<InputStreamT>::dereference(
+    const object_types::indirect_reference& reference) {
+	return dereference_Variant_impl<Variant>(
+	    std::make_index_sequence<std::variant_size_v<Variant>>(), reference);
+}
+
+template <class InputStreamT>
 template <class... ObjectTypes, class... ObjectTypesContainingRef,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
 std::variant<ObjectTypes...> object_pool<InputStreamT>::dereference(
     const std::variant<ObjectTypesContainingRef...>& object) {
 	using namespace object_types;
-	static_cast(
+	static_assert(
 	    (... || std::is_same_v<indirect_reference, ObjectTypesContainingRef>));
 
 	return std::visit(
@@ -202,7 +248,9 @@ std::variant<ObjectTypes...> object_pool<InputStreamT>::dereference(
 }
 
 template <class InputStreamT>
-template <class ObjectType, class... ObjectTypesContainingRef>
+template <class ObjectType, class... ObjectTypesContainingRef,
+          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
+                           std::nullptr_t>>
 ObjectType object_pool<InputStreamT>::dereference(
     const std::variant<ObjectTypesContainingRef...>& object) {
 	using namespace object_types;
@@ -219,10 +267,28 @@ ObjectType object_pool<InputStreamT>::dereference(
 }
 
 template <class InputStreamT>
-template <class ObjectType>
+template <class ObjectType,
+          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
+                           std::nullptr_t>>
 ObjectType object_pool<InputStreamT>::dereference(
     const object_types::indirect_reference& reference) {
 	return std::get<ObjectType>(dereference_variant_fixed<ObjectType>(reference));
+}
+
+template <class InputStreamT>
+template <class Variant, class... ObjectTypesContainingRef, std::size_t... Seq>
+Variant object_pool<InputStreamT>::dereference_Variant_impl(
+    std::index_sequence<Seq...>,
+    const std::variant<ObjectTypesContainingRef...>& object) {
+	return dereference<std::variant_alternative_t<Seq, Variant>...>(object);
+}
+
+template <class InputStreamT>
+template <class Variant, std::size_t... Seq>
+Variant object_pool<InputStreamT>::dereference_Variant_impl(
+    std::index_sequence<Seq...>,
+    const object_types::indirect_reference& reference) {
+	return dereference<std::variant_alternative_t<Seq, Variant>...>(reference);
 }
 
 template <class InputStreamT>

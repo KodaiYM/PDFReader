@@ -102,6 +102,12 @@
     <ClInclude Include="pdfparser.data_types.hpp">
       <Filter>pdfparser\document_parser\data_types</Filter>
     </ClInclude>
+    <ClInclude Include="pdfparser.document_error.hpp">
+      <Filter>pdfparser\document_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="type_traits_extended.hpp">
+      <Filter>pdfparser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -130,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="pdfparser.object_not_found_error.cpp">
       <Filter>pdfparser\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="pdfparser.data_types.cpp">
+      <Filter>pdfparser\document_parser\data_types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

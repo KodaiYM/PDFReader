@@ -11,11 +11,6 @@ stop
 @startuml GetPages
 partition "GetPages()" {
 start
-	if (mPages が null じゃない) then (y)
-		:return mPages;
-		stop
-	endif
-
 	:root_dictionary = m_object_pool.dereference<dictionary_object>(m_trailer_dictionary.at("Root"));
 	:return GetPages(root_dictionary, {});
 stop
@@ -35,7 +30,7 @@ start
 		endwhile
 
 		:pages = List<PDFPage>;
-		while (kid in complete_page_node.at("Kids")) is (y)
+		while (kid in page_node.at("Kids")) is (y)
 			:pages.AddRanges(GetPages(kid, new_inherited_attributes));
 		endwhile
 		:return pages;
@@ -44,11 +39,11 @@ start
 		:complete_page_node = page_node;
 		:complete_page_node.insert(inherited_attributes.begin(), inherited_attributes.end());
 
-		:media_box = rectangle_data(m_object_pool.dereference<array_object>(complete_page_node.at("MediaBox")));
-		:page : PDFPage;
-		:page.width  = media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
-		:page.height = media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
-		:return page;
+		:media_box = rectangle_data(m_object_pool, m_object_pool.dereference<array_object>(complete_page_node.at("MediaBox")));
+		:this_page : PDFPage;
+		:this_page.width  = media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
+		:this_page.height = media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
+		:return this_page;
 	else
 		:throw document_error();
 		stop
