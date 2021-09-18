@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="character_types.hpp" />
+    <ClInclude Include="PDFParser.PagesModel.hpp" />
     <ClInclude Include="type_traits_extended.hpp" />
     <ClInclude Include="pdfparser.data_types.hpp" />
     <ClInclude Include="pdfparser.document_error.hpp" />
@@ -138,7 +139,7 @@
     <ClInclude Include="pdfparser.parse_error.hpp" />
     <ClInclude Include="pdfparser.object_types.hpp" />
     <ClInclude Include="pdfparser.document_parser.hpp" />
-    <ClInclude Include="pdfparser.PDFPage.hpp" />
+    <ClInclude Include="PDFParser.PDFPage.hpp" />
     <ClInclude Include="pdfparser.xref_types.hpp" />
     <ClInclude Include="pdfparser.pdftoken.hpp" />
     <ClInclude Include="Resource.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="pdfparser.data_types.cpp" />
     <ClCompile Include="pdfparser.object_not_found_error.cpp" />
+    <ClCompile Include="PDFParser.PagesModel.cpp" />
     <ClCompile Include="pdfparser.parse_error.cpp" />
     <ClCompile Include="pdfparser.istream_extended_error.cpp" />
     <ClCompile Include="pdfparser.document_parser.cpp" />

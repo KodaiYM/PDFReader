@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pdfparser.PDFPage.hpp"
+#include "PDFParser.PDFPage.hpp"
 #include "pdfparser.data_types.hpp"
 #include "pdfparser.document_error.hpp"
 #include "pdfparser.object_pool.hpp"
@@ -16,7 +16,7 @@ namespace pdfparser {
 template <class InputStreamT>
 class document_parser final {
 public:
-	System::Collections::Generic::List<PDFPage> ^ GetPages();
+	System::Collections::Generic::List<PDFParser::PDFPage ^> ^ GetPages();
 
 public:
 	static_assert(std::is_base_of_v<std::istream, InputStreamT>,
@@ -40,7 +40,7 @@ public:
 	document_parser(InputStreamT&) = delete;
 
 private:
-	System::Collections::Generic::List<PDFPage> ^
+	System::Collections::Generic::List<PDFParser::PDFPage ^> ^
 	    GetPages(const object_types::dictionary_object& page_node,
 	             const object_types::dictionary_object& inherited_attributes);
 
@@ -50,13 +50,7 @@ private:
 	object_pool<InputStreamT>       m_object_pool;
 
 	// to GUI (by C++/CLI)
-	friend ref class parser_tostring;
-};
-public
-ref class parser_tostring
-    sealed { // C++/CLI execute document_parser and get xref_table by string
-public:
-	static System::String ^ get(System::String ^ filename);
+	friend ref class PagesModel;
 };
 } // namespace pdfparser
 
@@ -69,7 +63,7 @@ document_parser<InputStreamT>::document_parser(InputStreamT&& stream)
 }
 
 template <class InputStreamT>
-    System::Collections::Generic::List<PDFPage> ^
+    System::Collections::Generic::List<PDFParser::PDFPage ^> ^
     document_parser<InputStreamT>::GetPages() {
 	using namespace object_types;
 
@@ -80,7 +74,7 @@ template <class InputStreamT>
 	return GetPages(page_tree_root, {});
 }
 template <class InputStreamT>
-    System::Collections::Generic::List<PDFPage> ^
+    System::Collections::Generic::List<PDFParser::PDFPage ^> ^
     document_parser<InputStreamT>::GetPages(
         const object_types::dictionary_object& page_node,
         const object_types::dictionary_object& inherited_attributes) {
@@ -98,7 +92,7 @@ template <class InputStreamT>
 			}
 		}
 
-		auto pages = gcnew System::Collections::Generic::List<PDFPage>;
+		auto pages = gcnew System::Collections::Generic::List<PDFParser::PDFPage ^>;
 		const auto&        kids =
 		    m_object_pool.dereference<array_object>(page_node.at("Kids"));
 		for (const auto& kid : kids) {
@@ -116,14 +110,14 @@ template <class InputStreamT>
 		    rectangle_data(m_object_pool, m_object_pool.dereference<array_object>(
 		                                      complete_page_node.at("MediaBox")));
 
-		PDFPage this_page;
-		this_page.width =
+		PDFParser::PDFPage ^ this_page = gcnew PDFParser::PDFPage;
+		this_page->Width =
 		    media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
-		this_page.height =
+		this_page->Height =
 		    media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
 
 		auto      only_this_page_list =
-		    gcnew System::Collections::Generic::List<PDFPage>;
+		    gcnew System::Collections::Generic::List<PDFParser::PDFPage ^>;
 		only_this_page_list->Add(this_page);
 
 		return only_this_page_list;

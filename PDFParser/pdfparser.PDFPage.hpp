@@ -1,9 +1,9 @@
 #pragma once
 
-namespace pdfparser {
+namespace PDFParser {
 public
-value struct PDFPage {
-	double width;
-	double height;
+ref struct PDFPage {
+	property double Width;
+	property double Height;
 };
-} // namespace pdfparser
+} // namespace PDFParser

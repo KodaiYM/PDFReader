@@ -4,10 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PDFReader"
+        xmlns:vm="clr-namespace:PDFReader;assembly=PDFReaderModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <TextBox HorizontalAlignment="Left" Margin="83,48,0,0" Text="{Binding Text, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="505" Height="149"/>
-    </Grid>
+        Title="MainWindow" Height="538" Width="801" Background="SlateGray">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Pages}" x:Name="PagesControl">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Canvas Width="{Binding Width}" Height="{Binding Height}" Background="White" Margin="20">
+                        <Canvas.Effect>
+                            <DropShadowEffect BlurRadius="5" ShadowDepth="3"/>
+                        </Canvas.Effect>
+                    </Canvas>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </Window>
-    
