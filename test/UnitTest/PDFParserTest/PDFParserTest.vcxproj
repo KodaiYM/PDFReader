@@ -133,7 +133,7 @@
     <ClInclude Include="ignore_if_present_test.hpp" />
     <ClInclude Include="literal_trim.hpp" />
     <ClInclude Include="operator++_test.hpp" />
-    <ClInclude Include="parser_test.hpp" />
+    <ClInclude Include="document_parser_test.hpp" />
     <ClInclude Include="no_token.hpp" />
     <ClInclude Include="peek_test.hpp" />
     <ClInclude Include="promise_test.hpp" />
@@ -168,7 +168,7 @@
     <ClCompile Include="eof_test.cpp" />
     <ClCompile Include="ignore_if_present_test.cpp" />
     <ClCompile Include="literal_trim.cpp" />
-    <ClCompile Include="parser_test.cpp" />
+    <ClCompile Include="document_parser_test.cpp" />
     <ClCompile Include="peek_test.cpp" />
     <ClCompile Include="promise_token_test.cpp" />
     <ClCompile Include="seek_forward_head_of_line_test.cpp" />

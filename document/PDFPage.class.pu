@@ -1,0 +1,7 @@
+@startuml PDFPage
+hide empty members
+class PDFPage<<struct>> {
+	+width  : double
+	+height : double
+}
+@enduml

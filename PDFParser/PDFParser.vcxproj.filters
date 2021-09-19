@@ -22,9 +22,6 @@
     <Filter Include="pdfparser\object_types">
       <UniqueIdentifier>{f13b5421-662f-4180-af25-5dc3776b75a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\parser">
-      <UniqueIdentifier>{469ca825-74ae-4d07-917a-534d8c1cde23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="pdfparser\stream_parser">
       <UniqueIdentifier>{ed7b18f4-4990-41d6-ae62-ba883c209bbb}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,15 @@
     <Filter Include="pdfparser\pdftoken">
       <UniqueIdentifier>{2a6b0465-8233-4804-9579-a9203e9a9fda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pdfparser\document_parser">
+      <UniqueIdentifier>{469ca825-74ae-4d07-917a-534d8c1cde23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_parser\data_types">
+      <UniqueIdentifier>{46e52900-f46c-468a-9d5f-1f6442400337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PDFParser %28.NET%29">
+      <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -57,8 +63,8 @@
     <ClInclude Include="pdfparser.object_types.hpp">
       <Filter>pdfparser\object_types</Filter>
     </ClInclude>
-    <ClInclude Include="pdfparser.parser.hpp">
-      <Filter>pdfparser\parser</Filter>
+    <ClInclude Include="pdfparser.document_parser.hpp">
+      <Filter>pdfparser\document_parser</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.stream_parser.hpp">
       <Filter>pdfparser\stream_parser</Filter>
@@ -93,6 +99,21 @@
     <ClInclude Include="pdfparser.object_not_found_error.hpp">
       <Filter>pdfparser\stream_parser</Filter>
     </ClInclude>
+    <ClInclude Include="pdfparser.data_types.hpp">
+      <Filter>pdfparser\document_parser\data_types</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.document_error.hpp">
+      <Filter>pdfparser\document_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="type_traits_extended.hpp">
+      <Filter>pdfparser</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFParser.PagesModel.hpp">
+      <Filter>PDFParser %28.NET%29</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFParser.PDFPage.hpp">
+      <Filter>PDFParser %28.NET%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -101,8 +122,8 @@
     <ClCompile Include="pdfparser.object_types.cpp">
       <Filter>pdfparser\object_types</Filter>
     </ClCompile>
-    <ClCompile Include="pdfparser.parser.cpp">
-      <Filter>pdfparser\parser</Filter>
+    <ClCompile Include="pdfparser.document_parser.cpp">
+      <Filter>pdfparser\document_parser</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.xref_types.cpp">
       <Filter>pdfparser\xref_types</Filter>
@@ -121,6 +142,12 @@
     </ClCompile>
     <ClCompile Include="pdfparser.object_not_found_error.cpp">
       <Filter>pdfparser\stream_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="pdfparser.data_types.cpp">
+      <Filter>pdfparser\document_parser\data_types</Filter>
+    </ClCompile>
+    <ClCompile Include="PDFParser.PagesModel.cpp">
+      <Filter>PDFParser %28.NET%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

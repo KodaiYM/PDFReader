@@ -86,7 +86,7 @@
     <ClInclude Include="testtool.h">
       <Filter>pdfparser_test</Filter>
     </ClInclude>
-    <ClInclude Include="parser_test.hpp">
+    <ClInclude Include="document_parser_test.hpp">
       <Filter>pdfparser</Filter>
     </ClInclude>
     <ClInclude Include="attempt_test.hpp">
@@ -184,7 +184,7 @@
     <ClCompile Include="take_footer_test.cpp">
       <Filter>pdfparser\stream_parser</Filter>
     </ClCompile>
-    <ClCompile Include="parser_test.cpp">
+    <ClCompile Include="document_parser_test.cpp">
       <Filter>pdfparser</Filter>
     </ClCompile>
     <ClCompile Include="literal_trim.cpp">

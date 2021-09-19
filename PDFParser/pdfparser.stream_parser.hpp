@@ -331,6 +331,15 @@ public:
 	    take_stream_object(object_pool<InputStreamT>& object_accessor);
 
 	/// <summary>
+	/// take stream object (optimized version for successive calls to
+	/// take_stream_object and take_dictionary_object)
+	/// </summary>
+	template <class DictionaryObject>
+	object_types::stream_object
+	    take_stream_object(object_pool<InputStreamT>& object_accessor,
+	                       DictionaryObject&&         stream_dictionary);
+
+	/// <summary>
 	/// take null object
 	/// </summary>
 	/// <returns>null object</returns>
@@ -772,15 +781,43 @@ std::variant<ObjectTypes...> stream_parser<InputStreamT>::take_object(
 			}
 		}
 	}
-	if constexpr (contains_stream) {
-		auto before_take_object_pos = m_tknizer.tell();
+	if constexpr (contains_stream || contains_dictionary) {
+		auto before_take_dictionary_pos = m_tknizer.tell();
+		std::optional<dictionary_object> dictionary;
 		try {
-			return take_stream_object(object_accessor);
+			dictionary = take_dictionary_object(object_accessor);
 		} catch (const object_not_found_error& obj_e) {
-			if (object_not_found_error::stream_object_not_found == obj_e.code()) {
-				m_tknizer.seek(before_take_object_pos);
+			if (object_not_found_error::dictionary_object_not_found == obj_e.code()) {
+				m_tknizer.seek(before_take_dictionary_pos);
 			} else {
 				throw;
+			}
+		}
+
+		if (dictionary.has_value()) {
+			if constexpr (contains_stream) {
+				auto before_take_stream_pos = m_tknizer.tell();
+				try {
+					if constexpr (contains_dictionary) {
+						return take_stream_object(object_accessor, dictionary.value());
+					} else {
+						return take_stream_object(object_accessor,
+						                          std::move(dictionary).value());
+					}
+				} catch (const object_not_found_error& obj_e) {
+					if (object_not_found_error::stream_object_not_found == obj_e.code()) {
+						if constexpr (contains_dictionary) {
+							m_tknizer.seek(before_take_stream_pos);
+							return std::move(dictionary).value();
+						} else {
+							m_tknizer.seek(before_take_dictionary_pos);
+						}
+					} else {
+						throw;
+					}
+				}
+			} else {
+				return std::move(dictionary).value();
 			}
 		}
 	}
@@ -803,18 +840,6 @@ std::variant<ObjectTypes...> stream_parser<InputStreamT>::take_object(
 			return take_integer_object();
 		} catch (const object_not_found_error& obj_e) {
 			if (object_not_found_error::integer_object_not_found == obj_e.code()) {
-				m_tknizer.seek(before_take_object_pos);
-			} else {
-				throw;
-			}
-		}
-	}
-	if constexpr (contains_dictionary) {
-		auto before_take_object_pos = m_tknizer.tell();
-		try {
-			return take_dictionary_object(object_accessor);
-		} catch (const object_not_found_error& obj_e) {
-			if (object_not_found_error::dictionary_object_not_found == obj_e.code()) {
 				m_tknizer.seek(before_take_object_pos);
 			} else {
 				throw;
@@ -1131,13 +1156,13 @@ object_types::dictionary_object
 
 			// emplace to dictionary
 			std::visit(
-			    [&dictionary, &name](const auto& concrete_value) {
+			    [&dictionary, &name](auto&& concrete_value) {
 				    using T = std::decay_t<decltype(concrete_value)>;
 				    if constexpr (!std::is_same_v<null_object, T>) {
-					    dictionary.emplace(name, concrete_value);
+					    dictionary.emplace(std::move(name), std::move(concrete_value));
 				    }
 			    },
-			    value);
+			    std::move(value));
 		}
 
 		return dictionary;
@@ -1151,9 +1176,9 @@ object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
     object_pool<InputStreamT>& object_accessor) {
 	using namespace object_types;
 
-	dictionary_object dictionary;
+	dictionary_object stream_dictionary;
 	try {
-		dictionary = take_dictionary_object(object_accessor);
+		stream_dictionary = take_dictionary_object(object_accessor);
 	} catch (const object_not_found_error& obj_e) {
 		if (object_not_found_error::dictionary_object_not_found == obj_e.code()) {
 			throw object_not_found_error(
@@ -1162,6 +1187,17 @@ object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
 			throw;
 		}
 	}
+	return take_stream_object(object_accessor, std::move(stream_dictionary));
+}
+template <class InputStreamT>
+template <class DictionaryObject>
+object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
+    object_pool<InputStreamT>& object_accessor,
+    DictionaryObject&&         stream_dictionary) {
+	using namespace object_types;
+
+	static_assert(
+	    std::is_same_v<dictionary_object, std::decay_t<DictionaryObject>>);
 
 	if (!m_tknizer.attempt_token("stream")) {
 		throw object_not_found_error(
@@ -1170,8 +1206,8 @@ object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
 
 	m_tknizer.promise({"\r\n", "\n"});
 
-	const auto length_it = dictionary.find("Length");
-	if (length_it == dictionary.end()) {
+	const auto length_it = stream_dictionary.find("Length");
+	if (length_it == stream_dictionary.end()) {
 		throw parse_error(parse_error::stream_dictionary_absence_of_Length_entry);
 	}
 
@@ -1197,7 +1233,8 @@ object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
 
 	m_tknizer.promise_token({"endstream"});
 
-	return stream_object{std::move(dictionary), std::move(stream_data)};
+	return stream_object{std::forward<DictionaryObject>(stream_dictionary),
+	                     std::move(stream_data)};
 }
 template <class InputStreamT>
 object_types::null_object stream_parser<InputStreamT>::take_null_object() {

@@ -1,0 +1,15 @@
+@startuml data_types
+hide empty members
+namespace pdfparser::data_types {
+class coordinates<<struct>> {
+	+x : double
+	+y : double
+}
+class rectangle_data<<struct>> {
+	+less_coordinates    : coordinates
+	+greater_coordinates : coordinates
+
+	+rectangle_data(inout object_accessor : object_pool<InputStreamT>&, diagonal_coordinates : const array_object&)
+}
+}
+@enduml
