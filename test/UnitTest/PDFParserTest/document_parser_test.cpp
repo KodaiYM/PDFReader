@@ -20,8 +20,11 @@ void document_parser_test::test_GetPages_helloworld() {
 	document_parser main_parser{std::ifstream(
 	    helloworld_path, std::ios_base::in | std::ios_base::binary)};
 
-	System::Collections::Generic::List<PDFPage> expected_pages;
-	expected_pages.Add(PDFPage{596, 843});
+	System::Collections::Generic::List<PDFParser::PDFPage ^> expected_pages;
+	PDFParser::PDFPage ^ page = gcnew                        PDFParser::PDFPage;
+	page->Width               = 596;
+	page->Height              = 843;
+	expected_pages.Add(page);
 
 	CollectionAssert::AreEqual(% expected_pages, main_parser.GetPages());
 }

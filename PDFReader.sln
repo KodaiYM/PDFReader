@@ -63,7 +63,6 @@ Global
 		{5C26BCD8-BC35-4BD7-96DE-C970BEC7C1C3}.Debug|x86.Build.0 = Debug|Win32
 		{5C26BCD8-BC35-4BD7-96DE-C970BEC7C1C3}.Release|Any CPU.ActiveCfg = Release|x64
 		{5C26BCD8-BC35-4BD7-96DE-C970BEC7C1C3}.Release|x64.ActiveCfg = Release|x64
-		{5C26BCD8-BC35-4BD7-96DE-C970BEC7C1C3}.Release|x64.Build.0 = Release|x64
 		{5C26BCD8-BC35-4BD7-96DE-C970BEC7C1C3}.Release|x86.ActiveCfg = Release|Win32
 		{5C26BCD8-BC35-4BD7-96DE-C970BEC7C1C3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
