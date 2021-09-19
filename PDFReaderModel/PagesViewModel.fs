@@ -3,7 +3,7 @@
 open Microsoft.WindowsAPICodePack.Dialogs
 open System.ComponentModel
 open System.Collections.ObjectModel
-open System.Linq
+open System.Diagnostics
 
 type PagesViewModel() =
    //   let mutable _Text = "Hello, PDF Parser Test Program!"
@@ -21,11 +21,16 @@ type PagesViewModel() =
             PDFParser.PagesModel.GetPages dialog.FileName
 
          for page in pages do
-            this.Pages.Add page
+            this.Pages.Add
+            <| PDFParser.PDFPage(
+               Width = this.ToDefaultUserSpace page.Width,
+               Height = this.ToDefaultUserSpace page.Height
+            )
 
       this.Pages.Add(PDFParser.PDFPage(Width = 200.0, Height = 400.0))
       this.Pages.Add(PDFParser.PDFPage(Width = 595.0, Height = 842.0))
 
+   member this.ToDefaultUserSpace point = point / 72.0 * 96.0
 (*
    interface INotifyPropertyChanged with
       [<CLIEventAttribute>]
