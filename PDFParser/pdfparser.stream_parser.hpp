@@ -1156,13 +1156,13 @@ object_types::dictionary_object
 
 			// emplace to dictionary
 			std::visit(
-			    [&dictionary, &name](const auto& concrete_value) {
+			    [&dictionary, &name](auto&& concrete_value) {
 				    using T = std::decay_t<decltype(concrete_value)>;
 				    if constexpr (!std::is_same_v<null_object, T>) {
-					    dictionary.emplace(name, concrete_value);
+					    dictionary.emplace(std::move(name), std::move(concrete_value));
 				    }
 			    },
-			    value);
+			    std::move(value));
 		}
 
 		return dictionary;
