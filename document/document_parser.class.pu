@@ -1,23 +1,23 @@
-@startuml document_parser
+@startuml document_manager
 hide empty members
 namespace pdfparser {
-class document_parser<InputStreamT> {
+class document_manager<InputStreamT> {
 	-m_stream_parser      : stream_parser<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
 	-m_object_pool        : object_pool<InputStreamT>
 
-	+document_parser(in stream : InputStreamT&&)
-	+document_parser(const InputStreamT&&) = delete
-	+document_parser(InputStreamT&)        = delete
+	+document_manager(in stream : InputStreamT&&)
+	+document_manager(const InputStreamT&&) = delete
+	+document_manager(InputStreamT&)        = delete
 	+GetPages() : List<PDFPage>
 	+GetPage(page_dictionary : const dictionary_object&) : PDFPage
 	+GetContents(contents_builder : PDFContents_builder&, content_stream : string_view) : PDFContents
 	-GetPages(page_node : const dictionary_object&, inherited_attributes : const dictionary_object&) : List<PDFPage>
 }
-document_parser --> stream_parser
-document_parser --> dictionary_object 
-document_parser --> object_pool
-document_parser --> "0..*" PDFPage
+document_manager --> stream_parser
+document_manager --> dictionary_object 
+document_manager --> object_pool
+document_manager --> "0..*" PDFPage
 
 class stream_parser<InputStreamT> {
 	[[stream_parser.class.pu]]

@@ -1,5 +1,5 @@
-@startuml document_parser
-partition "document_parser(in stream : InputStreamT&&)" {
+@startuml document_manager
+partition "document_manager(in stream : InputStreamT&&)" {
 start
 	:m_stream_parser = stream_parser(std::move(stream));
 	:m_object_pool = object_pool(m_stream_parser);
