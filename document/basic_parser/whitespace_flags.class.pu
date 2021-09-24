@@ -1,7 +1,6 @@
 @startuml stream_parser
 hide empty members
 namespace pdfparser {
-' TODO: 将来的に不要にしたい
 enum whitespace_flags <<Enumeration>> {
 	<<Const, Flag>>
 	+{static} none            : uint8_t = 0

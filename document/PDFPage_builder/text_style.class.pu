@@ -1,0 +1,10 @@
+@startuml text_style
+hide empty members
+namespace rendering_mode {
+	<<Const>>
+	+{static} fill                  = 0
+	+{static} stroke                = 1
+	+{static} fill_and_stroke       = 2
+	+{static} no_fill_and_no_stroke = 3
+}
+@enduml

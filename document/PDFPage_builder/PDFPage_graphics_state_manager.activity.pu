@@ -1,0 +1,31 @@
+@startuml PDFPage_graphics_state_manager
+partition "PDFPage_graphics_state_manager()" {
+start
+	:m_graphics_states.emplace();
+stop
+}
+@enduml
+
+@startuml store_graphics_state
+partition "store_graphics_state()" {
+start
+	:m_graphics_states.push(m_graphics_states.top());
+stop
+}
+@enduml
+
+@startuml restore_graphics_state
+partition "restore_graphics_state()" {
+start
+	:m_graphics_states.pop();
+stop
+}
+@enduml
+
+@startuml current_graphics_state
+partition "current_graphics_state()" {
+start
+	:m_graphics_states.top();
+stop
+}
+@enduml

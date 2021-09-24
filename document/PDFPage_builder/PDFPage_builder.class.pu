@@ -1,0 +1,23 @@
+@startuml PDFPage_builder
+hide empty members
+class PDFPage_builder {
+	+PDFPage_builder()
+	+toPDFPage() : PDFPage
+	+SetMediaBox(media_box : const RectangleData&)
+	+SetContents(page_content : const PDFContents&)
+	-m_page : PDFPage
+}
+PDFPage_builder --|> PDFContents_builder
+PDFPage_builder --> PDFPage
+PDFPage_builder --> graphics_state
+
+abstract PDFContents_builder {
+	[[PDFContents_builder.class.pu]]
+}
+class PDFPage {
+	[[PDFPage.class.pu]]
+}
+class graphics_state {
+	[[graphics_state.class.pu]]
+}
+@enduml
