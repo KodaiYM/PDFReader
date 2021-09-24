@@ -31,7 +31,7 @@ abstract PDFContents_builder {
 	-text_matrix : AffineMatrix
 	-text_line_matrix : AffineMatrix
 }
-PDFContents_builder --|> PDFPage_graphics_state_manager
+PDFContents_builder --|> graphics_state_manager
 PDFContents_builder ..> line_style
 PDFContents_builder ..> text_style
 
@@ -41,7 +41,7 @@ annotation line_style <<(N, yellow) namespace>> {
 annotation text_style <<(N, yellow) namespace>> {
 	[[text_style.class.pu]]
 }
-abstract PDFPage_graphics_state_manager {
-	[[PDFPage_graphics_state_manager.class.pu]]
+abstract graphics_state_manager {
+	[[graphics_state_manager.class.pu]]
 }
 @enduml

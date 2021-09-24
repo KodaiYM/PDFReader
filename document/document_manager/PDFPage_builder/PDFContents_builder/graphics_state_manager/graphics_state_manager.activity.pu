@@ -1,5 +1,5 @@
-@startuml PDFPage_graphics_state_manager
-partition "PDFPage_graphics_state_manager()" {
+@startuml graphics_state_manager
+partition "graphics_state_manager()" {
 start
 	:m_graphics_states.emplace();
 stop
