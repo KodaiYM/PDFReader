@@ -10,9 +10,11 @@ class document_parser<InputStreamT> {
 	+document_parser(const InputStreamT&&) = delete
 	+document_parser(InputStreamT&)        = delete
 	+GetPages() : List<PDFPage>
+	+GetPage(page_dictionary : const dictionary_object&) : PDFPage
+	+GetContents(contents_builder : PDFContents_builder&, content_stream : string_view) : PDFContents
 	-GetPages(page_node : const dictionary_object&, inherited_attributes : const dictionary_object&) : List<PDFPage>
 }
-document_parser *--> stream_parser
+document_parser --> stream_parser
 document_parser --> dictionary_object 
 document_parser --> object_pool
 document_parser --> "0..*" PDFPage

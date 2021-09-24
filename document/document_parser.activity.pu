@@ -39,15 +39,134 @@ start
 		:complete_page_node = page_node;
 		:complete_page_node.insert(inherited_attributes.begin(), inherited_attributes.end());
 
-		:media_box = rectangle_data(m_object_pool, m_object_pool.dereference<array_object>(complete_page_node.at("MediaBox")));
-		:this_page : PDFPage;
-		:this_page.width  = media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
-		:this_page.height = media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
-		:return this_page;
+		:return GetPage(complete_page_node);
 	else
 		:throw document_error();
 		stop
 	endif
+stop
+}
+@enduml
+
+@startuml GetPage
+partition "GetPage(page_dictionary : const dictionary_object&)" {
+start
+	:page_builder : PDFPage_builder;
+
+	% Get MediaBox
+	:MediaBox_array = m_object_pool.dereference<array_object>(page_dictionary.at("MediaBox"));
+	:page_builder.SetMediaBox(RectangleData(Coordinates{MediaBox_array.at(0), MediaBox_array.at(1)}, Coordinates{MediaBox_array.at(2), MediaBox_array.at(3)}));
+
+	% Get Contents
+	:content_stream = m_object_pool.dereference<stream_object>(page_dictionary.at("Contents"));
+	:page_builder.SetContents(GetContents(page_builder, content_stream.get_decoded_data()));
+
+	:return page_builder.toPDFPage();
+stop
+}
+@enduml
+
+@startuml GetContents
+partition "GetContents(contents_builder : PDFContents_builder&, content_stream : const std::string&)" {
+start
+	:content_stream_parser = stream_parser(istringstream(content_stream, std::ios_base::in | std::ios_base::binary));
+	:contents_operands : std::vector<any_direct_object>;
+	while (true) is (y)
+		:object = content_stream_parser.take_object<any_direct_object>(m_object_pool);
+		if (object_not_found_error が出た) then (y)
+			:contents_operator = content_stream_parser.take_token();
+			if (!contents_operands.has_value()) then (y)
+				break
+			endif
+			switch (contents_operator?)
+			case ("q")
+				:contents_builder.store_graphics_state();
+			case ("Q")
+				:contents_builder.restore_graphics_state();
+			case ("cm")
+				:contents_builder.concat_CTM(contents_operands.at(0), contents_operands.at(1), contents_operands.at(2), contents_operands.at(3), contents_operands.at(4), contents_operands.at(5));
+			case ("d")
+				:pattern_array = std::get<array_object>(contents_operands.at(0));
+				:pattern_vector = pattern_array to vector<double>;
+				:start_phase = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:contents_builder.set_line_dash_pattern({std::move(pattern_vector), std::move(start_phase)});
+			case ("i")
+				:contents_builder.set_flatness(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("j")
+				:contents_builder.set_line_join_style(static_cast<line_style::join_type>(std::get<integer_object>(contents_operands.at(0))));
+			case ("J")
+				:contents_builder.set_line_cap_style(static_cast<line_style::cap_type>(std::get<integer_object>(contents_operands.at(0))));
+			case ("M")
+				:contents_builder.set_miter_limit(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("w")
+				:contents_builder.set_line_width(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("g")
+				:contents_builder.set_fill_color_gray(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("G")
+				:contents_builder.set_stroke_color_gray(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("k")
+				:cyan = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:megenta = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:yellow = number_to_double(std::get<number_object>(contents_operands.at(2)));
+				:black = number_to_double(std::get<number_object>(contents_operands.at(3)));
+				:contents_builder.set_fill_color_cmyk(cyan, megenta, yellow, black);
+			case ("K")
+				:cyan = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:megenta = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:yellow = number_to_double(std::get<number_object>(contents_operands.at(2)));
+				:black = number_to_double(std::get<number_object>(contents_operands.at(3)));
+				:contents_builder.set_stroke_color_cmyk(cyan, megenta, yellow, black);
+			case ("rg")
+				:red = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:green = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:blue = number_to_double(std::get<number_object>(contents_operands.at(2)));
+				:contents_builder.set_fill_color_rgb(red, green, blue);
+			case ("RG")
+				:red = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:green = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:blue = number_to_double(std::get<number_object>(contents_operands.at(2)));
+				:contents_builder.set_stroke_color_rgb(red, green, blue);
+			case ("BT")
+				:contents_builder.begin_text();
+			case ("Tc")
+				:contents_builder.set_character_spacing(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("Tf")
+				' 未実装
+			case ("TL")
+				:contents_builder.set_leading(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("Tr")
+				:contents_builder.set_text_rendering_mode(static_cast<text_style::rendering_mode>(std::get<integer_object>(contents_operands.at(0))));
+			case ("Ts")
+				:contents_builder.set_text_rise(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("Tw")
+				:contents_builder.set_word_spacing(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("Tz")
+				:contents_builder.set_horizontal_scaling(number_to_double(std::get<number_object>(contents_operands.at(0))));
+			case ("Td")
+				:next_line_offset_x = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:next_line_offset_y = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:contents_builder.concat_text_matrices(next_line_offset_x, next_line_offset_y);
+			case ("TD")
+				:next_line_offset_x = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:next_line_offset_y = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:contents_builder.set_leading(-next_line_offset_y);
+				:contents_builder.concat_text_matrices(next_line_offset_x, next_line_offset_y);
+			case ("Tm")
+				:next_line_x = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:next_line_y = number_to_double(std::get<number_object>(contents_operands.at(1)));
+				:contents_builder.set_text_matrices(next_line_x, next_line_y);
+			case ("T*")
+				:contents_builder.move_to_next_line();
+			case ("ET")
+				:contents_builder.end_text();
+			case (default)
+				:throw document_error();
+			endswitch
+			:contents_operands.clear();
+		else
+			:contents_operands.push_back(std::move(object));
+		endif
+	endwhile
 stop
 }
 @enduml
