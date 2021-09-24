@@ -2,7 +2,7 @@
 hide empty members
 namespace pdfparser {
 class document_manager<InputStreamT> {
-	-m_stream_parser      : stream_parser<InputStreamT>
+	-m_stream_parser      : document_parser<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
 	-m_object_pool        : object_pool<InputStreamT>
 
@@ -14,13 +14,13 @@ class document_manager<InputStreamT> {
 	+GetContents(contents_builder : PDFContents_builder&, content_stream : string_view) : PDFContents
 	-GetPages(page_node : const dictionary_object&, inherited_attributes : const dictionary_object&) : List<PDFPage>
 }
-document_manager --> stream_parser
+document_manager --> document_parser
 document_manager --> dictionary_object 
 document_manager --> object_pool
 document_manager --> "0..*" PDFPage
 
-class stream_parser<InputStreamT> {
-	[[stream_parser.class.pu]]
+class document_parser<InputStreamT> {
+	[[document_parser.class.pu]]
 }
 class object_pool {
 	[[object_pool.class.pu]]

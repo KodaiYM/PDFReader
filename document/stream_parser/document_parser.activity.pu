@@ -1,5 +1,5 @@
-@startuml stream_parser
-partition "stream_parser(in stream : InputStreamT&&)" {
+@startuml document_parser
+partition "document_parser(in stream : InputStreamT&&)" {
 start
 	:m_tokenizer = tokenizer(stream);
 stop

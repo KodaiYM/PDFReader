@@ -7,11 +7,11 @@ class type_mismatch {
 type_mismatch --|> std::runtime_error
 
 class object_pool<InputStreamT> {
-	-m_parser     : stream_parser<InputStreamT>&
+	-m_parser     : document_parser<InputStreamT>&
 	-m_xref_table : xref_table
 	-m_object_map : unordered_map<pair<object_t, generation_t>, any_direct_object>
 
-	+object_pool(parser : stream_parser<InputStreamT>&)
+	+object_pool(parser : document_parser<InputStreamT>&)
 
 	+add_xref_table(in referenced_xref_table : const xref_table&) : void
 
@@ -26,13 +26,13 @@ class object_pool<InputStreamT> {
 	+dereference<ObjectType>(in reference : const std::variant<...ObjectTypesContainingRef>&) : Object
 	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
 }
-object_pool <..> stream_parser
+object_pool <..> document_parser
 object_pool --> xref_table
 object_pool --> object_types
 object_pool ..> type_mismatch
 
-class stream_parser<InputStreamT> {
-	[[stream_parser.class.pu]]
+class document_parser<InputStreamT> {
+	[[document_parser.class.pu]]
 }
 class xref_table {
 	[[xref_types.class.pu]]

@@ -1,8 +1,8 @@
-# stream_parser.cpp
+# document_parser.cpp
 ## 概要
 | クラス名 | 概要 |
 | --- | --- |
-| pdfparser::stream_parser | ストリームの読み取り/操作、解析を行う |
+| pdfparser::document_parser | ストリームの読み取り/操作、解析を行う |
 | pdfparser::object_pool | 間接オブジェクトを保持し、オブジェクトへのアクセスを管理する |
 
 ## 用語
@@ -33,13 +33,13 @@
 | Indirect Reference | オブジェクト番号(整数) 世代番号(整数) "R" | (オブジェクト番号, 世代番号)の組に対応する Indirect オブジェクトへの参照 |
 
 ## 公開クラス一覧
-- [オブジェクト解析クラス図](stream_parser.class.pu)
+- [オブジェクト解析クラス図](document_parser.class.pu)
 - [トークン解析クラス図](tokenizer.class.pu)
 - [ストリーム機能拡張クラス図](istream_extended.class.pu)
 - [オブジェクトプールクラス図](object_pool.class.pu)
 
 ## 主要フローチャート
-- [オブジェクト解析クラス図](stream_parser.activity.pu)
+- [オブジェクト解析クラス図](document_parser.activity.pu)
 - [トークン解析クラス図](tokenizer.activity.pu)
 - [ストリーム機能拡張クラス図](istream_extended.activity.pu)
 - [オブジェクトプールクラス図](object_pool.activity.pu)
