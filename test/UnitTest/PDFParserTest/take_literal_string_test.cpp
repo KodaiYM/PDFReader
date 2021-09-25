@@ -1,5 +1,5 @@
 #include "literal_trim.hpp"
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.document_parser.hpp"
 #include "take_literal_string_test.hpp"
 
 #include <sstream>

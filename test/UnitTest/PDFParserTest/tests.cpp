@@ -1,4 +1,4 @@
-#include "pdfparser.document_parser.cpp"
+#include "pdfparser.document_reader.cpp"
 #include "pdfparser.istream_extended_error.cpp"
 #include "pdfparser.object_not_found_error.cpp"
 #include "pdfparser.object_types.cpp"

@@ -1,4 +1,4 @@
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.document_parser.hpp"
 #include "take_name_object_test.hpp"
 
 #include <sstream>

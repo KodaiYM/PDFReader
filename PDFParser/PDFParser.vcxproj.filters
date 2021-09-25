@@ -63,7 +63,7 @@
     <ClInclude Include="pdfparser.object_types.hpp">
       <Filter>pdfparser\document_reader\document_parser\object_types</Filter>
     </ClInclude>
-    <ClInclude Include="pdfparser.stream_parser.hpp">
+    <ClInclude Include="pdfparser.document_parser.hpp">
       <Filter>pdfparser\document_reader\document_parser</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.xref_types.hpp">
@@ -108,7 +108,7 @@
     <ClInclude Include="PDFParser.PDFPage.hpp">
       <Filter>PDFParser %28.NET%29</Filter>
     </ClInclude>
-    <ClInclude Include="pdfparser.document_parser.hpp">
+    <ClInclude Include="pdfparser.document_reader.hpp">
       <Filter>pdfparser\document_reader</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.document_error.hpp">
@@ -146,7 +146,7 @@
     <ClCompile Include="PDFParser.PagesModel.cpp">
       <Filter>PDFParser %28.NET%29</Filter>
     </ClCompile>
-    <ClCompile Include="pdfparser.document_parser.cpp">
+    <ClCompile Include="pdfparser.document_reader.cpp">
       <Filter>pdfparser\document_reader</Filter>
     </ClCompile>
   </ItemGroup>
