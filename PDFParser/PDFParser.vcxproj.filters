@@ -22,35 +22,53 @@
     <Filter Include="pdfparser\document_reader\object_pool">
       <UniqueIdentifier>{43153da4-ade5-4025-a85e-9fab6e828253}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\data_types">
-      <UniqueIdentifier>{46e52900-f46c-468a-9d5f-1f6442400337}</UniqueIdentifier>
+    <Filter Include="pdfparser\document_reader\pdfpage_builder">
+      <UniqueIdentifier>{774df1fa-3bca-44ae-af23-7cb1938993a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser">
+    <Filter Include="pdfparser\document_reader\pdfpage_builder\pdfcontents_builder">
+      <UniqueIdentifier>{7727b4f2-50cc-497a-ae84-78eb9fb2c417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack">
+      <UniqueIdentifier>{1006eaeb-971c-4dd2-994a-03ed4c4ea1a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state">
+      <UniqueIdentifier>{788f44d9-e457-43ca-bc01-b606506b3e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PDFReader">
+      <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PDFReader\PDFPage">
+      <UniqueIdentifier>{d2cf25ff-6595-4ff0-a7f4-da99a99764ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PDFReader\PDFPage\PDFContents">
+      <UniqueIdentifier>{197e566f-182e-41e6-8526-2f845044fbd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PDFReader\PagesModel">
+      <UniqueIdentifier>{e568c213-86ca-4b1b-8773-b6aa70329f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\object_parser">
       <UniqueIdentifier>{ed7b18f4-4990-41d6-ae62-ba883c209bbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\object_types">
+    <Filter Include="pdfparser\document_reader\object_parser\object_types">
       <UniqueIdentifier>{f13b5421-662f-4180-af25-5dc3776b75a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\tokenizer">
+    <Filter Include="pdfparser\document_reader\object_parser\tokenizer">
       <UniqueIdentifier>{980e1a15-2f06-4ebe-bf21-5c673b03abd5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\tokenizer\pdftoken">
+    <Filter Include="pdfparser\document_reader\object_parser\tokenizer\pdftoken">
       <UniqueIdentifier>{2a6b0465-8233-4804-9579-a9203e9a9fda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\tokenizer\istream_extended">
+    <Filter Include="pdfparser\document_reader\object_parser\tokenizer\istream_extended">
       <UniqueIdentifier>{d495e982-6f00-4d6d-874c-acc91d14793f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\tokenizer\istream_extended\whitespace_flags">
+    <Filter Include="pdfparser\document_reader\object_parser\tokenizer\istream_extended\whitespace_flags">
       <UniqueIdentifier>{94480dce-d7a4-4dfd-a0c6-37acacb08de7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\tokenizer\character_types">
+    <Filter Include="pdfparser\document_reader\object_parser\tokenizer\character_types">
       <UniqueIdentifier>{3a1e4010-4cc7-4e6c-8d15-f7b655387d5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\document_parser\xref_types">
+    <Filter Include="pdfparser\document_reader\object_parser\xref_types">
       <UniqueIdentifier>{ec799d21-d17c-46df-8147-d7b17be513c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PDFReader.PagesModel">
-      <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,52 +79,43 @@
       <Filter>pdfparser\document_reader\object_pool</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.object_types.hpp">
-      <Filter>pdfparser\document_reader\document_parser\object_types</Filter>
+      <Filter>pdfparser\document_reader\object_parser\object_types</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.document_parser.hpp">
-      <Filter>pdfparser\document_reader\document_parser</Filter>
+      <Filter>pdfparser\document_reader\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.xref_types.hpp">
-      <Filter>pdfparser\document_reader\document_parser\xref_types</Filter>
+      <Filter>pdfparser\document_reader\object_parser\xref_types</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.istream_extended.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\istream_extended</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\istream_extended</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.istream_extended_error.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\istream_extended</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\istream_extended</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.whitespace_flags.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\istream_extended\whitespace_flags</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\istream_extended\whitespace_flags</Filter>
     </ClInclude>
     <ClInclude Include="character_types.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\character_types</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\character_types</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.tokenizer.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.tokenize_error.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.pdftoken.hpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\pdftoken</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\pdftoken</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.parse_error.hpp">
-      <Filter>pdfparser\document_reader\document_parser</Filter>
+      <Filter>pdfparser\document_reader\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.object_not_found_error.hpp">
-      <Filter>pdfparser\document_reader\document_parser</Filter>
-    </ClInclude>
-    <ClInclude Include="pdfparser.data_types.hpp">
-      <Filter>pdfparser\data_types</Filter>
+      <Filter>pdfparser\document_reader\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="type_traits_extended.hpp">
       <Filter>pdfparser</Filter>
-    </ClInclude>
-    <ClInclude Include="PDFReader.PagesModel.hpp">
-      <Filter>PDFReader.PagesModel</Filter>
-    </ClInclude>
-    <ClInclude Include="PDFReader.PDFPage.hpp">
-      <Filter>PDFReader.PagesModel</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.document_reader.hpp">
       <Filter>pdfparser\document_reader</Filter>
@@ -114,40 +123,76 @@
     <ClInclude Include="pdfparser.document_error.hpp">
       <Filter>pdfparser\document_reader</Filter>
     </ClInclude>
+    <ClInclude Include="pdfparser.graphics_state.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.space.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.chroma.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.line_style.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.text_style.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.graphics_state_stack.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.pdfcontents_builder.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.pdfpage_builder.hpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFReader.PDFPage.hpp">
+      <Filter>PDFReader\PDFPage</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFReader.PagesModel.hpp">
+      <Filter>PDFReader\PagesModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PDFReader.PDFContents.hpp">
+      <Filter>PDFReader\PDFPage\PDFContents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.object_types.cpp">
-      <Filter>pdfparser\document_reader\document_parser\object_types</Filter>
+      <Filter>pdfparser\document_reader\object_parser\object_types</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.xref_types.cpp">
-      <Filter>pdfparser\document_reader\document_parser\xref_types</Filter>
+      <Filter>pdfparser\document_reader\object_parser\xref_types</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.istream_extended_error.cpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\istream_extended</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\istream_extended</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.tokenize_error.cpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.pdftoken.cpp">
-      <Filter>pdfparser\document_reader\document_parser\tokenizer\pdftoken</Filter>
+      <Filter>pdfparser\document_reader\object_parser\tokenizer\pdftoken</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.parse_error.cpp">
-      <Filter>pdfparser\document_reader\document_parser</Filter>
+      <Filter>pdfparser\document_reader\object_parser</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.object_not_found_error.cpp">
-      <Filter>pdfparser\document_reader\document_parser</Filter>
-    </ClCompile>
-    <ClCompile Include="pdfparser.data_types.cpp">
-      <Filter>pdfparser\data_types</Filter>
-    </ClCompile>
-    <ClCompile Include="PDFReader.PagesModel.cpp">
-      <Filter>PDFReader.PagesModel</Filter>
+      <Filter>pdfparser\document_reader\object_parser</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.document_reader.cpp">
       <Filter>pdfparser\document_reader</Filter>
+    </ClCompile>
+    <ClCompile Include="pdfparser.space.cpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+    </ClCompile>
+    <ClCompile Include="pdfparser.graphics_state_stack.cpp">
+      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack</Filter>
+    </ClCompile>
+    <ClCompile Include="PDFReader.PagesModel.cpp">
+      <Filter>PDFReader\PagesModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
