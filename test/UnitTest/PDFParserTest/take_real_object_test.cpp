@@ -5,7 +5,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace document_parser_test::take_object_test;
 
 void take_real_object_test::test_unsigned_leading_period() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

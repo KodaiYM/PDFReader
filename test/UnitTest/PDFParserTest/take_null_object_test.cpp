@@ -5,7 +5,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace document_parser_test::take_object_test;
 
 void take_null_object_test::test_null() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

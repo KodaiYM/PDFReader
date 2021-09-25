@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace stream_parser_test {
+namespace document_parser_test {
 [TestClass] public ref class take_footer_test {
 public:
 	[TestMethod] void test_sample();
@@ -13,4 +13,4 @@ public:
 	[TestMethod] void test_startxref_SP_startxref_comment_EOL();
 	[TestMethod] void test_xref_SP_xref_comment_EOL();
 };
-} // namespace stream_parser_test
+} // namespace document_parser_test

@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test;
+using namespace document_parser_test;
 using namespace xref_types;
 
 void take_indirect_object_test::test_sample() {

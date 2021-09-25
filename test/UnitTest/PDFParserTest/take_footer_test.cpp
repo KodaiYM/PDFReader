@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test;
+using namespace document_parser_test;
 
 void take_footer_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

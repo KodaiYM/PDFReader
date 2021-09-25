@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace stream_parser_test::take_object_test {
+namespace document_parser_test::take_object_test {
 [TestClass] public ref class take_object_test {
 public:
 	[TestMethod] void test_any_direct_object_boolean();
@@ -19,4 +19,4 @@ public:
 	[TestMethod] void test_no_object();
 	[TestMethod] void test_eof();
 };
-} // namespace stream_parser_test::take_object_test
+} // namespace document_parser_test::take_object_test
