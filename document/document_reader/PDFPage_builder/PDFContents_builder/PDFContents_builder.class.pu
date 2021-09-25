@@ -1,6 +1,6 @@
-@startuml PDFContents_builder
+@startuml pdfcontents_builder
 hide empty members
-abstract PDFContents_builder {
+abstract pdfcontents_builder {
 	+concat_CTM(double a, double b, double c, double d, double e, double f) : void
 	+set_line_dash_pattern(line_dash_pattern : line_style::dash_pattern_type) : void
 	+set_flatness(flatness : double) : void
@@ -31,9 +31,9 @@ abstract PDFContents_builder {
 	-text_matrix : AffineMatrix
 	-text_line_matrix : AffineMatrix
 }
-PDFContents_builder --|> graphics_state_manager
-PDFContents_builder ..> line_style
-PDFContents_builder ..> text_style
+pdfcontents_builder --|> graphics_state_manager
+pdfcontents_builder ..> line_style
+pdfcontents_builder ..> text_style
 
 annotation line_style <<(N, yellow) namespace>> {
 	[[line_style.class.pu]]

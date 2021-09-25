@@ -1,11 +1,11 @@
-# PDFPage_builder
+# pdfpage_builder
 ## 概要
 | クラス名 | 概要 |
 | --- | --- |
-| pdfparser::PDFPage_builder | PDFの各ページを構築する |
+| pdfparser::pdfpage_builder | PDFの各ページを構築する |
 
 ## 関連クラス図
-[PDFContents_builder](PDFContents_builder/PDFContents_builder.md)
+[pdfcontents_builder](pdfcontents_builder/pdfcontents_builder.md)
 
 ## ページを表すクラス
 [ページクラス図](PDFPage.class.pu)
@@ -14,7 +14,7 @@
 [座標空間系のクラス図](space.class.pu)
 
 ## クラス図一覧
-- [PDFページ構築クラス図](PDFPage_builder.class.pu)
+- [PDFページ構築クラス図](pdfpage_builder.class.pu)
 
 ## フローチャート
-- [PDFページ構築アクティビティ図](PDFPage_builder.activity.pu)
+- [PDFページ構築アクティビティ図](pdfpage_builder.activity.pu)

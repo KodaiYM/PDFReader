@@ -1,5 +1,5 @@
-@startuml PDFPage_builder
-partition "PDFPage_builder()" {
+@startuml pdfpage_builder
+partition "pdfpage_builder()" {
 start
 stop
 }

@@ -11,7 +11,7 @@ class document_reader<InputStreamT> {
 	+document_reader(InputStreamT&)        = delete
 	+GetPages() : List<PDFPage>
 	+GetPage(page_dictionary : const dictionary_object&) : PDFPage
-	+GetContents(contents_builder : PDFContents_builder&, content_stream : string_view) : PDFContents
+	+GetContents(contents_builder : pdfcontents_builder&, content_stream : string_view) : PDFContents
 	-GetPages(page_node : const dictionary_object&, inherited_attributes : const dictionary_object&) : List<PDFPage>
 }
 document_reader --> document_parser

@@ -51,7 +51,7 @@ stop
 @startuml GetPage
 partition "GetPage(page_dictionary : const dictionary_object&)" {
 start
-	:page_builder : PDFPage_builder;
+	:page_builder : pdfpage_builder;
 
 	% Get MediaBox
 	:MediaBox_array = m_object_pool.dereference<array_object>(page_dictionary.at("MediaBox"));
@@ -67,7 +67,7 @@ stop
 @enduml
 
 @startuml GetContents
-partition "GetContents(contents_builder : PDFContents_builder&, content_stream : const std::string&)" {
+partition "GetContents(contents_builder : pdfcontents_builder&, content_stream : const std::string&)" {
 start
 	:content_stream_parser = document_parser(istringstream(content_stream, std::ios_base::in | std::ios_base::binary));
 	:contents_operands : std::vector<any_direct_object>;
