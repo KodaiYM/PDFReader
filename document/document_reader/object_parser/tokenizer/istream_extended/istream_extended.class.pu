@@ -1,4 +1,4 @@
-@startuml document_parser
+@startuml object_parser
 hide empty members
 namespace pdfparser {
 class istream_extended<InputStreamT> {

@@ -1,4 +1,4 @@
-@startuml document_parser
+@startuml object_parser
 hide empty members
 namespace pdfparser {
 enum parse_error::error_code <<Enumeration>> {

@@ -1,12 +1,12 @@
-@startuml document_parser
+@startuml object_parser
 hide empty members
 namespace pdfparser {
-class document_parser<InputStreamT> {
+class object_parser<InputStreamT> {
 	-m_tokenizer : tokenizer
 
-	+document_parser(inout stream : InputStreamT&&)
-	+document_parser(const InputStreamT&&) = delete
-	+document_parser(InputStreamT&)        = delete
+	+object_parser(inout stream : InputStreamT&&)
+	+object_parser(const InputStreamT&&) = delete
+	+object_parser(InputStreamT&)        = delete
 
 	+take_footer(inout object_accessor : object_pool<InputStreamT>&)  : dictionary_object
 	+take_xref_table()                                                : xref_table
@@ -30,12 +30,12 @@ class document_parser<InputStreamT> {
 
 	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&) : any_direct_object
 }
-document_parser --> "1" tokenizer
-document_parser ..> xref_types
-document_parser ..> object_types
-document_parser <..> object_pool
-document_parser ..> parse_error
-document_parser ..> object_not_found_error
+object_parser --> "1" tokenizer
+object_parser ..> xref_types
+object_parser ..> object_types
+object_parser <..> object_pool
+object_parser ..> parse_error
+object_parser ..> object_not_found_error
 
 class tokenizer {
 	[[tokenizer.class.pu]]

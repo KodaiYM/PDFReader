@@ -1,9 +1,9 @@
 @startuml document_reader
 partition "document_reader(in stream : InputStreamT&&)" {
 start
-	:m_stream_parser = document_parser(std::move(stream));
-	:m_object_pool = object_pool(m_stream_parser);
-	:m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
+	:m_object_parser = object_parser(std::move(stream));
+	:m_object_pool = object_pool(m_object_parser);
+	:m_trailer_dictionary = m_object_parser.take_footer(m_object_pool);
 stop
 }
 @enduml
@@ -69,7 +69,7 @@ stop
 @startuml GetContents
 partition "GetContents(contents_builder : pdfcontents_builder&, content_stream : const std::string&)" {
 start
-	:content_stream_parser = document_parser(istringstream(content_stream, std::ios_base::in | std::ios_base::binary));
+	:content_stream_parser = object_parser(istringstream(content_stream, std::ios_base::in | std::ios_base::binary));
 	:contents_operands : std::vector<any_direct_object>;
 	while (true) is (y)
 		:object = content_stream_parser.take_object<any_direct_object>(m_object_pool);
