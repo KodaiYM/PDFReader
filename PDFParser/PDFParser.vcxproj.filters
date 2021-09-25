@@ -16,9 +16,6 @@
     <Filter Include="pdfparser">
       <UniqueIdentifier>{ef5eb83f-ffd9-45c1-a9c6-948d97526de4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PDFParser %28.NET%29">
-      <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="pdfparser\document_reader">
       <UniqueIdentifier>{05357ed6-e3e3-40ab-b74f-cefed1657c20}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,9 @@
     </Filter>
     <Filter Include="pdfparser\document_reader\document_parser\xref_types">
       <UniqueIdentifier>{ec799d21-d17c-46df-8147-d7b17be513c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PDFReader.PagesModel">
+      <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,11 +102,11 @@
     <ClInclude Include="type_traits_extended.hpp">
       <Filter>pdfparser</Filter>
     </ClInclude>
-    <ClInclude Include="PDFParser.PagesModel.hpp">
-      <Filter>PDFParser %28.NET%29</Filter>
+    <ClInclude Include="PDFReader.PagesModel.hpp">
+      <Filter>PDFReader.PagesModel</Filter>
     </ClInclude>
-    <ClInclude Include="PDFParser.PDFPage.hpp">
-      <Filter>PDFParser %28.NET%29</Filter>
+    <ClInclude Include="PDFReader.PDFPage.hpp">
+      <Filter>PDFReader.PagesModel</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.document_reader.hpp">
       <Filter>pdfparser\document_reader</Filter>
@@ -143,8 +143,8 @@
     <ClCompile Include="pdfparser.data_types.cpp">
       <Filter>pdfparser\data_types</Filter>
     </ClCompile>
-    <ClCompile Include="PDFParser.PagesModel.cpp">
-      <Filter>PDFParser %28.NET%29</Filter>
+    <ClCompile Include="PDFReader.PagesModel.cpp">
+      <Filter>PDFReader.PagesModel</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.document_reader.cpp">
       <Filter>pdfparser\document_reader</Filter>

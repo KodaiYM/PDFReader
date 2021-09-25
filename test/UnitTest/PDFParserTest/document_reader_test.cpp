@@ -20,8 +20,8 @@ void document_reader_test::test_GetPages_helloworld() {
 	document_reader main_parser{std::ifstream(
 	    helloworld_path, std::ios_base::in | std::ios_base::binary)};
 
-	System::Collections::Generic::List<PDFParser::PDFPage ^> expected_pages;
-	PDFParser::PDFPage ^ page = gcnew                        PDFParser::PDFPage;
+	System::Collections::Generic::List<PDFReader::PDFPage ^> expected_pages;
+	PDFReader::PDFPage ^ page = gcnew                        PDFReader::PDFPage;
 	page->Width               = 596;
 	page->Height              = 843;
 	expected_pages.Add(page);

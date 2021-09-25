@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PDFParser {
+namespace PDFReader {
 public
 ref struct PDFPage: System::IEquatable<PDFPage ^> {
 	property double Width;
@@ -19,4 +19,4 @@ ref struct PDFPage: System::IEquatable<PDFPage ^> {
 		return !(this == other);
 	}
 };
-} // namespace PDFParser
+} // namespace PDFReader

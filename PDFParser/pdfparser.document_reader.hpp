@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PDFParser.PDFPage.hpp"
+#include "PDFReader.PDFPage.hpp"
 #include "pdfparser.data_types.hpp"
 #include "pdfparser.document_error.hpp"
 #include "pdfparser.document_parser.hpp"
@@ -16,7 +16,7 @@ namespace pdfparser {
 template <class InputStreamT>
 class document_reader final {
 public:
-	System::Collections::Generic::List<PDFParser::PDFPage ^> ^ GetPages();
+	System::Collections::Generic::List<PDFReader::PDFPage ^> ^ GetPages();
 
 public:
 	static_assert(std::is_base_of_v<std::istream, InputStreamT>,
@@ -40,7 +40,7 @@ public:
 	document_reader(InputStreamT&) = delete;
 
 private:
-	System::Collections::Generic::List<PDFParser::PDFPage ^> ^
+	System::Collections::Generic::List<PDFReader::PDFPage ^> ^
 	    GetPages(const object_types::dictionary_object& page_node,
 	             const object_types::dictionary_object& inherited_attributes);
 
@@ -63,7 +63,7 @@ document_reader<InputStreamT>::document_reader(InputStreamT&& stream)
 }
 
 template <class InputStreamT>
-    System::Collections::Generic::List<PDFParser::PDFPage ^> ^
+    System::Collections::Generic::List<PDFReader::PDFPage ^> ^
     document_reader<InputStreamT>::GetPages() {
 	using namespace object_types;
 
@@ -74,7 +74,7 @@ template <class InputStreamT>
 	return GetPages(page_tree_root, {});
 }
 template <class InputStreamT>
-    System::Collections::Generic::List<PDFParser::PDFPage ^> ^
+    System::Collections::Generic::List<PDFReader::PDFPage ^> ^
     document_reader<InputStreamT>::GetPages(
         const object_types::dictionary_object& page_node,
         const object_types::dictionary_object& inherited_attributes) {
@@ -92,7 +92,7 @@ template <class InputStreamT>
 			}
 		}
 
-		auto pages = gcnew System::Collections::Generic::List<PDFParser::PDFPage ^>;
+		auto pages = gcnew System::Collections::Generic::List<PDFReader::PDFPage ^>;
 		const auto&        kids =
 		    m_object_pool.dereference<array_object>(page_node.at("Kids"));
 		for (const auto& kid : kids) {
@@ -110,14 +110,14 @@ template <class InputStreamT>
 		    rectangle_data(m_object_pool, m_object_pool.dereference<array_object>(
 		                                      complete_page_node.at("MediaBox")));
 
-		PDFParser::PDFPage ^ this_page = gcnew PDFParser::PDFPage;
+		PDFReader::PDFPage ^ this_page = gcnew PDFReader::PDFPage;
 		this_page->Width =
 		    media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
 		this_page->Height =
 		    media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
 
 		auto      only_this_page_list =
-		    gcnew System::Collections::Generic::List<PDFParser::PDFPage ^>;
+		    gcnew System::Collections::Generic::List<PDFReader::PDFPage ^>;
 		only_this_page_list->Add(this_page);
 
 		return only_this_page_list;

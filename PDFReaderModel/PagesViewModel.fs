@@ -6,7 +6,7 @@ open System.Collections.ObjectModel
 open System.Diagnostics
 
 type PagesViewModel() =
-   member val Pages = ObservableCollection<PDFParser.PDFPage>()
+   member val Pages = ObservableCollection<PDFReader.PDFPage>()
 
    member this.LoadPages() =
       let dialog = new CommonOpenFileDialog()
@@ -15,11 +15,11 @@ type PagesViewModel() =
 
       if dialog.ShowDialog() = CommonFileDialogResult.Ok then
          let pages =
-            PDFParser.PagesModel.GetPages dialog.FileName
+            PDFReader.PagesModel.GetPages dialog.FileName
 
          for page in pages do
             this.Pages.Add
-            <| PDFParser.PDFPage(
+            <| PDFReader.PDFPage(
                Width = this.ToDefaultUserSpace page.Width,
                Height = this.ToDefaultUserSpace page.Height
             )
