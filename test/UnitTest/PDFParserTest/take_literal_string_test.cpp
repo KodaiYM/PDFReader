@@ -15,7 +15,7 @@ void take_literal_string_test::test_sample() {
 	stream << "( String may contain balanced parentheses () and\n"
 	          "special characters (*!&}^% and so on). )";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue(" String may contain balanced parentheses () and\nspecial"
@@ -27,7 +27,7 @@ void take_literal_string_test::test_escape_sequence() {
 
 	stream << R"((\n\r\r\n\t\b\f\(\)\\\123))";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue("\n\r\r\n\t\b\f()\\\123" == object);
@@ -38,7 +38,7 @@ void take_literal_string_test::test_invalid_escape_sequence() {
 
 	stream << "(\\a)";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue("a" == object);
@@ -53,7 +53,7 @@ two strings \
 are the same.)
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue("These two strings are the same." == object);
@@ -64,7 +64,7 @@ void take_literal_string_test::test_EOL_unification() {
 
 	stream << "(\n\r\n\r)";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue("\n\n\n" == object);
@@ -75,7 +75,7 @@ void take_literal_string_test::test_short_octal() {
 
 	stream << "(before\\56after)";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue("before\56after" == object);
@@ -86,7 +86,7 @@ void take_literal_string_test::test_octal_overflow() {
 
 	stream << "(\\777)";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_string_object();
 	Assert::IsTrue("\377" == object);
@@ -97,7 +97,7 @@ void take_literal_string_test::test_lack_of_right_parenthesis() {
 
 	stream << "(abc(\\)def)";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	try {
 		str_parser.take_string_object();

@@ -14,7 +14,7 @@ void take_indirect_reference_test::test_unsigned() {
 
 	stream << "3 8 R";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_indirect_reference();
 	Assert::IsTrue(indirect_reference{3, 8} == object);
@@ -25,7 +25,7 @@ void take_indirect_reference_test::test_signed() {
 
 	stream << "+3 +8 R";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_indirect_reference();
 	Assert::IsTrue(indirect_reference{3, 8} == object);

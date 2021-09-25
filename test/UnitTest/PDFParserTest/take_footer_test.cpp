@@ -26,8 +26,8 @@ startxref
 %%EOF
 )";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
 	               str_parser.take_footer(obj_pool));
@@ -49,8 +49,8 @@ startxref
 %%EOF)";
 	stream << "\r\n";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
 	               str_parser.take_footer(obj_pool));
@@ -71,8 +71,8 @@ startxref
 0
 %%EOF)";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
 	               str_parser.take_footer(obj_pool));
@@ -85,8 +85,8 @@ void take_footer_test::test_xref_byte_offset_not_found() {
 	stream << "startxref\r\n"
 	       << "%%EOF\n";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	try {
 		str_parser.take_footer(obj_pool);
@@ -122,8 +122,8 @@ trailer
 )"_trimmed
 	       << '\n';
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
 	               str_parser.take_footer(obj_pool));
@@ -147,8 +147,8 @@ startxref
 %%EOF
 )";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
 	               str_parser.take_footer(obj_pool));

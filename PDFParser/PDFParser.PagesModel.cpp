@@ -6,7 +6,7 @@
 namespace PDFParser {
 System::Collections::Generic::List<PDFParser::PDFPage ^> ^
     PagesModel::GetPages(System::String ^ filename) {
-	pdfparser::document_parser doc_parser{
+	pdfparser::document_reader doc_parser{
 	    std::ifstream(msclr::interop::marshal_as<std::string>(filename),
 	                  std::ios_base::in | std::ios_base::binary)};
 

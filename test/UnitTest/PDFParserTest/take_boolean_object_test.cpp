@@ -13,7 +13,7 @@ void take_boolean_object_test::test_true() {
 
 	stream << "true";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_boolean_object();
 	Assert::IsTrue(true == object);
@@ -24,7 +24,7 @@ void take_boolean_object_test::test_false() {
 
 	stream << "false";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_boolean_object();
 	Assert::IsTrue(false == object);

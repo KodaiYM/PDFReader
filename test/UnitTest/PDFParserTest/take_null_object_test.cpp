@@ -13,7 +13,7 @@ void take_null_object_test::test_null() {
 
 	stream << "null";
 
-	stream_parser str_parser(std::move(stream));
-	auto          object = str_parser.take_null_object();
+	document_parser str_parser(std::move(stream));
+	auto            object = str_parser.take_null_object();
 	Assert::IsTrue(null == object);
 }

@@ -15,8 +15,8 @@ void take_object_test::test_any_direct_object_boolean() {
 
 	stream << "true";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(true == std::get<boolean_object>(object));
 }
@@ -26,8 +26,8 @@ void take_object_test::test_any_direct_object_integer() {
 
 	stream << "10";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(10 == static_cast<int>(std::get<integer_object>(object)));
 }
@@ -37,8 +37,8 @@ void take_object_test::test_any_direct_object_real() {
 
 	stream << "1.2";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(1.2 == std::get<real_object>(object));
 }
@@ -48,8 +48,8 @@ void take_object_test::test_any_direct_object_string() {
 
 	stream << "(str)";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue("str" == std::get<string_object>(object));
 }
@@ -59,8 +59,8 @@ void take_object_test::test_any_direct_object_name() {
 
 	stream << "/name";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue("name" == std::get<name_object>(object));
 }
@@ -70,8 +70,8 @@ void take_object_test::test_any_direct_object_array() {
 
 	stream << "[(s) 1 0.4]";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(array_object{string_object("s"), 1, 0.4} ==
 	               std::get<array_object>(object));
@@ -82,8 +82,8 @@ void take_object_test::test_any_direct_object_dictionary() {
 
 	stream << "<</key(value)>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(dictionary_object{{"key", string_object("value")}} ==
 	               std::get<dictionary_object>(object));
@@ -99,8 +99,8 @@ stream
 endstream
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 9}}, "123456789"} ==
 	               std::get<stream_object>(object));
@@ -111,8 +111,8 @@ void take_object_test::test_any_direct_object_null() {
 
 	stream << "null";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(null == std::get<null_object>(object));
 }
@@ -122,8 +122,8 @@ void take_object_test::test_any_direct_object_indirect_reference() {
 
 	stream << "1 2 R";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	auto object = str_parser.take_object<any_direct_object_or_ref>(obj_pool);
 	Assert::IsTrue(indirect_reference{1, 2} ==
 	               std::get<indirect_reference>(object));
@@ -135,8 +135,8 @@ void take_object_test::test_no_object() {
 
 	stream << "nothing";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_object<any_direct_object>(obj_pool);
 	} catch (const object_not_found_error& obj_e) {
@@ -152,8 +152,8 @@ void take_object_test::test_eof() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_object<any_direct_object>(obj_pool);
 	} catch (const object_not_found_error& obj_e) {

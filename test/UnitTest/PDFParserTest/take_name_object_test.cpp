@@ -16,7 +16,7 @@ void take_name_object_test::test_valid_name() {
 
 	stream << R"(/;*_-.$@!"&'=~^\|`+:,?)";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_name_object();
 	Assert::IsTrue(R"(;*_-.$@!"&'=~^\|`+:,?)" == object);
@@ -27,7 +27,7 @@ void take_name_object_test::test_empty_name() {
 
 	stream << "/";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_name_object();
 	Assert::IsTrue("" == object);
@@ -38,7 +38,7 @@ void take_name_object_test::test_hexadecimal_code() {
 
 	stream << "/A#20B";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_name_object();
 	Assert::IsTrue("A"s + '\x20' + "B" == object);

@@ -14,7 +14,7 @@
 
 namespace pdfparser {
 template <class InputStreamT>
-class document_parser final {
+class document_reader final {
 public:
 	System::Collections::Generic::List<PDFParser::PDFPage ^> ^ GetPages();
 
@@ -31,13 +31,13 @@ public:
 	/// <exception>
 	/// move constructor of InputStreamT may throw an exception.
 	/// </exception>
-	explicit document_parser(InputStreamT&& stream);
+	explicit document_reader(InputStreamT&& stream);
 
 	/// <summary>prohibit to move from const rvalue/summary>
-	document_parser(const InputStreamT&&) = delete;
+	document_reader(const InputStreamT&&) = delete;
 
 	/// <summary>prohibit to copy from lvalue</summary>
-	document_parser(InputStreamT&) = delete;
+	document_reader(InputStreamT&) = delete;
 
 private:
 	System::Collections::Generic::List<PDFParser::PDFPage ^> ^
@@ -45,7 +45,7 @@ private:
 	             const object_types::dictionary_object& inherited_attributes);
 
 private:
-	stream_parser<InputStreamT>     m_stream_parser;
+	document_parser<InputStreamT>   m_stream_parser;
 	object_types::dictionary_object m_trailer_dictionary;
 	object_pool<InputStreamT>       m_object_pool;
 
@@ -57,14 +57,14 @@ private:
 // definition of template functions
 namespace pdfparser {
 template <class InputStreamT>
-document_parser<InputStreamT>::document_parser(InputStreamT&& stream)
+document_reader<InputStreamT>::document_reader(InputStreamT&& stream)
     : m_stream_parser(std::move(stream)), m_object_pool(m_stream_parser) {
 	m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
 }
 
 template <class InputStreamT>
     System::Collections::Generic::List<PDFParser::PDFPage ^> ^
-    document_parser<InputStreamT>::GetPages() {
+    document_reader<InputStreamT>::GetPages() {
 	using namespace object_types;
 
 	auto page_tree_root = m_object_pool.dereference<dictionary_object>(
@@ -75,7 +75,7 @@ template <class InputStreamT>
 }
 template <class InputStreamT>
     System::Collections::Generic::List<PDFParser::PDFPage ^> ^
-    document_parser<InputStreamT>::GetPages(
+    document_reader<InputStreamT>::GetPages(
         const object_types::dictionary_object& page_node,
         const object_types::dictionary_object& inherited_attributes) {
 	using namespace object_types;

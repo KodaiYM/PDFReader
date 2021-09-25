@@ -23,8 +23,8 @@ trailer
 	>>
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	// check if no-throw
 	str_parser.take_trailer(obj_pool);
@@ -34,8 +34,8 @@ void take_trailer_test::test_no_white_space_after_keyword_trailer() {
 	                         std::ios_base::binary);
 	stream << "trailer<<>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 
 	// check if no-throw
 	str_parser.take_trailer(obj_pool);

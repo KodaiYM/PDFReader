@@ -13,8 +13,8 @@ void take_hexadecimal_string_test::test_mix_letters() {
 
 	stream << "<0A1B2C3d4e5fe6d7c8b9a1>";
 
-	stream_parser str_parser(std::move(stream));
-	auto          object = str_parser.take_string_object();
+	document_parser str_parser(std::move(stream));
+	auto            object = str_parser.take_string_object();
 	Assert::IsTrue("\x0A\x1B\x2C\x3D\x4E\x5F\xE6\xD7\xC8\xB9\xA1" == object);
 }
 void take_hexadecimal_string_test::test_whitespace() {
@@ -23,8 +23,8 @@ void take_hexadecimal_string_test::test_whitespace() {
 
 	stream << "< 20 3A F  5  >";
 
-	stream_parser str_parser(std::move(stream));
-	auto          object = str_parser.take_string_object();
+	document_parser str_parser(std::move(stream));
+	auto            object = str_parser.take_string_object();
 	Assert::IsTrue("\x20\x3A\xF5" == object);
 }
 void take_hexadecimal_string_test::test_odd_number_of_digits() {
@@ -33,8 +33,8 @@ void take_hexadecimal_string_test::test_odd_number_of_digits() {
 
 	stream << "<901FA>";
 
-	stream_parser str_parser(std::move(stream));
-	auto          object = str_parser.take_string_object();
+	document_parser str_parser(std::move(stream));
+	auto            object = str_parser.take_string_object();
 	Assert::IsTrue("\x90\x1F\xA0" == object);
 }
 void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
@@ -43,7 +43,7 @@ void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
 
 	stream << "<901GA>";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_string_object();
 	} catch (const parse_error& parse_e) {
@@ -62,7 +62,7 @@ void take_hexadecimal_string_test::test_lack_of_greater_than_sign() {
 
 	stream << "<901FA";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_string_object();
 	} catch (const parse_error& parse_e) {

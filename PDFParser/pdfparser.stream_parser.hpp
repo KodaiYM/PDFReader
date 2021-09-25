@@ -24,7 +24,7 @@ template <class InputStreamT>
 class object_pool;
 
 template <class InputStreamT>
-class stream_parser {
+class document_parser {
 public:
 	/// <summary>
 	/// seek to end and parse stream footer (xref table and trailer) and
@@ -413,17 +413,17 @@ public:
 	/// constructor of tokenizer(InputStreamT&amp;&amp;) may throw an
 	/// exception.
 	/// </exception>
-	stream_parser(InputStreamT&& stream);
+	document_parser(InputStreamT&& stream);
 
 	/// <summary>
 	/// prohibit to move from const rvalue
 	/// </summary>
-	stream_parser(const InputStreamT&&) = delete;
+	document_parser(const InputStreamT&&) = delete;
 
 	/// <summary>
 	/// prohibit to copy from lvalue
 	/// </summary>
-	stream_parser(InputStreamT&) = delete;
+	document_parser(InputStreamT&) = delete;
 
 private:
 	tokenizer<InputStreamT> m_tknizer;
@@ -438,15 +438,15 @@ private:
 };
 } // namespace pdfparser
 
-// definition of member functions of stream_parser
+// definition of member functions of document_parser
 namespace pdfparser {
 #pragma region stream_parser_definitions
 template <class InputStreamT>
-stream_parser<InputStreamT>::stream_parser(InputStreamT&& stream)
+document_parser<InputStreamT>::document_parser(InputStreamT&& stream)
     : m_tknizer(std::move(stream)) {}
 
 template <class InputStreamT>
-object_types::dictionary_object stream_parser<InputStreamT>::take_footer(
+object_types::dictionary_object document_parser<InputStreamT>::take_footer(
     object_pool<InputStreamT>& object_accessor) {
 	m_tknizer.seek_to_end();
 	m_tknizer.seek_forward_head_of_line();
@@ -473,7 +473,7 @@ object_types::dictionary_object stream_parser<InputStreamT>::take_footer(
 }
 
 template <class InputStreamT>
-xref_types::xref_table stream_parser<InputStreamT>::take_xref_table() {
+xref_types::xref_table document_parser<InputStreamT>::take_xref_table() {
 	using namespace xref_types;
 
 	xref_table this_xref_table;
@@ -501,7 +501,7 @@ xref_types::xref_table stream_parser<InputStreamT>::take_xref_table() {
 }
 
 template <class InputStreamT>
-xref_types::xref_entry stream_parser<InputStreamT>::take_xref_entry(
+xref_types::xref_entry document_parser<InputStreamT>::take_xref_entry(
     xref_types::object_t object_number) {
 	using namespace std::string_view_literals;
 
@@ -521,7 +521,7 @@ xref_types::xref_entry stream_parser<InputStreamT>::take_xref_entry(
 }
 
 template <class InputStreamT>
-object_types::dictionary_object stream_parser<InputStreamT>::take_trailer(
+object_types::dictionary_object document_parser<InputStreamT>::take_trailer(
     object_pool<InputStreamT>& object_accessor) {
 	m_tknizer.promise_token({"trailer"});
 	return take_dictionary_object(object_accessor);
@@ -529,14 +529,14 @@ object_types::dictionary_object stream_parser<InputStreamT>::take_trailer(
 
 template <class InputStreamT>
 template <class Variant, std::size_t... Seq>
-Variant stream_parser<InputStreamT>::take_object_Variant_impl(
+Variant document_parser<InputStreamT>::take_object_Variant_impl(
     std::index_sequence<Seq...>) {
 	return take_object<std::variant_alternative_t<Seq, Variant>...>();
 }
 
 template <class InputStreamT>
 template <class Variant, std::size_t... Seq>
-Variant stream_parser<InputStreamT>::take_object_Variant_impl(
+Variant document_parser<InputStreamT>::take_object_Variant_impl(
     std::index_sequence<Seq...>, object_pool<InputStreamT>& object_accessor) {
 	return take_object<std::variant_alternative_t<Seq, Variant>...>(
 	    object_accessor);
@@ -544,14 +544,14 @@ Variant stream_parser<InputStreamT>::take_object_Variant_impl(
 
 template <class InputStreamT>
 template <class Variant>
-Variant stream_parser<InputStreamT>::take_object() {
+Variant document_parser<InputStreamT>::take_object() {
 	return take_object_Variant_impl<Variant>(
 	    std::make_index_sequence<std::variant_size_v<Variant>>());
 }
 
 template <class InputStreamT>
 template <class Variant>
-Variant stream_parser<InputStreamT>::take_object(
+Variant document_parser<InputStreamT>::take_object(
     object_pool<InputStreamT>& object_accessor) {
 	return take_object_Variant_impl<Variant>(
 	    std::make_index_sequence<std::variant_size_v<Variant>>(),
@@ -561,7 +561,7 @@ Variant stream_parser<InputStreamT>::take_object(
 template <class InputStreamT>
 template <class... ObjectTypes,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
-std::variant<ObjectTypes...> stream_parser<InputStreamT>::take_object() {
+std::variant<ObjectTypes...> document_parser<InputStreamT>::take_object() {
 	using namespace object_types;
 
 	constexpr bool contains_boolean =
@@ -677,7 +677,7 @@ std::variant<ObjectTypes...> stream_parser<InputStreamT>::take_object() {
 template <class InputStreamT>
 template <class... ObjectTypes,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
-std::variant<ObjectTypes...> stream_parser<InputStreamT>::take_object(
+std::variant<ObjectTypes...> document_parser<InputStreamT>::take_object(
     object_pool<InputStreamT>& object_accessor) {
 	using namespace object_types;
 
@@ -853,7 +853,7 @@ std::variant<ObjectTypes...> stream_parser<InputStreamT>::take_object(
 
 template <class InputStreamT>
 object_types::boolean_object
-    stream_parser<InputStreamT>::take_boolean_object() {
+    document_parser<InputStreamT>::take_boolean_object() {
 	using namespace object_types;
 
 	if (m_tknizer.attempt_token("true")) {
@@ -867,7 +867,7 @@ object_types::boolean_object
 }
 template <class InputStreamT>
 object_types::integer_object
-    stream_parser<InputStreamT>::take_integer_object() {
+    document_parser<InputStreamT>::take_integer_object() {
 	auto front_token = m_tknizer.take_token();
 
 	if (front_token.has_value()) {
@@ -886,7 +886,7 @@ object_types::integer_object
 	    object_not_found_error::integer_object_not_found);
 }
 template <class InputStreamT>
-object_types::real_object stream_parser<InputStreamT>::take_real_object() {
+object_types::real_object document_parser<InputStreamT>::take_real_object() {
 	using namespace object_types;
 
 	auto front_token = m_tknizer.take_token();
@@ -907,7 +907,8 @@ object_types::real_object stream_parser<InputStreamT>::take_real_object() {
 	throw object_not_found_error(object_not_found_error::real_object_not_found);
 }
 template <class InputStreamT>
-object_types::string_object stream_parser<InputStreamT>::take_string_object() {
+object_types::string_object
+    document_parser<InputStreamT>::take_string_object() {
 	using namespace object_types;
 
 	// Litral String
@@ -1054,7 +1055,7 @@ object_types::string_object stream_parser<InputStreamT>::take_string_object() {
 	throw object_not_found_error(object_not_found_error::string_object_not_found);
 }
 template <class InputStreamT>
-object_types::name_object stream_parser<InputStreamT>::take_name_object() {
+object_types::name_object document_parser<InputStreamT>::take_name_object() {
 	using namespace object_types;
 
 	if (m_tknizer.attempt_token("/")) {
@@ -1087,7 +1088,7 @@ object_types::name_object stream_parser<InputStreamT>::take_name_object() {
 	throw object_not_found_error(object_not_found_error::name_object_not_found);
 }
 template <class InputStreamT>
-object_types::array_object stream_parser<InputStreamT>::take_array_object(
+object_types::array_object document_parser<InputStreamT>::take_array_object(
     object_pool<InputStreamT>& object_accessor) {
 	using namespace object_types;
 
@@ -1118,7 +1119,7 @@ object_types::array_object stream_parser<InputStreamT>::take_array_object(
 }
 template <class InputStreamT>
 object_types::dictionary_object
-    stream_parser<InputStreamT>::take_dictionary_object(
+    document_parser<InputStreamT>::take_dictionary_object(
         object_pool<InputStreamT>& object_accessor) {
 	using namespace object_types;
 
@@ -1172,7 +1173,7 @@ object_types::dictionary_object
 	    object_not_found_error::dictionary_object_not_found);
 }
 template <class InputStreamT>
-object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
+object_types::stream_object document_parser<InputStreamT>::take_stream_object(
     object_pool<InputStreamT>& object_accessor) {
 	using namespace object_types;
 
@@ -1191,7 +1192,7 @@ object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
 }
 template <class InputStreamT>
 template <class DictionaryObject>
-object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
+object_types::stream_object document_parser<InputStreamT>::take_stream_object(
     object_pool<InputStreamT>& object_accessor,
     DictionaryObject&&         stream_dictionary) {
 	using namespace object_types;
@@ -1237,7 +1238,7 @@ object_types::stream_object stream_parser<InputStreamT>::take_stream_object(
 	                     std::move(stream_data)};
 }
 template <class InputStreamT>
-object_types::null_object stream_parser<InputStreamT>::take_null_object() {
+object_types::null_object document_parser<InputStreamT>::take_null_object() {
 	if (m_tknizer.attempt_token("null")) {
 		return object_types::null;
 	}
@@ -1246,7 +1247,7 @@ object_types::null_object stream_parser<InputStreamT>::take_null_object() {
 }
 template <class InputStreamT>
 object_types::indirect_reference
-    stream_parser<InputStreamT>::take_indirect_reference() {
+    document_parser<InputStreamT>::take_indirect_reference() {
 	using namespace object_types;
 
 	xref_types::object_t     object_number;
@@ -1273,7 +1274,7 @@ object_types::indirect_reference
 
 template <class InputStreamT>
 object_types::any_direct_object
-    stream_parser<InputStreamT>::take_indirect_object(
+    document_parser<InputStreamT>::take_indirect_object(
         object_pool<InputStreamT>&          object_accessor,
         const xref_types::xref_inuse_entry& object_info) {
 	auto before_take_indirect_object_pos = m_tknizer.tell();

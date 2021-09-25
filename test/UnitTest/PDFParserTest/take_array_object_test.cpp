@@ -15,9 +15,9 @@ void take_array_object_test::test_simple_array() {
 
 	stream << "[1 2 3]";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_array_object(obj_pool);
 	Assert::IsTrue(array_object{1, 2, 3} == object);
 }
 void take_array_object_test::test_valid_array() {
@@ -40,9 +40,9 @@ void take_array_object_test::test_valid_array() {
 ]
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_array_object(obj_pool);
 
 	Assert::IsTrue(
 	    array_object{
@@ -66,9 +66,9 @@ void take_array_object_test::test_empty_array() {
 
 	stream << "[]";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_array_object(obj_pool);
 	Assert::IsTrue(array_object{} == object);
 }
 void take_array_object_test::test_lack_of_right_square_bracket() {
@@ -77,8 +77,8 @@ void take_array_object_test::test_lack_of_right_square_bracket() {
 
 	stream << "[0 1 2";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_array_object(obj_pool);
 	} catch (const parse_error& parse_e) {

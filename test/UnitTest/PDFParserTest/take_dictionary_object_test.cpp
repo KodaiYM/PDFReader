@@ -27,9 +27,9 @@ void take_dictionary_object_test::test_sample() {
 >>
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_dictionary_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_dictionary_object(obj_pool);
 	Assert::IsTrue(dictionary_object{
 	                   {"Type", name_object{"Example"}},              // these
 	                   {"SubType", name_object{"DictionaryExample"}}, // comments
@@ -51,9 +51,9 @@ void take_dictionary_object_test::test_empty() {
 
 	stream << "<<>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_dictionary_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_dictionary_object(obj_pool);
 	Assert::IsTrue(dictionary_object{} == dictionary_object(object));
 }
 void take_dictionary_object_test::test_null_value() {
@@ -62,9 +62,9 @@ void take_dictionary_object_test::test_null_value() {
 
 	stream << "<</key null /key2 null /key3 (string) /key4 null>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_dictionary_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_dictionary_object(obj_pool);
 	Assert::IsTrue(dictionary_object{{"key3", string_object{"string"}}} ==
 	               object);
 }
@@ -74,8 +74,8 @@ void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 
 	stream << "<</key (value)";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_dictionary_object(obj_pool);
 	} catch (const parse_error& parse_e) {

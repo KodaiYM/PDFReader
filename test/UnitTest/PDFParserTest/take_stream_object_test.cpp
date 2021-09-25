@@ -18,9 +18,9 @@ void take_stream_object_test::test_sample_CRLF() {
 	       << " stream contents \n\n"
 	       << "endstream";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_stream_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_stream_object(obj_pool);
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
 	                             " stream contents \n"} == object);
 }
@@ -33,9 +33,9 @@ void take_stream_object_test::test_sample_LF() {
 	       << " stream contents \n\n"
 	       << "endstream";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_stream_object(obj_pool);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
+	auto            object = str_parser.take_stream_object(obj_pool);
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
 	                             " stream contents \n"} == object);
 }
@@ -61,8 +61,8 @@ endobj
 )"_trimmed;
 
 	stream.seekg(beginning_of_stream);
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	obj_pool.add_xref_table(
 	    xref_types::xref_table{xref_types::xref_inuse_entry{1, 0, 0}});
 
@@ -82,8 +82,8 @@ stream
 endstream
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_stream_object(obj_pool);
 	} catch (const parse_error& parse_e) {
@@ -106,8 +106,8 @@ stream
 endstream
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_stream_object(obj_pool);
 	} catch (const parse_error& parse_e) {

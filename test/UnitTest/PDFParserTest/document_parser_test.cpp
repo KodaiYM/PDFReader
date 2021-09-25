@@ -17,7 +17,7 @@ void document_parser_test::test_GetPages_helloworld() {
 	Assert::IsTrue(fs::exists(helloworld_path));
 
 	// check if no-throw
-	document_parser main_parser{std::ifstream(
+	document_reader main_parser{std::ifstream(
 	    helloworld_path, std::ios_base::in | std::ios_base::binary)};
 
 	System::Collections::Generic::List<PDFParser::PDFPage ^> expected_pages;

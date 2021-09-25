@@ -41,8 +41,8 @@ endobj
 endobj
 )";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	obj_pool.add_xref_table(
 	    xref_table{xref_inuse_entry{8, 0, offset_of_objnum8}});
 	auto object =
@@ -61,8 +61,8 @@ void take_indirect_object_test::test_inconsistent_object_number() {
 endobj
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_indirect_object(obj_pool, xref_inuse_entry{8, 0, 0});
 	} catch (const parse_error& parse_e) {
@@ -85,8 +85,8 @@ void take_indirect_object_test::test_inconsistent_generation_number() {
 endobj
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	document_parser str_parser(std::move(stream));
+	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_indirect_object(obj_pool, xref_inuse_entry{7, 1, 0});
 	} catch (const parse_error& parse_e) {

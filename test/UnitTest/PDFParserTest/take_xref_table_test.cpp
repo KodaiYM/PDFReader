@@ -15,7 +15,7 @@ void take_xref_table_test::test_maximum_xref_table() {
 	stream << "xref\n";
 	stream << "1 " << std::numeric_limits<xref_types::object_t>::max() << "\n";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_xref_table();
 	} catch (std::overflow_error&) {
@@ -33,7 +33,7 @@ void take_xref_table_test::test_overflow() {
 	constexpr auto max = std::numeric_limits<xref_types::object_t>::max();
 	stream << "1 " << (max / 10) << (max % 10 + 1) << "\n";
 
-	stream_parser str_parser(std::move(stream));
+	document_parser str_parser(std::move(stream));
 	try {
 		str_parser.take_xref_table();
 	} catch (std::overflow_error&) {
