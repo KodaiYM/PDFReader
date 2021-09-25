@@ -2,7 +2,7 @@
 partition "graphics_state()" {
 start
 	:clipping_path = ;
-	:current_transformation_matrix = Matrix3d::Identity();
+	:current_transformation_matrix = AffineMatrix::Identity();
 	:fill_color = chroma::grascale_black;
 	:flatness = 0;
 	:line_cap_style = line_style::cap_type::butt;
@@ -16,7 +16,6 @@ start
 	:character_spacing = 0;
 	:horizontal_scaling = 100;
 	:leading = 0;
-	:text_matrix = Matrix3d::Identity();
 	:text_rise = 0;
 	:text_rendering_mode = text_style::rendering_mode::fill;
 	:word_spacing = 0;

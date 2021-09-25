@@ -1,6 +1,6 @@
 @startuml space
 hide empty members
-namespace pdfparser::space {
+namespace pdfparser {
 class Coordinates {
 	+x : double
 	+y : double

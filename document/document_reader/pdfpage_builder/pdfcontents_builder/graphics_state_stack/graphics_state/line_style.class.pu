@@ -1,6 +1,6 @@
 @startuml line_style
 hide empty members
-namespace line_style {
+namespace pdfparser::line_style {
 enum cap_type <<enumeration>> {
 	<<Const>>
 	+{static} butt   = 0
