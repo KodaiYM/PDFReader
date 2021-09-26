@@ -31,7 +31,7 @@ struct hash<std::pair<Key, Value>> {
 
 namespace pdfparser {
 template <class InputStreamT>
-class document_parser;
+class object_parser;
 
 class type_mismatch: public std::runtime_error {
 public:
@@ -155,11 +155,11 @@ public:
 	ObjectType dereference(const object_types::indirect_reference& reference);
 
 public:
-	explicit object_pool(document_parser<InputStreamT>& parser) noexcept;
+	explicit object_pool(object_parser<InputStreamT>& parser) noexcept;
 
 private:
-	document_parser<InputStreamT>& m_parser;
-	xref_types::xref_table         m_xref_table;
+	object_parser<InputStreamT>& m_parser;
+	xref_types::xref_table       m_xref_table;
 	std::unordered_map<std::pair<xref_types::object_t, xref_types::generation_t>,
 	                   object_types::any_direct_object>
 	    m_object_map;
@@ -186,7 +186,7 @@ private:
 namespace pdfparser {
 template <class InputStreamT>
 object_pool<InputStreamT>::object_pool(
-    document_parser<InputStreamT>& parser) noexcept
+    object_parser<InputStreamT>& parser) noexcept
     : m_parser(parser) {}
 
 template <class InputStreamT>

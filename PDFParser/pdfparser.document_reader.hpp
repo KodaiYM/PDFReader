@@ -1,11 +1,11 @@
 #pragma once
 
 #include "PDFReader.PDFPage.hpp"
-#include "pdfparser.data_types.hpp"
 #include "pdfparser.document_error.hpp"
-#include "pdfparser.document_parser.hpp"
+#include "pdfparser.object_parser.hpp"
 #include "pdfparser.object_pool.hpp"
 #include "pdfparser.object_types.hpp"
+#include "pdfparser.space.hpp"
 #include "pdfparser.xref_types.hpp"
 
 #include <fstream> // for IntelliSense
@@ -45,7 +45,7 @@ private:
 	             const object_types::dictionary_object& inherited_attributes);
 
 private:
-	document_parser<InputStreamT>   m_stream_parser;
+	object_parser<InputStreamT>     m_object_parser;
 	object_types::dictionary_object m_trailer_dictionary;
 	object_pool<InputStreamT>       m_object_pool;
 
@@ -58,8 +58,8 @@ private:
 namespace pdfparser {
 template <class InputStreamT>
 document_reader<InputStreamT>::document_reader(InputStreamT&& stream)
-    : m_stream_parser(std::move(stream)), m_object_pool(m_stream_parser) {
-	m_trailer_dictionary = m_stream_parser.take_footer(m_object_pool);
+    : m_object_parser(std::move(stream)), m_object_pool(m_object_parser) {
+	m_trailer_dictionary = m_object_parser.take_footer(m_object_pool);
 }
 
 template <class InputStreamT>
@@ -79,7 +79,6 @@ template <class InputStreamT>
         const object_types::dictionary_object& page_node,
         const object_types::dictionary_object& inherited_attributes) {
 	using namespace object_types;
-	using namespace data_types;
 
 	auto type = m_object_pool.dereference<name_object>(page_node.at("Type"));
 	if ("Pages" == type) {
@@ -106,9 +105,17 @@ template <class InputStreamT>
 		complete_page_node.insert(inherited_attributes.begin(),
 		                          inherited_attributes.end());
 
-		auto media_box =
-		    rectangle_data(m_object_pool, m_object_pool.dereference<array_object>(
-		                                      complete_page_node.at("MediaBox")));
+		auto media_box_array = m_object_pool.dereference<array_object>(
+		    complete_page_node.at("MediaBox"));
+		auto media_box = rectangle_data(
+		    {number_to_double(
+		         m_object_pool.dereference<number_object>(media_box_array.at(0))),
+		     number_to_double(
+		         m_object_pool.dereference<number_object>(media_box_array.at(1)))},
+		    {number_to_double(
+		         m_object_pool.dereference<number_object>(media_box_array.at(2))),
+		     number_to_double(
+		         m_object_pool.dereference<number_object>(media_box_array.at(3)))});
 
 		PDFReader::PDFPage ^ this_page = gcnew PDFReader::PDFPage;
 		this_page->Width =

@@ -81,7 +81,7 @@
     <ClInclude Include="pdfparser.object_types.hpp">
       <Filter>pdfparser\document_reader\object_parser\object_types</Filter>
     </ClInclude>
-    <ClInclude Include="pdfparser.document_parser.hpp">
+    <ClInclude Include="pdfparser.object_parser.hpp">
       <Filter>pdfparser\document_reader\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.xref_types.hpp">

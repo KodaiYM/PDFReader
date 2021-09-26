@@ -155,7 +155,7 @@
     <ClInclude Include="pdfparser.xref_types.hpp" />
     <ClInclude Include="pdfparser.pdftoken.hpp" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="pdfparser.document_parser.hpp" />
+    <ClInclude Include="pdfparser.object_parser.hpp" />
     <ClInclude Include="pdfparser.whitespace_flags.hpp" />
     <ClInclude Include="pdfparser.tokenizer.hpp" />
     <ClInclude Include="pdfparser.tokenize_error.hpp" />
