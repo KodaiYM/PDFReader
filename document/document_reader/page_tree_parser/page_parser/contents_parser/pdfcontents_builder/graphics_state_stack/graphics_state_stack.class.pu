@@ -3,9 +3,9 @@ hide empty members
 namespace pdfparser {
 class graphics_state_stack {
 	+graphics_state_stack()
-	+store_graphics_state()   : void
-	+restore_graphics_state() : void
-	+current_graphics_state() : graphics_state&
+	+store()   : void
+	+restore() : void
+	+top() : graphics_state&
 	-m_graphics_states : stack<graphics_state>
 }
 graphics_state_stack --> "*" graphics_state

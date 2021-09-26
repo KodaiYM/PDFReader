@@ -16,6 +16,5 @@ public:
 
 private:
 	gcroot<PDFReader::PDFPage ^> m_page;
-	pdfcontents_builder          m_contents_builder;
 };
 } // namespace pdfparser

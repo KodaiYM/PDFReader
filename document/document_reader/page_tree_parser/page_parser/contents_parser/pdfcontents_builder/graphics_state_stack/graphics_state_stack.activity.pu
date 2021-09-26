@@ -1,0 +1,31 @@
+@startuml graphics_state_stack
+partition "graphics_state_stack()" {
+start
+	:m_graphics_states.emplace();
+stop
+}
+@enduml
+
+@startuml store
+partition "store()" {
+start
+	:m_graphics_states.push(top());
+stop
+}
+@enduml
+
+@startuml restore
+partition "restore()" {
+start
+	:m_graphics_states.pop();
+stop
+}
+@enduml
+
+@startuml top
+partition "top()" {
+start
+	:m_graphics_states.top();
+stop
+}
+@enduml

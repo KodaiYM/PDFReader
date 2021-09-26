@@ -5,7 +5,7 @@
 | pdfparser::pdfcontents_builder | PDFの各ページのコンテンツをコンテンツストリームの解析に沿って構築する |
 
 ## 関連クラス図
-[グラフィック状態管理クラス](graphics_state_manager/graphics_state_manager.md)
+[グラフィック状態管理クラス](graphics_state_stack/graphics_state_stack.md)
 
 ## コンテンツを表すクラス
 [PDFコンテンツクラス図](PDFContents.class.pu)

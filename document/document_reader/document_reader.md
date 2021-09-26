@@ -6,7 +6,7 @@
 | pdfparser::document_error  | ドキュメントの構文上のエラーを表す |
 
 ## 使用例
-- GetPages を呼び出すと、[オブジェクトプール](object_pool/object_pool.md)を使って間接オブジェクトにアクセスしながら、[ファイル解析](object_parser/object_parser.md)を行い、[PDFの各ページを構築する](pdfpage_builder/pdfpage_builder.md)。
+- get_pages を呼び出すと、[ファイル解析クラス](object_parser/object_parser.md)や[オブジェクトプールクラス](object_pool/object_pool.md)を使い、[PDFの全ページを解析](page_tree_parser/page_tree_parser.md)する。
 
 ## クラス図一覧
 - [ドキュメント解析クラス図](document_reader.class.pu)

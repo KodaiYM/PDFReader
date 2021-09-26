@@ -1,19 +1,15 @@
 @startuml pdfcontents_builder
 hide empty members
 abstract pdfcontents_builder {
-	+concat_CTM(double a, double b, double c, double d, double e, double f) : void
+	+concat_CTM(concat_matrix : AffineMatrix) : void
 	+set_line_dash_pattern(line_dash_pattern : line_style::dash_pattern_type) : void
 	+set_flatness(flatness : double) : void
 	+set_line_join_style(line_join_style : line_style::join_type) : void
 	+set_line_cap_style(line_cap_style : line_style::cap_type) : void
 	+set_miter_limit(miter_limit : double) : void
 	+set_line_width(line_width : double) : void
-	+set_fill_color_gray(gray_fill_color : double) : void
-	+set_stroke_color_gray(gray_stroke_color : double) : void
-	+set_fill_color_cmyk(cyan : double, magenta : double, yellow : double, black : double) : void
-	+set_stroke_color_cmyk(cyan : double, magenta : double, yellow : double, black : double) : void
-	+set_fill_color_rgb(red : double, green : double, blue : double) : void
-	+set_stroke_color_rgb(red : double, green : double, blue : double) : void
+	+set_fill_color_gray(fill_color : color) : void
+	+set_stroke_color_gray(stroke_color : color) : void
 	+set_character_spacing(character_spacing : double) : void
 	+set_leading(leading : double) : void
 	+set_text_rendering_mode(text_rendering_mode : text_style::rendering_mode) : void
@@ -27,11 +23,12 @@ abstract pdfcontents_builder {
 	+begin_text() : void
 	+end_text()   : void
 
+	-graphics_states : graphics_state_stack
+
 	' These matrices are ambiguously represented in PDF 1.0, but are clearly defined in PDF 1.7.
 	-text_matrix : AffineMatrix
 	-text_line_matrix : AffineMatrix
 }
-pdfcontents_builder --|> graphics_state_manager
 pdfcontents_builder ..> line_style
 pdfcontents_builder ..> text_style
 
@@ -41,7 +38,7 @@ annotation line_style <<(N, yellow) namespace>> {
 annotation text_style <<(N, yellow) namespace>> {
 	[[text_style.class.pu]]
 }
-abstract graphics_state_manager {
-	[[graphics_state_manager.class.pu]]
+abstract graphics_state_stack {
+	[[graphics_state_stack.class.pu]]
 }
 @enduml

@@ -132,10 +132,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="character_types.hpp" />
+    <ClInclude Include="pdfparser.contents_parser.hpp" />
     <ClInclude Include="pdfparser.graphics_state_stack.hpp" />
     <ClInclude Include="pdfparser.chroma.hpp" />
     <ClInclude Include="pdfparser.graphics_state.hpp" />
     <ClInclude Include="pdfparser.line_style.hpp" />
+    <ClInclude Include="pdfparser.page_parser.hpp" />
+    <ClInclude Include="pdfparser.page_tree_parser.hpp" />
     <ClInclude Include="pdfparser.pdfcontents_builder.hpp" />
     <ClInclude Include="pdfparser.pdfpage_builder.hpp" />
     <ClInclude Include="pdfparser.space.hpp" />

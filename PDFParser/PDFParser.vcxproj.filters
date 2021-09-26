@@ -22,18 +22,6 @@
     <Filter Include="pdfparser\document_reader\object_pool">
       <UniqueIdentifier>{43153da4-ade5-4025-a85e-9fab6e828253}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\pdfpage_builder">
-      <UniqueIdentifier>{774df1fa-3bca-44ae-af23-7cb1938993a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pdfparser\document_reader\pdfpage_builder\pdfcontents_builder">
-      <UniqueIdentifier>{7727b4f2-50cc-497a-ae84-78eb9fb2c417}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack">
-      <UniqueIdentifier>{1006eaeb-971c-4dd2-994a-03ed4c4ea1a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state">
-      <UniqueIdentifier>{788f44d9-e457-43ca-bc01-b606506b3e25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PDFReader">
       <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
     </Filter>
@@ -69,6 +57,27 @@
     </Filter>
     <Filter Include="pdfparser\document_reader\object_parser\xref_types">
       <UniqueIdentifier>{ec799d21-d17c-46df-8147-d7b17be513c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser">
+      <UniqueIdentifier>{4bb328da-065b-496c-9dfd-6e19d51dc3ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser\page_parser">
+      <UniqueIdentifier>{3c791407-ea59-4944-a8d1-c11e529ddc04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser\page_parser\contents_parser">
+      <UniqueIdentifier>{7909f37d-fdeb-467a-88e9-cbfc7a56ca6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder">
+      <UniqueIdentifier>{7727b4f2-50cc-497a-ae84-78eb9fb2c417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack">
+      <UniqueIdentifier>{1006eaeb-971c-4dd2-994a-03ed4c4ea1a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state">
+      <UniqueIdentifier>{788f44d9-e457-43ca-bc01-b606506b3e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader\page_tree_parser\page_parser\pdfpage_builder">
+      <UniqueIdentifier>{774df1fa-3bca-44ae-af23-7cb1938993a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,28 +133,28 @@
       <Filter>pdfparser\document_reader</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.graphics_state.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.space.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.chroma.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.line_style.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.text_style.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.graphics_state_stack.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.pdfcontents_builder.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.pdfpage_builder.hpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\pdfpage_builder</Filter>
     </ClInclude>
     <ClInclude Include="PDFReader.PDFPage.hpp">
       <Filter>PDFReader\PDFPage</Filter>
@@ -155,6 +164,15 @@
     </ClInclude>
     <ClInclude Include="PDFReader.PDFContents.hpp">
       <Filter>PDFReader\PDFPage\PDFContents</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.page_tree_parser.hpp">
+      <Filter>pdfparser\document_reader\page_tree_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.page_parser.hpp">
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.contents_parser.hpp">
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -186,10 +204,10 @@
       <Filter>pdfparser\document_reader</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.space.cpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.graphics_state_stack.cpp">
-      <Filter>pdfparser\document_reader\pdfpage_builder\pdfcontents_builder\graphics_state_stack</Filter>
+      <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack</Filter>
     </ClCompile>
     <ClCompile Include="PDFReader.PagesModel.cpp">
       <Filter>PDFReader\PagesModel</Filter>

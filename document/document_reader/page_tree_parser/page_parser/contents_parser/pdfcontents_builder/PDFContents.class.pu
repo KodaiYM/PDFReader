@@ -1,0 +1,5 @@
+@startuml PDFContents
+hide empty members
+class PDFContents {
+}
+@enduml
