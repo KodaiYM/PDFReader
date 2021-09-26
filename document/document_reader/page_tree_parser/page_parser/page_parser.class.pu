@@ -2,18 +2,18 @@
 hide empty members
 namespace pdfparser {
 class page_parser<InputStreamT> {
-	-m_object_parser : object_parser<InputStreamT>&
+	-m_object_pool   : object_pool<InputStreamT>&
 	-m_page_object   : const dictionary_object&
 
-	+page_parser(obj_parser : object_parser<InputStreamT>&, page_object : const dictionary_object&)
+	+page_parser(obj_pool : object_pool<InputStreamT>&, page_object : const dictionary_object&)
 	+get_page() : PDFPage
 }
-page_parser ..> object_parser
+page_parser ..> object_pool
 page_parser ..> dictionary_object
 page_parser ..> PDFPage
 
-class object_parser {
-	[[object_parser.class.pu]]
+class object_pool {
+	[[object_pool.class.pu]]
 }
 class dictionary_object {
 	[[object_types.class.pu]]

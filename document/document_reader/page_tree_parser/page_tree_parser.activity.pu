@@ -11,7 +11,7 @@ stop
 @startuml get_pages
 partition "get_pages()" {
 start
-	:return get_pages(root_node, {});
+	:return get_pages(m_root_node, {});
 stop
 }
 @enduml
@@ -38,7 +38,7 @@ start
 		:complete_page_object = page_node;
 		:complete_page_object.insert(inherited_attributes.begin(), inherited_attributes.end());
 
-		:this_page_parser : page_parser(m_object_parser, m_object_pool, complete_page_object);
+		:this_page_parser : page_parser(m_object_pool, complete_page_object);
 		:return this_page_parser.get_page(complete_page_object);
 	else
 		:throw document_error();

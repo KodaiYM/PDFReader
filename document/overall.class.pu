@@ -40,7 +40,7 @@ class InputStreamT {
 class page_parser {
 	ページオブジェクトの解析
 }
-page_parser o--> object_parser : > 間接参照
+page_parser o--> object_pool : > エントリの参照
 page_parser --> contents_parser : > コンテンツの解析
 
 class contents_parser {
