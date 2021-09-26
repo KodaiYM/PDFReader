@@ -16,11 +16,17 @@
     <Filter Include="pdfparser\tokenizer">
       <UniqueIdentifier>{5fc1d187-fa9e-4889-81bc-6e8b85845a45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_parser">
+    <Filter Include="pdfparser\object_parser">
       <UniqueIdentifier>{97fb2060-1ae8-4730-8c4d-a3c0600aa7f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_parser\take_object_test">
+    <Filter Include="pdfparser\object_parser\take_object_test">
       <UniqueIdentifier>{9a6b326c-6d91-49d5-815c-0b29f7c2131e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\document_reader">
+      <UniqueIdentifier>{55c9ab85-32eb-4dc7-b447-89b0ae22ff1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\contents_parser">
+      <UniqueIdentifier>{12af86a8-4ecb-4c9e-aaf6-4294c7351aac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,64 +36,61 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="take_footer_test.hpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="take_indirect_object_test.hpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="take_trailer_test.hpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="take_xref_entry_test.hpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="take_xref_table_test.hpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClInclude>
     <ClInclude Include="take_array_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_boolean_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_dictionary_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_hexadecimal_string_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_indirect_reference_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_integer_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_literal_string_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_name_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_null_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_real_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_stream_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="take_object_test.hpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClInclude>
     <ClInclude Include="literal_trim.hpp">
       <Filter>pdfparser_test</Filter>
     </ClInclude>
     <ClInclude Include="testtool.h">
       <Filter>pdfparser_test</Filter>
-    </ClInclude>
-    <ClInclude Include="document_reader_test.hpp">
-      <Filter>pdfparser</Filter>
     </ClInclude>
     <ClInclude Include="attempt_test.hpp">
       <Filter>pdfparser\istream_extended</Filter>
@@ -134,58 +137,61 @@
     <ClInclude Include="no_token.hpp">
       <Filter>pdfparser\tokenizer</Filter>
     </ClInclude>
+    <ClInclude Include="get_pages_test.hpp">
+      <Filter>pdfparser\document_reader</Filter>
+    </ClInclude>
+    <ClInclude Include="get_contents_test.hpp">
+      <Filter>pdfparser\contents_parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="take_indirect_object_test.cpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClCompile>
     <ClCompile Include="take_trailer_test.cpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClCompile>
     <ClCompile Include="take_xref_table_test.cpp">
-      <Filter>pdfparser\document_parser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClCompile>
     <ClCompile Include="take_stream_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_array_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_boolean_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_dictionary_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_hexadecimal_string_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_indirect_reference_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_integer_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_literal_string_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_name_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_null_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_real_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_object_test.cpp">
-      <Filter>pdfparser\document_parser\take_object_test</Filter>
+      <Filter>pdfparser\object_parser\take_object_test</Filter>
     </ClCompile>
     <ClCompile Include="take_footer_test.cpp">
-      <Filter>pdfparser\document_parser</Filter>
-    </ClCompile>
-    <ClCompile Include="document_reader_test.cpp">
-      <Filter>pdfparser</Filter>
+      <Filter>pdfparser\object_parser</Filter>
     </ClCompile>
     <ClCompile Include="literal_trim.cpp">
       <Filter>pdfparser_test</Filter>
@@ -225,6 +231,12 @@
     </ClCompile>
     <ClCompile Include="take_token_test.cpp">
       <Filter>pdfparser\tokenizer</Filter>
+    </ClCompile>
+    <ClCompile Include="get_pages_test.cpp">
+      <Filter>pdfparser\document_reader</Filter>
+    </ClCompile>
+    <ClCompile Include="get_contents_test.cpp">
+      <Filter>pdfparser\contents_parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

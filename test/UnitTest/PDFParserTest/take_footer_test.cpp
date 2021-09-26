@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace document_parser_test;
+using namespace object_parser_test;
 
 void take_footer_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -26,7 +26,7 @@ startxref
 %%EOF
 )";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
@@ -49,7 +49,7 @@ startxref
 %%EOF)";
 	stream << "\r\n";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
@@ -71,7 +71,7 @@ startxref
 0
 %%EOF)";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
@@ -85,7 +85,7 @@ void take_footer_test::test_xref_byte_offset_not_found() {
 	stream << "startxref\r\n"
 	       << "%%EOF\n";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 
 	try {
@@ -122,7 +122,7 @@ trailer
 )"_trimmed
 	       << '\n';
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
@@ -147,7 +147,7 @@ startxref
 %%EOF
 )";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==

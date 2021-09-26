@@ -1,13 +1,13 @@
-#include "document_reader_test.hpp"
+#include "get_pages_test.hpp"
 #include "pdfparser.document_reader.hpp"
 
 #include <filesystem>
 #include <fstream>
 
 using namespace pdfparser;
-using namespace pdfparser_test;
+using namespace document_reader_test;
 
-void document_reader_test::test_GetPages_helloworld() {
+void get_pages_test::test_GetPages_helloworld() {
 	using namespace xref_types;
 	namespace fs = std::filesystem;
 

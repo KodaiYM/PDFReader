@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace document_parser_test::take_object_test;
+using namespace object_parser_test::take_object_test;
 
 void take_stream_object_test::test_sample_CRLF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -18,7 +18,7 @@ void take_stream_object_test::test_sample_CRLF() {
 	       << " stream contents \n\n"
 	       << "endstream";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	auto            object = str_parser.take_stream_object(obj_pool);
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
@@ -33,7 +33,7 @@ void take_stream_object_test::test_sample_LF() {
 	       << " stream contents \n\n"
 	       << "endstream";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	auto            object = str_parser.take_stream_object(obj_pool);
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
@@ -61,7 +61,7 @@ endobj
 )"_trimmed;
 
 	stream.seekg(beginning_of_stream);
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	obj_pool.add_xref_table(
 	    xref_types::xref_table{xref_types::xref_inuse_entry{1, 0, 0}});
@@ -82,7 +82,7 @@ stream
 endstream
 )"_trimmed;
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_stream_object(obj_pool);
@@ -106,7 +106,7 @@ stream
 endstream
 )"_trimmed;
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_stream_object(obj_pool);

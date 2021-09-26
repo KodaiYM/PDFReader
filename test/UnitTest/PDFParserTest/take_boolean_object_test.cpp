@@ -5,7 +5,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace document_parser_test::take_object_test;
+using namespace object_parser_test::take_object_test;
 
 void take_boolean_object_test::test_true() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -13,7 +13,7 @@ void take_boolean_object_test::test_true() {
 
 	stream << "true";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_boolean_object();
 	Assert::IsTrue(true == object);
@@ -24,7 +24,7 @@ void take_boolean_object_test::test_false() {
 
 	stream << "false";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_boolean_object();
 	Assert::IsTrue(false == object);

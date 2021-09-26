@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace document_parser_test;
+using namespace object_parser_test;
 using namespace xref_types;
 
 void take_indirect_object_test::test_sample() {
@@ -41,7 +41,7 @@ endobj
 endobj
 )";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	obj_pool.add_xref_table(
 	    xref_table{xref_inuse_entry{8, 0, offset_of_objnum8}});
@@ -61,7 +61,7 @@ void take_indirect_object_test::test_inconsistent_object_number() {
 endobj
 )"_trimmed;
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_indirect_object(obj_pool, xref_inuse_entry{8, 0, 0});
@@ -85,7 +85,7 @@ void take_indirect_object_test::test_inconsistent_generation_number() {
 endobj
 )"_trimmed;
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 	object_pool     obj_pool(str_parser);
 	try {
 		str_parser.take_indirect_object(obj_pool, xref_inuse_entry{7, 1, 0});

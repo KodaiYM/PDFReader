@@ -3,7 +3,7 @@ hide empty members
 namespace pdfparser {
 class page_parser<InputStreamT> {
 	-m_object_parser : object_parser<InputStreamT>&
-	-m_page_object     : const dictionary_object&
+	-m_page_object   : const dictionary_object&
 
 	+page_parser(obj_parser : object_parser<InputStreamT>&, page_object : const dictionary_object&)
 	+get_page() : PDFPage

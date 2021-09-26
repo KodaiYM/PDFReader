@@ -6,7 +6,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace document_parser_test::take_object_test;
+using namespace object_parser_test::take_object_test;
 
 using namespace std::string_literals;
 
@@ -16,7 +16,7 @@ void take_name_object_test::test_valid_name() {
 
 	stream << R"(/;*_-.$@!"&'=~^\|`+:,?)";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_name_object();
 	Assert::IsTrue(R"(;*_-.$@!"&'=~^\|`+:,?)" == object);
@@ -27,7 +27,7 @@ void take_name_object_test::test_empty_name() {
 
 	stream << "/";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_name_object();
 	Assert::IsTrue("" == object);
@@ -38,7 +38,7 @@ void take_name_object_test::test_hexadecimal_code() {
 
 	stream << "/A#20B";
 
-	document_parser str_parser(std::move(stream));
+	object_parser str_parser(std::move(stream));
 
 	auto object = str_parser.take_name_object();
 	Assert::IsTrue("A"s + '\x20' + "B" == object);

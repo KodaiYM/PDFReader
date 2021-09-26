@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace document_parser_test::take_object_test {
+namespace object_parser_test::take_object_test {
 [TestClass] public ref class take_literal_string_test {
 public:
 	[TestMethod] void test_sample();
@@ -14,4 +14,4 @@ public:
 	[TestMethod] void test_octal_overflow();
 	[TestMethod] void test_lack_of_right_parenthesis();
 };
-} // namespace document_parser_test::take_object_test
+} // namespace object_parser_test::take_object_test
