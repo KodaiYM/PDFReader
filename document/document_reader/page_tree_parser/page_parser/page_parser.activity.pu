@@ -1,8 +1,7 @@
 @startuml page_parser
-partition "page_parser(obj_parser : object_parser<InputStreamT>&, obj_pool : object_pool<InputStreamT>&, page_object : const dictionary_object&)" {
+partition "page_parser(obj_parser : object_parser<InputStreamT>&, page_object : const dictionary_object&)" {
 start
 	:m_object_parser = obj_parser;
-	:m_object_pool = obj_pool;
 	:m_page_object = page_object;
 stop
 }
