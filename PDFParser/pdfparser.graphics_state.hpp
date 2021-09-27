@@ -17,7 +17,7 @@ struct graphics_state {
 	line_style::dash_pattern_type line_dash_pattern = {{}, 0};
 	line_style::join_type         line_join_style = line_style::join_type::miter;
 	double                        line_width      = 1;
-	double                        miter_width     = 10;
+	double                        miter_limit     = 10;
 	chroma::color                 stroke_color    = chroma::grayscale_black;
 
 	// text-specific parameters

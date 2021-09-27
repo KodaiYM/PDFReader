@@ -20,11 +20,20 @@ struct rectangle_data {
 	rectangle_data(const coordinates& diagonal_coordinate1,
 	               const coordinates& diagonal_coordinate2);
 };
-struct AffineMatrix: Eigen::Matrix3d {
+struct AffineMatrix {
 public:
-	static AffineMatrix Identity();
+	static AffineMatrix        Identity();
+	[[nodiscard]] AffineMatrix operator*(const AffineMatrix& rhs) const;
+	[[nodiscard]] AffineMatrix operator+(const AffineMatrix& rhs) const;
+	[[nodiscard]] AffineMatrix operator-(const AffineMatrix& rhs) const;
+	AffineMatrix&              operator*=(const AffineMatrix& rhs);
+	AffineMatrix&              operator+=(const AffineMatrix& rhs);
+	AffineMatrix&              operator-=(const AffineMatrix& rhs);
 
 public:
 	AffineMatrix(std::array<double, 6> coefficients = {1, 0, 0, 1, 0, 0});
+
+private:
+	Eigen::Matrix3d m_matrix;
 };
 } // namespace pdfparser

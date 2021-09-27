@@ -133,12 +133,16 @@
   <ItemGroup>
     <ClInclude Include="character_types.hpp" />
     <ClInclude Include="pdfparser.contents_parser.hpp" />
+    <ClInclude Include="pdfparser.contents_parser.ipp" />
+    <ClInclude Include="pdfparser.document_reader.ipp" />
     <ClInclude Include="pdfparser.graphics_state_stack.hpp" />
     <ClInclude Include="pdfparser.chroma.hpp" />
     <ClInclude Include="pdfparser.graphics_state.hpp" />
     <ClInclude Include="pdfparser.line_style.hpp" />
     <ClInclude Include="pdfparser.page_parser.hpp" />
+    <ClInclude Include="pdfparser.page_parser.ipp" />
     <ClInclude Include="pdfparser.page_tree_parser.hpp" />
+    <ClInclude Include="pdfparser.page_tree_parser.ipp" />
     <ClInclude Include="pdfparser.pdfcontents_builder.hpp" />
     <ClInclude Include="pdfparser.pdfpage_builder.hpp" />
     <ClInclude Include="pdfparser.space.hpp" />
@@ -165,13 +169,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="pdfparser.pdfcontents_builder.cpp" />
     <ClCompile Include="pdfparser.graphics_state_stack.cpp" />
     <ClCompile Include="pdfparser.object_not_found_error.cpp" />
+    <ClCompile Include="pdfparser.pdfpage_builder.cpp" />
     <ClCompile Include="pdfparser.space.cpp" />
     <ClCompile Include="PDFReader.PagesModel.cpp" />
     <ClCompile Include="pdfparser.parse_error.cpp" />
     <ClCompile Include="pdfparser.istream_extended_error.cpp" />
-    <ClCompile Include="pdfparser.document_reader.cpp" />
     <ClCompile Include="pdfparser.pdftoken.cpp" />
     <ClCompile Include="pdfparser.xref_types.cpp" />
     <ClCompile Include="pdfparser.tokenize_error.cpp" />

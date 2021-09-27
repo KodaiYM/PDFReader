@@ -1,6 +1,7 @@
 @startuml pdfpage_builder
 partition "pdfpage_builder()" {
 start
+	:m_page = gcnew PDFReader::PDFPage;
 stop
 }
 @enduml

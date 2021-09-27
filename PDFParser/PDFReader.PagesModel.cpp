@@ -10,6 +10,6 @@ System::Collections::Generic::List<PDFReader::PDFPage ^> ^
 	    std::ifstream(msclr::interop::marshal_as<std::string>(filename),
 	                  std::ios_base::in | std::ios_base::binary)};
 
-	return doc_parser.GetPages();
+	return doc_parser.get_pages();
 }
 } // namespace PDFReader

@@ -22,8 +22,10 @@ private:
 	              const object_types::dictionary_object& inherited_attributes);
 
 private:
-	object_parser<InputStremT>&            obj_parser;
-	object_pool<InputStremT>&              obj_pool;
+	object_parser<InputStremT>&            m_object_parser;
+	object_pool<InputStremT>&              m_object_pool;
 	const object_types::dictionary_object& m_root_node;
 };
 } // namespace pdfparser
+
+#include "pdfparser.page_tree_parser.ipp"

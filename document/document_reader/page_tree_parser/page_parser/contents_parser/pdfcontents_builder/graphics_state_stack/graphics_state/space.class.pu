@@ -12,7 +12,7 @@ class RectangleData<<struct>> {
 	+RectangleData(diagonal_coordinate1 : Coordinates, diagonal_coordinate2 : Coordinates)
 }
 class AffineMatrix {
+	-m_matrix : Matrix3d
 }
-AffineMatrix --|> Matrix3d
 }
 @enduml

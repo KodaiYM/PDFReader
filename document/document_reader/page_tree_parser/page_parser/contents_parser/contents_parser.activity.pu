@@ -24,7 +24,7 @@ start
 			case ("Q")
 				:contents_builder.restore_graphics_state();
 			case ("cm")
-				:contents_builder.concat_CTM(contents_operands.at(0), contents_operands.at(1), contents_operands.at(2), contents_operands.at(3), contents_operands.at(4), contents_operands.at(5));
+				:contents_builder.concat_CTM({contents_operands.at(0), contents_operands.at(1), contents_operands.at(2), contents_operands.at(3), contents_operands.at(4), contents_operands.at(5)});
 			case ("d")
 				:pattern_array = std::get<array_object>(contents_operands.at(0));
 				:pattern_vector = pattern_array to vector<double>;

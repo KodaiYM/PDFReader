@@ -35,8 +35,8 @@ public:
 	void end_text() noexcept;
 
 private:
-	graphics_state_stack graphics_states;
-	AffineMatrix         text_matrix;
-	AffineMatrix         text_line_matrix;
+	graphics_state_stack m_graphics_states;
+	AffineMatrix         m_text_matrix;
+	AffineMatrix         m_text_line_matrix;
 };
 } // namespace pdfparser

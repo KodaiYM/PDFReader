@@ -14,6 +14,9 @@ public:
 	void set_media_box(rectangle_data media_box) noexcept;
 	void set_contents(PDFReader::PDFContents ^ page_content) noexcept;
 
+public:
+	pdfpage_builder();
+
 private:
 	gcroot<PDFReader::PDFPage ^> m_page;
 };

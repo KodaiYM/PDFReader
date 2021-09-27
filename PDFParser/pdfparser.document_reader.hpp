@@ -16,7 +16,7 @@ namespace pdfparser {
 template <class InputStreamT>
 class document_reader final {
 public:
-	System::Collections::Generic::List<PDFReader::PDFPage ^> ^ GetPages();
+	System::Collections::Generic::List<PDFReader::PDFPage ^> ^ get_pages();
 
 public:
 	static_assert(std::is_base_of_v<std::istream, InputStreamT>,
@@ -40,96 +40,10 @@ public:
 	document_reader(InputStreamT&) = delete;
 
 private:
-	System::Collections::Generic::List<PDFReader::PDFPage ^> ^
-	    GetPages(const object_types::dictionary_object& page_node,
-	             const object_types::dictionary_object& inherited_attributes);
-
-private:
 	object_parser<InputStreamT>     m_object_parser;
 	object_types::dictionary_object m_trailer_dictionary;
 	object_pool<InputStreamT>       m_object_pool;
-
-	// to GUI (by C++/CLI)
-	friend ref class PagesModel;
 };
 } // namespace pdfparser
 
-// definition of template functions
-namespace pdfparser {
-template <class InputStreamT>
-document_reader<InputStreamT>::document_reader(InputStreamT&& stream)
-    : m_object_parser(std::move(stream)), m_object_pool(m_object_parser) {
-	m_trailer_dictionary = m_object_parser.take_footer(m_object_pool);
-}
-
-template <class InputStreamT>
-    System::Collections::Generic::List<PDFReader::PDFPage ^> ^
-    document_reader<InputStreamT>::GetPages() {
-	using namespace object_types;
-
-	auto page_tree_root = m_object_pool.dereference<dictionary_object>(
-	    m_object_pool
-	        .dereference<dictionary_object>(m_trailer_dictionary.at("Root"))
-	        .at("Pages"));
-	return GetPages(page_tree_root, {});
-}
-template <class InputStreamT>
-    System::Collections::Generic::List<PDFReader::PDFPage ^> ^
-    document_reader<InputStreamT>::GetPages(
-        const object_types::dictionary_object& page_node,
-        const object_types::dictionary_object& inherited_attributes) {
-	using namespace object_types;
-
-	auto type = m_object_pool.dereference<name_object>(page_node.at("Type"));
-	if ("Pages" == type) {
-		auto new_inherited_attributes = inherited_attributes;
-		for (const auto& entry : page_node) {
-			const auto key = entry.first;
-			if ("Resources" == key || "MediaBox" == key || "CropBox" == key ||
-			    "Rotate" == key) {
-				new_inherited_attributes.insert_or_assign(key, entry.second);
-			}
-		}
-
-		auto pages = gcnew System::Collections::Generic::List<PDFReader::PDFPage ^>;
-		const auto&        kids =
-		    m_object_pool.dereference<array_object>(page_node.at("Kids"));
-		for (const auto& kid : kids) {
-			pages->AddRange(
-			    GetPages(m_object_pool.dereference<dictionary_object>(kid),
-			             new_inherited_attributes));
-		}
-		return pages;
-	} else if ("Page" == type) {
-		auto complete_page_node = page_node;
-		complete_page_node.insert(inherited_attributes.begin(),
-		                          inherited_attributes.end());
-
-		auto media_box_array = m_object_pool.dereference<array_object>(
-		    complete_page_node.at("MediaBox"));
-		auto media_box = rectangle_data(
-		    {number_to_double(
-		         m_object_pool.dereference<number_object>(media_box_array.at(0))),
-		     number_to_double(
-		         m_object_pool.dereference<number_object>(media_box_array.at(1)))},
-		    {number_to_double(
-		         m_object_pool.dereference<number_object>(media_box_array.at(2))),
-		     number_to_double(
-		         m_object_pool.dereference<number_object>(media_box_array.at(3)))});
-
-		PDFReader::PDFPage ^ this_page = gcnew PDFReader::PDFPage;
-		this_page->Width =
-		    media_box.greater_coordinates.x - media_box.less_coordinates.x + 1;
-		this_page->Height =
-		    media_box.greater_coordinates.y - media_box.less_coordinates.y + 1;
-
-		auto      only_this_page_list =
-		    gcnew System::Collections::Generic::List<PDFReader::PDFPage ^>;
-		only_this_page_list->Add(this_page);
-
-		return only_this_page_list;
-	} else {
-		throw gcnew document_error();
-	}
-}
-} // namespace pdfparser
+#include "pdfparser.document_reader.ipp"
