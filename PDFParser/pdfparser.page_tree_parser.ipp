@@ -7,10 +7,9 @@ using namespace pdfparser;
 
 template <class InputStremT>
 page_tree_parser<InputStremT>::page_tree_parser(
-    object_parser<InputStremT>& obj_parser, object_pool<InputStremT>& obj_pool,
+    object_pool<InputStremT>&              obj_pool,
     const object_types::dictionary_object& root_node)
-    : m_object_parser(obj_parser), m_object_pool(obj_pool),
-      m_root_node(root_node) {}
+    : m_object_pool(obj_pool), m_root_node(root_node) {}
 
 template <class InputStremT>
     System::Collections::Generic::List<PDFReader::PDFPage ^> ^

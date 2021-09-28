@@ -19,7 +19,6 @@ template <class InputStreamT>
 	    m_object_pool
 	        .dereference<dictionary_object>(m_trailer_dictionary.at("Root"))
 	        .at("Pages"));
-	page_tree_parser this_page_tree_parser(m_object_parser, m_object_pool,
-	                                       page_tree_root);
+	page_tree_parser this_page_tree_parser(m_object_pool, page_tree_root);
 	return this_page_tree_parser.get_pages();
 }

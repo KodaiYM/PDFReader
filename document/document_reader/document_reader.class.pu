@@ -5,18 +5,25 @@ class document_reader<InputStreamT> {
 	-m_object_parser      : object_parser<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
 	-m_object_pool        : object_pool<InputStreamT>
-	-m_page_tree_parser   : page_tree_parser<InputStreamT>
 
 	+document_reader(in stream : InputStreamT&&)
 	+document_reader(const InputStreamT&&) = delete
 	+document_reader(InputStreamT&)        = delete
 	+get_pages() : List<PDFPage>
 }
-document_reader --> pages_parser
+document_reader o--> object_parser
+document_reader o--> dictionary_object
+document_reader o--> object_pool
 document_reader ..> "0..*" PDFPage
 
-class pages_parser<InputStreamT> {
-	[[pages_parser.class.pu]]
+class object_parser {
+	[[object_parser.class.pu]]
+}
+class dictionary_object {
+	[[object_types.class.pu]]
+}
+class object_pool {
+	[[object_pool.class.pu]]
 }
 class PDFPage {
 	[[data_types.class.pu]]

@@ -12,8 +12,7 @@ public:
 	System::Collections::Generic::List<PDFReader::PDFPage ^> ^ get_pages();
 
 public:
-	page_tree_parser(object_parser<InputStremT>&            obj_parser,
-	                 object_pool<InputStremT>&              obj_pool,
+	page_tree_parser(object_pool<InputStremT>&              obj_pool,
 	                 const object_types::dictionary_object& root_node);
 
 private:
@@ -22,7 +21,6 @@ private:
 	              const object_types::dictionary_object& inherited_attributes);
 
 private:
-	object_parser<InputStremT>&            m_object_parser;
 	object_pool<InputStremT>&              m_object_pool;
 	const object_types::dictionary_object& m_root_node;
 };

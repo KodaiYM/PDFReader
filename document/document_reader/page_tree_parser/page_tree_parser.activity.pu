@@ -1,7 +1,6 @@
 @startuml page_tree_parser
-partition "page_tree_parser(obj_parser : object_parser<InputStreamT>&, obj_pool : object_pool<InputStreamT>&, root_node : const dictionary_object&)" {
+partition "page_tree_parser(obj_pool : object_pool<InputStreamT>&, root_node : const dictionary_object&)" {
 start
-	:m_object_parser = obj_parser;
 	:m_object_pool   = obj_pool;
 	:m_root_node     = root_node;
 stop
