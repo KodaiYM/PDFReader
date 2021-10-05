@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PDFReader.PDFPage.hpp"
-#include "pdfparser.object_parser.hpp"
+#include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.object_pool.hpp"
 #include "pdfparser.object_types.hpp"
 

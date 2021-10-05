@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PDFReader.PDFContents.hpp"
-#include "pdfparser.object_parser.hpp"
+#include "pdfparser.ipdfstream.hpp"
 
 namespace pdfparser {
 template <class InputStreamT>

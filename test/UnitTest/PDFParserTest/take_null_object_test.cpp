@@ -1,4 +1,4 @@
-#include "pdfparser.object_parser.hpp"
+#include "pdfparser.ipdfstream.hpp"
 #include "take_null_object_test.hpp"
 
 #include <sstream>

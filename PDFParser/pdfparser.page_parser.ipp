@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pdfparser.contents_parser.hpp"
-#include "pdfparser.object_parser.hpp"
+#include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.object_types.hpp"
 #include "pdfparser.page_parser.hpp"
 #include "pdfparser.pdfpage_builder.hpp"
