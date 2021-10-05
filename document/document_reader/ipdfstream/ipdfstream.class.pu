@@ -1,40 +1,65 @@
 @startuml ipdfstream
 hide empty members
 namespace pdfparser {
-class ipdfstream<InputStreamT> {
+class ipdfstream {
+	-m_xref_table : xref_table
+	-m_object_pool : object_pool
 	+ipdfstream(inout sb : std::streambuf*)
 
-	+take_footer(inout object_accessor : object_pool<InputStreamT>&)  : dictionary_object
-	+take_xref_table()                                                : xref_table
-	+take_xref_entry(in object_number : object_t)                     : xref_entry
-	+take_trailer(inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
+	+take_footer()  : dictionary_object
+	+take_xref_table()                            : xref_table
+	+take_xref_entry(in object_number : object_t) : xref_entry
+	+take_trailer() : dictionary_object
 
 	+take_object<variant<...>>() : variant<...>
-	+take_object<variant<...>>(inout object_accessor : object_pool<InputStreamT>&) : variant<...>
+	+take_object<variant<...>>() : variant<...>
 	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
-	+take_object<...ObjectTypes>(inout object_accessor : object_pool<InputStreamT>&) : variant<ObjectTypes...>
+	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
 	+take_boolean_object    () : boolean_object
 	+take_integer_object    () : integer_object
 	+take_real_object       () : real_object
 	+take_string_object     () : string_object
 	+take_name_object       () : name_object
-	+take_array_object      (inout object_accessor : object_pool<InputStreamT>&) : array_object
-	+take_dictionary_object (inout object_accessor : object_pool<InputStreamT>&) : dictionary_object
-	+take_stream_object     (inout object_accessor : object_pool<InputStreamT>&) : stream_object
+	+take_array_object      () : array_object
+	+take_dictionary_object () : dictionary_object
+	+take_stream_object     () : stream_object
 	+take_null_object       () : null_object
 	+take_indirect_reference() : indirect_reference
 
-	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&) : any_direct_object
+	+take_indirect_object(in object_info : const xref_inuse_entry&) : any_direct_object
+
+	+add_xref_table(in referenced_xref_table : const xref_table&) : void
+
+	' from object_pool
+	' NOTE: variant 版は必要になったら実装
+	+dereference<variant<...>>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
+	+dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
+
+	' NOTE: variant 版は必要になったら実装
+	+dereference<variant<...>>  (in reference : const indirect_reference&) : variant<...>
+	+dereference<...ObjectTypes>(in reference : const indirect_reference&) : variant<ObjectTypes...>
+
+	+dereference<ObjectType>(in reference : const std::variant<...ObjectTypesContainingRef>&) : Object
+	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
 }
 ipdfstream --|> tokenizer
+ipdfstream --> xref_table
+ipdfstream *--> object_pool
 ipdfstream ..> xref_types
 ipdfstream ..> object_types
-ipdfstream <..> object_pool
 ipdfstream ..> parse_error
 ipdfstream ..> object_not_found_error
+ipdfstream ..> type_mismatch
+
 
 class tokenizer {
 	[[tokenizer.class.pu]]
+}
+class xref_table {
+	[[xref_types.class.pu]]
+}
+class object_pool {
+	[[object_pool.class.pu]]
 }
 annotation xref_types <<(N, yellow) namespace>> {
 	[[xref_types.class.pu]]
@@ -42,14 +67,15 @@ annotation xref_types <<(N, yellow) namespace>> {
 annotation object_types <<(N, yellow) namespace>> {
 	[[object_types.class.pu]]
 }
-class object_pool<InputStreamT> {
-	[[object_pool.class.pu]]
-}
 class parse_error {
 	[[parse_error.class.pu]]
 }
 class object_not_found_error {
 	[[object_not_found_error.class.pu]]
 }
+class type_mismatch {
+	+type_mismatch()
+}
+type_mismatch --|> std::runtime_error
 }
 @enduml

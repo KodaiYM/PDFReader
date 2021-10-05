@@ -1,42 +1,16 @@
 @startuml object_pool
 hide empty members
 namespace pdfparser {
-class type_mismatch {
-	+type_mismatch()
-}
-type_mismatch --|> std::runtime_error
-
-class object_pool<InputStreamT> {
-	-m_parser     : ipdfstream<InputStreamT>&
-	-m_xref_table : xref_table
+class object_pool {
 	-m_object_map : unordered_map<pair<object_t, generation_t>, any_direct_object>
 
-	+object_pool(parser : ipdfstream<InputStreamT>&)
-
-	+add_xref_table(in referenced_xref_table : const xref_table&) : void
-
-	' NOTE: variant 版は必要になったら実装
-	+dereference<variant<...>>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
-	+dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
-
-	' NOTE: variant 版は必要になったら実装
-	+dereference<variant<...>>  (in reference : const indirect_reference&) : variant<...>
-	+dereference<...ObjectTypes>(in reference : const indirect_reference&) : variant<ObjectTypes...>
-
-	+dereference<ObjectType>(in reference : const std::variant<...ObjectTypesContainingRef>&) : Object
-	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
+	+object_pool()
+	+contains(in object_id : const pair<object_t, generation_t>&) : bool
+	+get(in object_id : const pair<object_t, generation_t>&) : const any_direct_object&
+	+add(in object_id : pair<object_t, generation_t>, in object : any_direct_object)
 }
-object_pool <..> ipdfstream
-object_pool --> xref_table
 object_pool --> object_types
-object_pool ..> type_mismatch
 
-class ipdfstream<InputStreamT> {
-	[[ipdfstream.class.pu]]
-}
-class xref_table {
-	[[xref_types.class.pu]]
-}
 annotation object_types <<(N, yellow) namespace>> {
 	[[object_types.class.pu]]
 }

@@ -7,7 +7,7 @@ stop
 @enduml
 
 @startuml take_footer
-partition "take_footer(inout object_accessor : object_pool<InputStreamT>&)" {
+partition "take_footer()" {
 start
 	:seek_to_end();
 	:seek_forward_head_of_line();
@@ -29,8 +29,8 @@ start
 	:xref_table = take_xref_table();
 
 	' Trailer
-	:object_accessor.add_xref_table(xref_table);
-	:return take_trailer(object_accessor);
+	:add_xref_table(xref_table);
+	:return take_trailer();
 stop
 }
 @enduml
@@ -82,7 +82,7 @@ stop
 @enduml
 
 @startuml take_trailer
-partition "take_trailer(inout object_accessor : object_pool<InputStreamT>&)" {
+partition "take_trailer()" {
 start
 	:promise_token("trailer");
 
@@ -93,7 +93,7 @@ stop
 @enduml
 
 @startuml take_object
-partition "take_object<...ObjectTypes>([inout object_accessor : object_pool<InputStreamT>&])" {
+partition "take_object<...ObjectTypes>()" {
 start
 	if ((constexpr) ObjectTypes に boolean_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
@@ -139,7 +139,7 @@ start
 	endif
 	if ((constexpr) ObjectTypes に stream_object がある場合) then (y)
 		:before_take_object_pos = m_tknizer.tell();
-		:return take_stream_object(object_accessor);
+		:return take_stream_object();
 		if (object_not_found_error(stream_object_not_found) が出た) then (y)
 			:m_tknizer.seek(before_take_object_pos);
 		endif
@@ -366,7 +366,7 @@ start
 				stop
 			endif
 
-			:element = take_object(object_accessor);
+			:element = take_object();
 			if (object_not_found_error(specified_object_not_found) が出た) then (y)
 				:throw parse_error(array_invalid_element);
 			endif
@@ -412,7 +412,7 @@ start
 				:throw parse_error(dictionary_invalid_key);
 			endif
 
-			:value = take_object(object_accessor);
+			:value = take_object();
 			if (object_not_found_error(specified_object_not_found) が出た) then (y)
 				:throw parse_error(dictionary_invalid_value);
 			endif
@@ -430,7 +430,7 @@ stop
 @enduml
 
 @startuml take_stream_object
-partition "take_stream_object(inout object_accessor : object_pool<InputStreamT>&)" {
+partition "take_stream_object()" {
 start
 	:dictionary = take_dictionary_object();
 	if (object_not_found_error(dictionary_object_not_found) が出た) then (y)
@@ -450,7 +450,7 @@ start
 		stop
 	endif
 
-	:stream_length = object_accessor.dereference<integer_object>(dictionary.at("Length"));
+	:stream_length = dereference<integer_object>(dictionary.at("Length"));
 
 	:stream_data : std::string = stream_lengthバイト読み取り;
 	' HACK: stream_length バイト読み取り中に、Filterに対する明示的なEODマーカーが出現した場合にエラーにする
@@ -490,7 +490,7 @@ stop
 @enduml
 
 @startuml take_indirect_object
-partition "take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&)" {
+partition "take_indirect_object(in object_info : const xref_inuse_entry&)" {
 start
 	:before_take_indirect_object_pos = m_tknizer.tell();
 	:m_tknizer.seek(object_info.byte_offset);
@@ -505,7 +505,7 @@ start
 
 	:promise_token("obj");
 
-	:object = take_any_direct_object(object_accessor);
+	:object = take_any_direct_object();
 
 	:promise_token("endobj");
 
@@ -513,5 +513,58 @@ start
 
 	:return object;
 stop
+}
+@enduml
+
+@startuml add_xref_table
+partition "add_xref_table(in referenced_xref_table : const xref_table&)" {
+start
+	' HACK: change to add
+	:m_xref_table = referenced_xref_table;
+stop
+}
+@enduml
+
+@startuml dereference of any
+partition "dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&)" {
+start
+	if (object が indirect_reference) then (y)
+		:return dereference<ObjectTypes...>(object as indirect_reference);
+		stop
+	else
+		if (object が ObjectTypes のいずれかの型を持つ) then (y)
+			:return object;
+			stop
+		else
+			:throw type_mismatch();
+			stop
+		endif
+	endif
+'stop
+}
+@enduml
+
+@startuml dereference of reference
+partition "dereference<...ObjectTypes>(in reference : const indirect_reference&)" {
+start
+	if (!m_object_pool.contains(pair{reference.object_number, reference.generation_number})) then (y)
+		if (m_xref_table.contains(reference.object_number, reference.generation_number) && m_xref_table.at(reference.object_number, reference.generation_number) は xref_inuse_entry) then (y)
+			:new_object = take_indirect_object(*this, m_xref_table.at(reference.object_number, reference.generation_number));
+		else
+			:new_object = null;
+		endif
+
+		:m_object_pool.add(pair{reference.object_number, reference.generation_number}, new_object);
+	endif
+
+	:object = m_object_pool.get(pair{reference.object_number, reference.generation_number});
+	if (object が ObjectTypes のいずれかの型を持つ)
+		:return object;
+		stop
+	else
+		:throw type_mismatch();
+		stop
+	endif
+'stop
 }
 @enduml

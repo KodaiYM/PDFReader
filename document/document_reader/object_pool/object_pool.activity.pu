@@ -1,52 +1,23 @@
-@startuml add_xref_table
-partition "add_xref_table(in referenced_xref_table : const xref_table&)" {
+@startuml contains
+partition "contains(in object_id : const pair<object_t, generation_t>&)" {
 start
-	' HACK: change to add
-	:m_xref_table = referenced_xref_table;
+	:return m_object_map.contains(object_id);
 stop
 }
 @enduml
 
-@startuml dereference of any
-partition "dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&)" {
+@startuml get
+partition "get(in object_id : const pair<object_t, generation_t>&)" {
 start
-	if (object が indirect_reference) then (y)
-		:return dereference<ObjectTypes...>(object as indirect_reference);
-		stop
-	else
-		if (object が ObjectTypes のいずれかの型を持つ) then (y)
-			:return object;
-			stop
-		else
-			:throw type_mismatch();
-			stop
-		endif
-	endif
-'stop
+	:return m_object_map.at(object_id);
+stop
 }
 @enduml
 
-@startuml dereference of reference
-partition "dereference<...ObjectTypes>(in reference : const indirect_reference&)" {
+@startuml add
+partition "add(in object_id : pair<object_t, generation_t>, in object : any_direct_object)" {
 start
-	if (!m_object_map.contains(pair{reference.object_number, reference.generation_number})) then (y)
-		if (m_xref_table.contains(reference.object_number, reference.generation_number) && m_xref_table.at(reference.object_number, reference.generation_number) は xref_inuse_entry) then (y)
-			:new_object = take_indirect_object(*this, m_xref_table.at(reference.object_number, reference.generation_number));
-		else
-			:new_object = null;
-		endif
-
-		:m_object_map.emplace(pair{reference.object_number, reference.generation_number}, new_object);
-	endif
-
-	:object = m_object_map.at(pair{reference.object_number, reference.generation_number});
-	if (object が ObjectTypes のいずれかの型を持つ)
-		:return object;
-		stop
-	else
-		:throw type_mismatch();
-		stop
-	endif
-'stop
+	:m_object_map.emplace(object_id, object);
+stop
 }
 @enduml
