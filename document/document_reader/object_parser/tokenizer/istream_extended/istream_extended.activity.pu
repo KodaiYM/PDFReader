@@ -1,6 +1,9 @@
 @startuml istream_extended
-partition "istream_extended(in stream : InputStreamT&&)" {
+partition "istream_extended(inout sb : std::streambuf*)" {
 start
+	:std::istream(sb);
+
+	' 以下の処理は、ipdffstream とか ipdfstringstream の責任に変わった
 	:m_stream = std::move(stream);
 	:m_stream.clear();
 	:m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);

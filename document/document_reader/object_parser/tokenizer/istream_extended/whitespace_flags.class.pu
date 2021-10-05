@@ -1,4 +1,4 @@
-@startuml object_parser
+@startuml ipdfstream
 hide empty members
 namespace pdfparser {
 enum whitespace_flags <<Enumeration>> {

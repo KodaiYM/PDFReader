@@ -2,16 +2,16 @@
 hide empty members
 namespace pdfparser {
 class contents_parser<InputStreamT> {
-	-m_object_parser : object_parser<InputStreamT>&
+	-m_ipdfstream : ipdfstream<InputStreamT>&
 
-	+contents_parser(obj_parser : object_parser<InputStreamT>&)
+	+contents_parser(obj_parser : ipdfstream<InputStreamT>&)
 	+get_contents() : PDFContents
 }
-contents_parser ..> object_parser
+contents_parser ..> ipdfstream
 contents_parser ..> PDFContents
 
-class object_parser<InputStreamT> {
-	[[object_parser.class.pu]]
+class ipdfstream<InputStreamT> {
+	[[ipdfstream.class.pu]]
 }
 class PDFContents {
 	[[PDFContents.class.pu]]

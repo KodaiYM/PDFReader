@@ -1,12 +1,8 @@
-@startuml object_parser
+@startuml ipdfstream
 hide empty members
 namespace pdfparser {
-class object_parser<InputStreamT> {
-	-m_tokenizer : tokenizer
-
-	+object_parser(inout stream : InputStreamT&&)
-	+object_parser(const InputStreamT&&) = delete
-	+object_parser(InputStreamT&)        = delete
+class ipdfstream<InputStreamT> {
+	+ipdfstream(inout sb : std::streambuf*)
 
 	+take_footer(inout object_accessor : object_pool<InputStreamT>&)  : dictionary_object
 	+take_xref_table()                                                : xref_table
@@ -30,12 +26,12 @@ class object_parser<InputStreamT> {
 
 	+take_indirect_object(inout object_accessor : object_pool<InputStreamT>&, in object_info : const xref_inuse_entry&) : any_direct_object
 }
-object_parser --> "1" tokenizer
-object_parser ..> xref_types
-object_parser ..> object_types
-object_parser <..> object_pool
-object_parser ..> parse_error
-object_parser ..> object_not_found_error
+ipdfstream --|> tokenizer
+ipdfstream ..> xref_types
+ipdfstream ..> object_types
+ipdfstream <..> object_pool
+ipdfstream ..> parse_error
+ipdfstream ..> object_not_found_error
 
 class tokenizer {
 	[[tokenizer.class.pu]]

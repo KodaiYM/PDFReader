@@ -1,4 +1,4 @@
-@startuml object_parser
+@startuml ipdfstream
 hide empty members
 namespace pdfparser {
 enum object_not_found_error::error_code <<Enumeration>> {

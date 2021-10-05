@@ -1,7 +1,7 @@
-@startuml object_parser
-partition "object_parser(in stream : InputStreamT&&)" {
+@startuml ipdfstream
+partition "ipdfstream(inout sb : std::streambuf*)" {
 start
-	:m_tokenizer = tokenizer(stream);
+	:tokenizer(sb);
 stop
 }
 @enduml
@@ -21,8 +21,8 @@ start
 	:xref_byte_offset = take_integer_object() : std::streamoff;
 
 	' %%EOF
-	:m_tokenizer.promise({"\r\n", "\n", "\r"});
-	:m_tokenizer.promise("%%EOF");
+	:promise({"\r\n", "\n", "\r"});
+	:promise("%%EOF");
 
 	' Cross Reference Table
 	:m_tknizer.seek(xref_byte_offset);
@@ -295,7 +295,7 @@ start
 
 		:character     : unsigned char = 0;
 		:hex_digit_pos : int           = 0;
-		while ((hex_token = m_tokenizer.take_token()) != ">") is (y)
+		while ((hex_token = take_token()) != ">") is (y)
 			if (!hex_token.has_value()) then (y)
 				:throw parse_error(hexadecimal_string_lack_of_greater_than_sign);
 				stop
@@ -338,7 +338,7 @@ stop
 partition "take_name_object()" {
 start
 	if (attempt_token("/")) then (y)
-		if (!is_regular(m_tokenizer.peek())) then (y)
+		if (!is_regular(peek())) then (y)
 			:return name_object();
 			stop
 		else
@@ -443,7 +443,7 @@ start
 		stop
 	endif
 
-	:m_tokenizer.promise({"\r\n", "\n"});
+	:promise({"\r\n", "\n"});
 
 	if (!dictionary.contains("Length")) then (y)
 		:throw parse_error(stream_dictionary_absence_of_Length_entry);
@@ -459,11 +459,11 @@ start
 		stop
 	endif
 
-	:m_tokenizer.promise({"\r\n", "\n", "\r"});
+	:promise({"\r\n", "\n", "\r"});
 
-	:m_tokenizer.ignore_if_present(EOL);
+	:ignore_if_present(EOL);
 
-	:m_tokenizer.promise_token("endstream");
+	:promise_token("endstream");
 	
 	:return stream_object(dictionary, stream_data);
 stop

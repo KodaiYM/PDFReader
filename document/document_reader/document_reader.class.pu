@@ -2,7 +2,7 @@
 hide empty members
 namespace pdfparser {
 class document_reader<InputStreamT> {
-	-m_object_parser      : object_parser<InputStreamT>
+	-m_ipdfstream      : ipdfstream<InputStreamT>
 	-m_trailer_dictionary : dictionary_object
 	-m_object_pool        : object_pool<InputStreamT>
 
@@ -11,13 +11,13 @@ class document_reader<InputStreamT> {
 	+document_reader(InputStreamT&)        = delete
 	+get_pages() : List<PDFPage>
 }
-document_reader o--> object_parser
+document_reader o--> ipdfstream
 document_reader o--> dictionary_object
 document_reader o--> object_pool
 document_reader ..> "0..*" PDFPage
 
-class object_parser {
-	[[object_parser.class.pu]]
+class ipdfstream {
+	[[ipdfstream.class.pu]]
 }
 class dictionary_object {
 	[[object_types.class.pu]]

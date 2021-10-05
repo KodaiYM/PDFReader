@@ -1,7 +1,7 @@
 @startuml tokenizer
-partition "tokenizer(in stream : InputStreamT&&)" {
+partition "tokenizer(inout sb : std::streambuf*)" {
 start
-	:istream_extended(std::move(stream));
+	:istream_extended(sb);
 stop
 }
 @enduml

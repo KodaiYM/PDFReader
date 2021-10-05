@@ -5,8 +5,8 @@
 ## 解析手順
 1. [ドキュメント解析](document_reader/document_reader.md)
 
-## 全クラス俯瞰図
-[俯瞰クラス図](overall.class.pu)
+## 全体クラス図
+[概略クラス図](overview.class.pu)
 
 ## 参考仕様書
 - https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf

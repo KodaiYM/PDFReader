@@ -1,8 +1,8 @@
-# object_parser
+# ipdfstream
 ## 概要
 | クラス名 | 概要 |
 | --- | --- |
-| pdfparser::object_parser | ストリームの読み取り/操作、解析を行う |
+| pdfparser::ipdfstream | ストリームの読み取り/操作、解析を行う |
 
 ## 関連クラス
 [トークン単位解析クラス](tokenizer/tokenizer.md)
@@ -12,9 +12,9 @@
 - take_object でPDFの[オブジェクト](object_types/object_types.md)を取得する
 
 ## クラス図一覧
-- [オブジェクト解析クラス図](object_parser.class.pu)
+- [オブジェクト解析クラス図](ipdfstream.class.pu)
 - [オブジェクト取得エラークラス図](object_not_found_error.class.pu)
 - [オブジェクト解析構文エラークラス図](parse_error.class.pu)
 
 ## フローチャート
-- [オブジェクト解析アクティビティ図](object_parser.activity.pu)
+- [オブジェクト解析アクティビティ図](ipdfstream.activity.pu)

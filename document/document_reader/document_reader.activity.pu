@@ -1,9 +1,9 @@
 @startuml document_reader
 partition "document_reader(in stream : InputStreamT&&)" {
 start
-	:m_object_parser = object_parser(std::move(stream));
-	:m_object_pool = object_pool(m_object_parser);
-	:m_trailer_dictionary = m_object_parser.take_footer(m_object_pool);
+	:m_ipdfstream = ipdfstream(std::move(stream));
+	:m_object_pool = object_pool(m_ipdfstream);
+	:m_trailer_dictionary = m_ipdfstream.take_footer(m_object_pool);
 stop
 }
 @enduml

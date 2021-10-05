@@ -19,7 +19,7 @@ start
 	' Get Contents
 	:content_stream_object = m_object_pool.dereference<stream_object>(m_page_object.at("Contents"));
 	:content_stream = istring_stream(content_stream_object.get_decoded_data(), std::ios_base::in | std::ios_base::binary);
-	:content_stream_object_parser = object_parser(std::move(content_stream));
+	:content_stream_ipdfstream = ipdfstream(std::move(content_stream));
 	:this_contents_parser = contents_parser(content_stream);
 	:page_builder.set_contents(this_contents_parser.get_contents());
 

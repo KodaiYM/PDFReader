@@ -1,12 +1,8 @@
-@startuml object_parser
+@startuml ipdfstream
 hide empty members
 namespace pdfparser {
-class istream_extended<InputStreamT> {
-	-m_stream : InputStreamT
-
-	+istream_extended(inout stream : InputStreamT&&)
-	+istream_extended(const InputStreamT&&) = delete
-	+istream_extended(InputStreamT&)        = delete
+class istream_extended {
+	+istream_extended(inout sb : std::streambuf*)
 
 	+peek() : optional<InputStreamT::char_type>
 	+get()  : InputStreamT::char_type
@@ -22,7 +18,7 @@ class istream_extended<InputStreamT> {
 	+attempt(in attempt_str : string_view)                    : bool
 	+promise(in promise_list : initializer_list<string_view>) : void
 }
-istream_extended --> "1" InputStreamT
+istream_extended --|> std::istream
 istream_extended ..> whitespace_flags
 istream_extended ..> istream_extended_error
 
