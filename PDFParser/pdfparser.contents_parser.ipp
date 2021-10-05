@@ -10,7 +10,7 @@ using namespace pdfparser;
 
 template <class InputStreamT>
 contents_parser<InputStreamT>::contents_parser(
-    object_parser<InputStreamT>& obj_parser) noexcept
+    ipdfstream<InputStreamT>& obj_parser) noexcept
     : m_object_parser(obj_parser) {}
 
 template <class InputStreamT>

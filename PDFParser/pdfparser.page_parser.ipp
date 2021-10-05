@@ -43,7 +43,7 @@ template <class InputStreamT>
 	    m_object_pool.dereference<stream_object>(m_page_object.at("Contents"));
 	std::istringstream content_stream(content_stream_object.get_decoded_data(),
 	                                  std::ios_base::in | std::ios_base::binary);
-	object_parser      content_stream_object_parser(std::move(content_stream));
+	ipdfstream         content_stream_object_parser(std::move(content_stream));
 	contents_parser    this_contents_parser(content_stream_object_parser);
 	this_page_builder.set_contents(this_contents_parser.get_contents());
 

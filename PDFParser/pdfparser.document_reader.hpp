@@ -40,7 +40,7 @@ public:
 	document_reader(InputStreamT&) = delete;
 
 private:
-	object_parser<InputStreamT>     m_object_parser;
+	ipdfstream<InputStreamT>        m_object_parser;
 	object_types::dictionary_object m_trailer_dictionary;
 	object_pool<InputStreamT>       m_object_pool;
 };
