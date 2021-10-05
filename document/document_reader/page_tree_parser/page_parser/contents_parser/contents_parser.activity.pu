@@ -1,7 +1,7 @@
 @startuml contents_parser
-partition "contents_parser(obj_parser : ipdfstream<InputStreamT>&)" {
+partition "contents_parser(stream : ipdfstream&)" {
 start
-	:m_ipdfstream = ipdfstream(obj_parser);
+	:m_stream = stream;
 stop
 }
 @enduml
@@ -12,9 +12,9 @@ start
 	:contents_builder : pdfcontents_builder;
 	:contents_operands : std::vector<any_direct_object>;
 	while (true) is (y)
-		:object = m_ipdfstream.take_object<any_direct_object>(object_pool(m_ipdfstream));
+		:object = m_stream.take_object<any_direct_object>(object_pool(m_stream));
 		if (object_not_found_error が出た) then (y)
-			:contents_operator = m_ipdfstream.take_token();
+			:contents_operator = m_stream.take_token();
 			if (!contents_operands.has_value()) then (y)
 				break
 			endif

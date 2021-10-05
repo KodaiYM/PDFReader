@@ -1,9 +1,8 @@
 @startuml document_reader
-partition "document_reader(in stream : InputStreamT&&)" {
+partition "document_reader(inout stream : ipdfstream&)" {
 start
-	:m_ipdfstream = ipdfstream(std::move(stream));
-	:m_object_pool = object_pool(m_ipdfstream);
-	:m_trailer_dictionary = m_ipdfstream.take_footer(m_object_pool);
+	:m_stream = stream;
+	:m_trailer_dictionary = m_stream.take_footer();
 stop
 }
 @enduml
@@ -11,9 +10,9 @@ stop
 @startuml get_pages
 partition "get_pages()" {
 start
-	:root_dictionary = m_object_pool.dereference<dictionary_object>(m_trailer_dictionary.at("Root"));
-	:page_tree_root = m_object_pool.dereference<dictionary_object>(root_dictionary.at("Pages"));
-	:this_page_tree_parser = page_tree_parser(m_object_pool, page_tree_root);
+	:root_dictionary = m_stream.dereference<dictionary_object>(m_trailer_dictionary.at("Root"));
+	:page_tree_root = m_stream.dereference<dictionary_object>(root_dictionary.at("Pages"));
+	:this_page_tree_parser = page_tree_parser(m_stream, page_tree_root);
 	:return this_page_tree_parser.get_pages();
 stop
 }

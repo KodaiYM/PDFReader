@@ -7,7 +7,7 @@ class object_pool {
 	+object_pool()
 	+contains(in object_id : const pair<object_t, generation_t>&) : bool
 	+get(in object_id : const pair<object_t, generation_t>&) : const any_direct_object&
-	+add(in object_id : pair<object_t, generation_t>, in object : any_direct_object)
+	+add(in object_id : pair<object_t, generation_t>, in object : any_direct_object) : void
 }
 object_pool --> object_types
 

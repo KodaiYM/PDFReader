@@ -1,10 +1,10 @@
 @startuml contents_parser
 hide empty members
 namespace pdfparser {
-class contents_parser<InputStreamT> {
-	-m_ipdfstream : ipdfstream<InputStreamT>&
+class contents_parser {
+	-m_stream : ipdfstream&
 
-	+contents_parser(obj_parser : ipdfstream<InputStreamT>&)
+	+contents_parser(content_stream : ipdfstream&)
 	+get_contents() : PDFContents
 }
 contents_parser ..> ipdfstream

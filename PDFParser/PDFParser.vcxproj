@@ -132,17 +132,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="character_types.hpp" />
+    <ClInclude Include="pdfparser.ipdffstream.hpp" />
     <ClInclude Include="pdfparser.contents_parser.hpp" />
-    <ClInclude Include="pdfparser.contents_parser.ipp" />
-    <ClInclude Include="pdfparser.document_reader.ipp" />
+    <ClCompile Include="pdfparser.contents_parser.cpp" />
+    <ClCompile Include="pdfparser.document_reader.cpp" />
     <ClInclude Include="pdfparser.graphics_state_stack.hpp" />
     <ClInclude Include="pdfparser.chroma.hpp" />
     <ClInclude Include="pdfparser.graphics_state.hpp" />
+    <ClInclude Include="pdfparser.ipdfstream.ipp" />
+    <ClInclude Include="pdfparser.ipdfstringstream.hpp" />
     <ClInclude Include="pdfparser.line_style.hpp" />
     <ClInclude Include="pdfparser.page_parser.hpp" />
-    <ClInclude Include="pdfparser.page_parser.ipp" />
+    <ClCompile Include="pdfparser.ipdfstringstream.cpp" />
+    <ClCompile Include="pdfparser.page_parser.cpp" />
     <ClInclude Include="pdfparser.page_tree_parser.hpp" />
-    <ClInclude Include="pdfparser.page_tree_parser.ipp" />
+    <ClCompile Include="pdfparser.page_tree_parser.cpp" />
     <ClInclude Include="pdfparser.pdfcontents_builder.hpp" />
     <ClInclude Include="pdfparser.pdfpage_builder.hpp" />
     <ClInclude Include="pdfparser.space.hpp" />
@@ -169,11 +173,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="pdfparser.ipdffstream.cpp" />
+    <ClCompile Include="pdfparser.ipdfstream.cpp" />
+    <ClCompile Include="pdfparser.istream_extended.cpp" />
+    <ClCompile Include="pdfparser.object_pool.cpp" />
     <ClCompile Include="pdfparser.pdfcontents_builder.cpp" />
     <ClCompile Include="pdfparser.graphics_state_stack.cpp" />
     <ClCompile Include="pdfparser.object_not_found_error.cpp" />
     <ClCompile Include="pdfparser.pdfpage_builder.cpp" />
     <ClCompile Include="pdfparser.space.cpp" />
+    <ClCompile Include="pdfparser.tokenizer.cpp" />
     <ClCompile Include="PDFReader.PagesModel.cpp" />
     <ClCompile Include="pdfparser.parse_error.cpp" />
     <ClCompile Include="pdfparser.istream_extended_error.cpp" />

@@ -1,19 +1,15 @@
 @startuml document_reader
 hide empty members
 namespace pdfparser {
-class document_reader<InputStreamT> {
-	-m_ipdfstream      : ipdfstream<InputStreamT>
+class document_reader {
+	-m_stream             : ipdfstream&
 	-m_trailer_dictionary : dictionary_object
-	-m_object_pool        : object_pool<InputStreamT>
 
-	+document_reader(in stream : InputStreamT&&)
-	+document_reader(const InputStreamT&&) = delete
-	+document_reader(InputStreamT&)        = delete
+	+document_reader(inout stream : ipdfstream&)
 	+get_pages() : List<PDFPage>
 }
 document_reader o--> ipdfstream
 document_reader o--> dictionary_object
-document_reader o--> object_pool
 document_reader ..> "0..*" PDFPage
 
 class ipdfstream {
@@ -21,9 +17,6 @@ class ipdfstream {
 }
 class dictionary_object {
 	[[object_types.class.pu]]
-}
-class object_pool {
-	[[object_pool.class.pu]]
 }
 class PDFPage {
 	[[data_types.class.pu]]

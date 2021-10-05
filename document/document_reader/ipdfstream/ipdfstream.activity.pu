@@ -25,7 +25,7 @@ start
 	:promise("%%EOF");
 
 	' Cross Reference Table
-	:m_tknizer.seek(xref_byte_offset);
+	:seek(xref_byte_offset);
 	:xref_table = take_xref_table();
 
 	' Trailer
@@ -96,73 +96,73 @@ stop
 partition "take_object<...ObjectTypes>()" {
 start
 	if ((constexpr) ObjectTypes に boolean_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_boolean_object();
 		if (object_not_found_error(boolean_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に real_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_real_object();
 		if (object_not_found_error(real_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に string_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_string_object();
 		if (object_not_found_error(string_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に name_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_name_object();
 		if (object_not_found_error(name_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に array_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_array_object();
 		if (object_not_found_error(array_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に null_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_null_object();
 		if (object_not_found_error(null_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に stream_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_stream_object();
 		if (object_not_found_error(stream_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に indirect_reference がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_indirect_reference();
 		if (object_not_found_error(indirect_reference_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に integer_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_integer_object();
 		if (object_not_found_error(integer_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 	if ((constexpr) ObjectTypes に dictionary_object がある場合) then (y)
-		:before_take_object_pos = m_tknizer.tell();
+		:before_take_object_pos = tell();
 		:return take_dictionary_object();
 		if (object_not_found_error(dictionary_object_not_found) が出た) then (y)
-			:m_tknizer.seek(before_take_object_pos);
+			:seek(before_take_object_pos);
 		endif
 	endif
 
@@ -492,8 +492,8 @@ stop
 @startuml take_indirect_object
 partition "take_indirect_object(in object_info : const xref_inuse_entry&)" {
 start
-	:before_take_indirect_object_pos = m_tknizer.tell();
-	:m_tknizer.seek(object_info.byte_offset);
+	:before_take_indirect_object_pos = tell();
+	:seek(object_info.byte_offset);
 
 	:first_integer = take_integer_object() : object_t;
 	:second_integer = take_integer_object() : generation_t;
@@ -509,7 +509,7 @@ start
 
 	:promise_token("endobj");
 
-	:m_tknizer.seek(before_take_indirect_object_pos);
+	:seek(before_take_indirect_object_pos);
 
 	:return object;
 stop

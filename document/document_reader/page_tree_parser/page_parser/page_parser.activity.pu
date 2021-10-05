@@ -1,7 +1,7 @@
 @startuml page_parser
-partition "page_parser(obj_pool : object_pool<InputStreamT>&, page_object : const dictionary_object&)" {
+partition "page_parser(stream : ipdfstream&, page_object : const dictionary_object&)" {
 start
-	:m_object_pool = obj_pool;
+	:m_stream = stream;
 	:m_page_object = page_object;
 stop
 }
@@ -13,13 +13,12 @@ start
 	:page_builder : pdfpage_builder;
 
 	' Get MediaBox
-	:MediaBox_array = m_object_pool.dereference<array_object>(m_page_object.at("MediaBox"));
+	:MediaBox_array = m_stream.dereference<array_object>(m_page_object.at("MediaBox"));
 	:page_builder.set_media_box(RectangleData(Coordinates{MediaBox_array.at(0), MediaBox_array.at(1)}, Coordinates{MediaBox_array.at(2), MediaBox_array.at(3)}));
 
 	' Get Contents
-	:content_stream_object = m_object_pool.dereference<stream_object>(m_page_object.at("Contents"));
-	:content_stream = istring_stream(content_stream_object.get_decoded_data(), std::ios_base::in | std::ios_base::binary);
-	:content_stream_ipdfstream = ipdfstream(std::move(content_stream));
+	:content_stream_object = m_stream.dereference<stream_object>(m_page_object.at("Contents"));
+	:content_stream = ipdfstringstream(content_stream_object.get_decoded_data());
 	:this_contents_parser = contents_parser(content_stream);
 	:page_builder.set_contents(this_contents_parser.get_contents());
 

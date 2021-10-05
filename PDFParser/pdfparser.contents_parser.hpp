@@ -4,17 +4,14 @@
 #include "pdfparser.ipdfstream.hpp"
 
 namespace pdfparser {
-template <class InputStreamT>
 class contents_parser {
 public:
 	PDFReader::PDFContents ^ get_contents();
 
 public:
-	explicit contents_parser(ipdfstream<InputStreamT>& obj_parser) noexcept;
+	explicit contents_parser(ipdfstream& content_stream) noexcept;
 
 private:
-	ipdfstream<InputStreamT>& m_object_parser;
+	ipdfstream& m_content_stream;
 };
 } // namespace pdfparser
-
-#include "pdfparser.contents_parser.ipp"

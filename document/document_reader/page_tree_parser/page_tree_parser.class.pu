@@ -1,20 +1,20 @@
 @startuml page_tree_parser
 hide empty members
 namespace pdfparser {
-class page_tree_parser<InputStreamT> {
-	-m_object_pool   : object_pool<InputStreamT>&
-	-m_root_node     : const dictionary_object&
+class page_tree_parser {
+	-m_stream    : ipdfstream&
+	-m_root_node : const dictionary_object&
 
-	+page_tree_parser(obj_pool : object_pool<InputStreamT>&, root_node : const dictionary_object&)
+	+page_tree_parser(stream : ipdfstream&, root_node : const dictionary_object&)
 	+get_pages() : List<PDFPage>
 	-get_pages(page_node : const dictionary_object&, inherited_attributes : const dictionary_object&) : List<PDFPage>
 }
-document_reader ..> object_pool
+document_reader ..> ipdfstream
 document_reader ..> dictionary_object 
 document_reader ..> "0..*" PDFPage
 
-class object_pool {
-	[[object_pool.class.pu]]
+class ipdfstream {
+	[[ipdfstream.class.pu]]
 }
 class dictionary_object {
 	[[object_types.class.pu]]

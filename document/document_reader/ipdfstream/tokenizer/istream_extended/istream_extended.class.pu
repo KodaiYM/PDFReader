@@ -4,15 +4,15 @@ namespace pdfparser {
 class istream_extended {
 	+istream_extended(inout sb : std::streambuf*)
 
-	+peek() : optional<InputStreamT::char_type>
-	+get()  : InputStreamT::char_type
+	+peek() : optional<char>
+	+get()  : char
 	+eof()  : bool
 
-	+tell()                                        : InputStreamT::off_type
-	+seek(in byte_offset : InputStreamT::off_type) : void
-	+seek_to_end()                                 : void
-	+seek_forward_head_of_line()                   : void
-	+operator++()                                  : istream_extended&
+	+tell()                                : std::streamoff
+	+seek(in byte_offset : std::streamoff) : void
+	+seek_to_end()                         : void
+	+seek_forward_head_of_line()           : void
+	+operator++()                          : istream_extended&
 
 	+ignore_if_present(in flags : whitespace_flags)           : void
 	+attempt(in attempt_str : string_view)                    : bool

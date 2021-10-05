@@ -2,8 +2,8 @@
 hide empty members
 namespace pdfparser {
 class ipdfstream {
-	-m_xref_table : xref_table
 	-m_object_pool : object_pool
+	-m_xref_table : xref_table
 	+ipdfstream(inout sb : std::streambuf*)
 
 	+take_footer()  : dictionary_object
@@ -12,8 +12,6 @@ class ipdfstream {
 	+take_trailer() : dictionary_object
 
 	+take_object<variant<...>>() : variant<...>
-	+take_object<variant<...>>() : variant<...>
-	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
 	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
 	+take_boolean_object    () : boolean_object
 	+take_integer_object    () : integer_object
@@ -43,8 +41,8 @@ class ipdfstream {
 	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
 }
 ipdfstream --|> tokenizer
-ipdfstream --> xref_table
 ipdfstream *--> object_pool
+ipdfstream --> xref_table
 ipdfstream ..> xref_types
 ipdfstream ..> object_types
 ipdfstream ..> parse_error

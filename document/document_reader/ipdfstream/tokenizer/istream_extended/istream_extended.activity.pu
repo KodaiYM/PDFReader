@@ -3,10 +3,7 @@ partition "istream_extended(inout sb : std::streambuf*)" {
 start
 	:std::istream(sb);
 
-	' 以下の処理は、ipdffstream とか ipdfstringstream の責任に変わった
-	:m_stream = std::move(stream);
-	:m_stream.clear();
-	:m_stream.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+	:exceptions(failbit | badbit);
 stop
 }
 @enduml
@@ -18,7 +15,7 @@ start
 		:return nullopt;
 	endif
 
-	:return m_stream.peek();
+	:return std::istream::peek();
 stop
 }
 @enduml
@@ -48,7 +45,7 @@ stop
 @startuml tell
 partition "tell()" {
 start
-	:return m_stream.rdbuf()->pubseekoff(0, std::ios_base::cur, std::ios_base::in);
+	:return rdbuf()->pubseekoff(0, std::ios_base::cur, std::ios_base::in);
 stop
 }
 @enduml
@@ -56,7 +53,7 @@ stop
 @startuml seek
 partition "seek(in byte_offset : InputStreamT::off_type)" {
 start
-	:m_stream.seekg(byte_offset, std::ios_base::beg);
+	:seekg(byte_offset, std::ios_base::beg);
 	if (失敗した) then (y)
 		:throw istream_extended_error(failed_to_seek);
 		stop
@@ -69,7 +66,7 @@ stop
 partition "seek_to_end()" {
 start
 	' NOTE: undefined behaviour on ISO C but it will go well on Windows
-	:m_stream.seekg(0, std::ios_base::end);
+	:seekg(0, std::ios_base::end);
 stop
 }
 @enduml
@@ -110,7 +107,7 @@ stop
 @startuml operator++
 partition "operator++()" {
 start
-	:m_stream.seekg(1, std::ios_base::cur);
+	:seekg(1, std::ios_base::cur);
 	if (失敗した) then (y)
 		:throw istream_extended_error(failed_to_seek);
 		stop

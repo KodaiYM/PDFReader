@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pdfparser.contents_parser.hpp"
 #include "pdfparser.object_types.hpp"
 #include "pdfparser.pdfcontents_builder.hpp"
@@ -8,13 +6,10 @@
 
 using namespace pdfparser;
 
-template <class InputStreamT>
-contents_parser<InputStreamT>::contents_parser(
-    ipdfstream<InputStreamT>& obj_parser) noexcept
-    : m_object_parser(obj_parser) {}
+contents_parser::contents_parser(ipdfstream& content_stream) noexcept
+    : m_content_stream(content_stream) {}
 
-template <class InputStreamT>
-    PDFReader::PDFContents ^ contents_parser<InputStreamT>::get_contents() {
+PDFReader::PDFContents ^ contents_parser::get_contents() {
 	using namespace object_types;
 	pdfcontents_builder            contents_builder;
 	std::vector<any_direct_object> contents_operands;

@@ -2,17 +2,15 @@
 
 #include "PDFReader.PDFPage.hpp"
 #include "pdfparser.ipdfstream.hpp"
-#include "pdfparser.object_pool.hpp"
 #include "pdfparser.object_types.hpp"
 
 namespace pdfparser {
-template <class InputStremT>
 class page_tree_parser {
 public:
 	System::Collections::Generic::List<PDFReader::PDFPage ^> ^ get_pages();
 
 public:
-	page_tree_parser(object_pool<InputStremT>&              obj_pool,
+	page_tree_parser(ipdfstream&                            stream,
 	                 const object_types::dictionary_object& root_node);
 
 private:
@@ -21,9 +19,7 @@ private:
 	              const object_types::dictionary_object& inherited_attributes);
 
 private:
-	object_pool<InputStremT>&              m_object_pool;
+	ipdfstream&                            m_stream;
 	const object_types::dictionary_object& m_root_node;
 };
 } // namespace pdfparser
-
-#include "pdfparser.page_tree_parser.ipp"
