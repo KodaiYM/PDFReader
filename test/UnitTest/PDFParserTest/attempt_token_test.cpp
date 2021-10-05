@@ -12,7 +12,7 @@ void attempt_token_test::test_when_true() {
 
 	stream << "token";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 
 	Assert::IsTrue(tknizer.attempt_token("token"));
 }
@@ -22,7 +22,7 @@ void attempt_token_test::test_when_false() {
 
 	stream << "token";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 
 	Assert::IsTrue(tknizer.tell() == 0);
 	Assert::IsFalse(tknizer.attempt_token("dummy"));

@@ -2,6 +2,7 @@
 #include "pdfparser.document_reader.hpp"
 #include "pdfparser.ipdffstream.hpp"
 
+#define NOMINMAX
 #include <msclr/marshal_cppstd.h>
 
 namespace PDFReader {

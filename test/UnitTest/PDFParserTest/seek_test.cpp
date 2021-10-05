@@ -16,7 +16,7 @@ void seek_test::test_to_between_CRLF() {
 	       << "\r\r"
 	       << "\r\n";
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek(6);
 	Assert::IsTrue(6 == str_extended.tell());
 }
@@ -26,7 +26,7 @@ void seek_test::test_to_EOF() {
 
 	stream << "test";
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek(4);
 	Assert::IsTrue(4 == str_extended.tell());
 }
@@ -36,7 +36,7 @@ void seek_test::test_over_EOF() {
 
 	stream << "test";
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	try {
 		str_extended.seek(5);
 	} catch (const istream_extended_error& parse_e) {

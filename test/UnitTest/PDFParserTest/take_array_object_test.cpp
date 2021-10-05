@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace object_parser_test::take_object_test;
+using namespace ipdfstream_test::take_object_test;
 
 void take_array_object_test::test_simple_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -15,9 +15,8 @@ void take_array_object_test::test_simple_array() {
 
 	stream << "[1 2 3]";
 
-	object_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	ipdfstream str_parser(stream.rdbuf());
+	auto       object = str_parser.take_array_object();
 	Assert::IsTrue(array_object{1, 2, 3} == object);
 }
 void take_array_object_test::test_valid_array() {
@@ -40,9 +39,8 @@ void take_array_object_test::test_valid_array() {
 ]
 )"_trimmed;
 
-	object_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	ipdfstream str_parser(stream.rdbuf());
+	auto       object = str_parser.take_array_object();
 
 	Assert::IsTrue(
 	    array_object{
@@ -66,9 +64,8 @@ void take_array_object_test::test_empty_array() {
 
 	stream << "[]";
 
-	object_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	ipdfstream str_parser(stream.rdbuf());
+	auto       object = str_parser.take_array_object();
 	Assert::IsTrue(array_object{} == object);
 }
 void take_array_object_test::test_lack_of_right_square_bracket() {
@@ -77,10 +74,9 @@ void take_array_object_test::test_lack_of_right_square_bracket() {
 
 	stream << "[0 1 2";
 
-	object_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 	try {
-		str_parser.take_array_object(obj_pool);
+		str_parser.take_array_object();
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::array_lack_of_right_square_bracket ==
 		               parse_e.code());

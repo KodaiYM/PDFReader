@@ -12,7 +12,7 @@ void promise_token_test::test_when_nothrow() {
 
 	stream << "token";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	// check if no-throw
 	tknizer.promise_token({"dummy1", "token", "dummy3"});
 }
@@ -22,7 +22,7 @@ void promise_token_test::test_when_throw() {
 
 	stream << "token1 token2 token3";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	try {
 		tknizer.promise_token({"token2", "token3", "token4"});
 	} catch (const tokenize_error& tknize_e) {

@@ -7,7 +7,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace object_parser_test::take_object_test;
+using namespace ipdfstream_test::take_object_test;
 
 void take_dictionary_object_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -27,9 +27,8 @@ void take_dictionary_object_test::test_sample() {
 >>
 )"_trimmed;
 
-	object_parser str_parser(std::move(stream));
-	object_pool     obj_pool(str_parser);
-	auto            object = str_parser.take_dictionary_object(obj_pool);
+	ipdfstream str_parser(stream.rdbuf());
+	auto       object = str_parser.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{
 	                   {"Type", name_object{"Example"}},              // these
 	                   {"SubType", name_object{"DictionaryExample"}}, // comments
@@ -51,9 +50,8 @@ void take_dictionary_object_test::test_empty() {
 
 	stream << "<<>>";
 
-	object_parser str_parser(std::move(stream));
-	object_pool     obj_pool(str_parser);
-	auto            object = str_parser.take_dictionary_object(obj_pool);
+	ipdfstream str_parser(stream.rdbuf());
+	auto       object = str_parser.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{} == dictionary_object(object));
 }
 void take_dictionary_object_test::test_null_value() {
@@ -62,9 +60,8 @@ void take_dictionary_object_test::test_null_value() {
 
 	stream << "<</key null /key2 null /key3 (string) /key4 null>>";
 
-	object_parser str_parser(std::move(stream));
-	object_pool     obj_pool(str_parser);
-	auto            object = str_parser.take_dictionary_object(obj_pool);
+	ipdfstream str_parser(stream.rdbuf());
+	auto       object = str_parser.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{{"key3", string_object{"string"}}} ==
 	               object);
 }
@@ -74,10 +71,9 @@ void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 
 	stream << "<</key (value)";
 
-	object_parser str_parser(std::move(stream));
-	object_pool     obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 	try {
-		str_parser.take_dictionary_object(obj_pool);
+		str_parser.take_dictionary_object();
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::dictionary_lack_of_double_greater_than_sign ==
 		               parse_e.code());
