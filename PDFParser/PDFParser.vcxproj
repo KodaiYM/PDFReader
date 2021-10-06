@@ -139,11 +139,13 @@
     <ClInclude Include="pdfparser.graphics_state_stack.hpp" />
     <ClInclude Include="pdfparser.chroma.hpp" />
     <ClInclude Include="pdfparser.graphics_state.hpp" />
-    <ClInclude Include="pdfparser.ipdfstream.ipp" />
     <ClInclude Include="pdfparser.ipdfstringstream.hpp" />
     <ClInclude Include="pdfparser.line_style.hpp" />
+    <ClInclude Include="pdfparser.object_stream.hpp" />
+    <ClInclude Include="pdfparser.object_stream.ipp" />
     <ClInclude Include="pdfparser.page_parser.hpp" />
     <ClCompile Include="pdfparser.ipdfstringstream.cpp" />
+    <ClCompile Include="pdfparser.object_stream.cpp" />
     <ClCompile Include="pdfparser.page_parser.cpp" />
     <ClInclude Include="pdfparser.page_tree_parser.hpp" />
     <ClCompile Include="pdfparser.page_tree_parser.cpp" />

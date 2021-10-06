@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace ipdfstream_test::take_object_test {
+namespace object_stream_test {
 [TestClass] public ref class take_stream_object_test {
 public:
 	[TestMethod] void test_sample_CRLF();
@@ -11,4 +11,4 @@ public:
 	[TestMethod] void test_absence_of_Length_entry();
 	[TestMethod] void test_data_is_shorter_than_Length();
 };
-} // namespace ipdfstream_test::take_object_test
+} // namespace object_stream_test

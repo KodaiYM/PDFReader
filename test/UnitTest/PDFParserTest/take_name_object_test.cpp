@@ -1,4 +1,4 @@
-#include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.object_stream.hpp"
 #include "take_name_object_test.hpp"
 
 #include <sstream>
@@ -6,7 +6,7 @@
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace ipdfstream_test::take_object_test;
+using namespace object_stream_test;
 
 using namespace std::string_literals;
 
@@ -16,9 +16,9 @@ void take_name_object_test::test_valid_name() {
 
 	stream << R"(/;*_-.$@!"&'=~^\|`+:,?)";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_name_object();
+	auto object = obj_stream.take_name_object();
 	Assert::IsTrue(R"(;*_-.$@!"&'=~^\|`+:,?)" == object);
 }
 void take_name_object_test::test_empty_name() {
@@ -27,9 +27,9 @@ void take_name_object_test::test_empty_name() {
 
 	stream << "/";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_name_object();
+	auto object = obj_stream.take_name_object();
 	Assert::IsTrue("" == object);
 }
 void take_name_object_test::test_hexadecimal_code() {
@@ -38,8 +38,8 @@ void take_name_object_test::test_hexadecimal_code() {
 
 	stream << "/A#20B";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_name_object();
+	auto object = obj_stream.take_name_object();
 	Assert::IsTrue("A"s + '\x20' + "B" == object);
 }

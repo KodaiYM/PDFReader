@@ -1,4 +1,4 @@
-#include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.object_stream.hpp"
 #include "take_indirect_reference_test.hpp"
 
 #include <sstream>
@@ -6,7 +6,7 @@
 using namespace pdfparser;
 
 using namespace object_types;
-using namespace ipdfstream_test::take_object_test;
+using namespace object_stream_test;
 
 void take_indirect_reference_test::test_unsigned() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -14,9 +14,9 @@ void take_indirect_reference_test::test_unsigned() {
 
 	stream << "3 8 R";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_indirect_reference();
+	auto object = obj_stream.take_indirect_reference();
 	Assert::IsTrue(indirect_reference{3, 8} == object);
 }
 void take_indirect_reference_test::test_signed() {
@@ -25,8 +25,8 @@ void take_indirect_reference_test::test_signed() {
 
 	stream << "+3 +8 R";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_indirect_reference();
+	auto object = obj_stream.take_indirect_reference();
 	Assert::IsTrue(indirect_reference{3, 8} == object);
 }

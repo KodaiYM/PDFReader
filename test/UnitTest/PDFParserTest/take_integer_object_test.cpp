@@ -1,11 +1,12 @@
-#include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.object_not_found_error.hpp"
+#include "pdfparser.object_stream.hpp"
 #include "take_integer_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace ipdfstream_test::take_object_test;
+using namespace object_stream_test;
 
 void take_integer_object_test::test_unsigned_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -13,9 +14,9 @@ void take_integer_object_test::test_unsigned_integer() {
 
 	stream << "0123";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	integer_object object = str_parser.take_integer_object();
+	integer_object object = obj_stream.take_integer_object();
 	Assert::AreEqual(123, static_cast<int>(object));
 }
 void take_integer_object_test::test_plus_integer() {
@@ -24,9 +25,9 @@ void take_integer_object_test::test_plus_integer() {
 
 	stream << "+0123";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	integer_object object = str_parser.take_integer_object();
+	integer_object object = obj_stream.take_integer_object();
 	Assert::AreEqual(123, static_cast<int>(object));
 }
 void take_integer_object_test::test_minus_integer() {
@@ -35,9 +36,9 @@ void take_integer_object_test::test_minus_integer() {
 
 	stream << "-0123";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 
-	integer_object object = str_parser.take_integer_object();
+	integer_object object = obj_stream.take_integer_object();
 	Assert::AreEqual(-123, static_cast<int>(object));
 }
 void take_integer_object_test::test_max() {
@@ -49,8 +50,8 @@ void take_integer_object_test::test_max() {
 	stream << max;
 	std::streamoff expected = stream.tellp();
 
-	ipdfstream               str_parser(stream.rdbuf());
-	integer_object::int_type integer = str_parser.take_integer_object();
+	object_stream            obj_stream(stream.rdbuf());
+	integer_object::int_type integer = obj_stream.take_integer_object();
 	Assert::AreEqual(max, integer);
 }
 void take_integer_object_test::test_min() {
@@ -62,8 +63,8 @@ void take_integer_object_test::test_min() {
 	stream << min;
 	std::streamoff expected = stream.tellp();
 
-	ipdfstream               str_parser(stream.rdbuf());
-	integer_object::int_type integer = str_parser.take_integer_object();
+	object_stream            obj_stream(stream.rdbuf());
+	integer_object::int_type integer = obj_stream.take_integer_object();
 	Assert::AreEqual(min, integer);
 }
 
@@ -73,9 +74,9 @@ void take_integer_object_test::test_not_number() {
 
 	stream << "deadbeef";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (const object_not_found_error& obj_e) {
 		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
 		               obj_e.code());
@@ -89,9 +90,9 @@ void take_integer_object_test::test_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (const object_not_found_error& obj_e) {
 		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
 		               obj_e.code());
@@ -107,9 +108,9 @@ void take_integer_object_test::test_plus_not_number() {
 
 	stream << "+deadbeef";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (const object_not_found_error& obj_e) {
 		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
 		               obj_e.code());
@@ -125,9 +126,9 @@ void take_integer_object_test::test_minus_not_number() {
 
 	stream << "-deadbeef";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (const object_not_found_error& obj_e) {
 		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
 		               obj_e.code());
@@ -143,9 +144,9 @@ void take_integer_object_test::test_sign_EOF() {
 
 	stream << "+";
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (const object_not_found_error& obj_e) {
 		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
 		               obj_e.code());
@@ -162,9 +163,9 @@ void take_integer_object_test::test_max_plus1() {
 	constexpr auto max = std::numeric_limits<integer_object::int_type>::max();
 	stream << max / 10 << ((max % 10) + 1);
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (std::out_of_range&) {
 		// success
 		return;
@@ -178,9 +179,9 @@ void take_integer_object_test::test_min_minus1() {
 	constexpr auto min = std::numeric_limits<long long>::min();
 	stream << min / 10 << (-(min % 10) + 1);
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_integer_object();
+		obj_stream.take_integer_object();
 	} catch (std::out_of_range&) {
 		// success
 		return;

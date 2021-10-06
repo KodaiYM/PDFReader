@@ -19,14 +19,14 @@
     <Filter Include="pdfparser\ipdfstream">
       <UniqueIdentifier>{97fb2060-1ae8-4730-8c4d-a3c0600aa7f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\ipdfstream\take_object_test">
-      <UniqueIdentifier>{9a6b326c-6d91-49d5-815c-0b29f7c2131e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="pdfparser\document_reader">
       <UniqueIdentifier>{55c9ab85-32eb-4dc7-b447-89b0ae22ff1e}</UniqueIdentifier>
     </Filter>
     <Filter Include="pdfparser\contents_parser">
       <UniqueIdentifier>{12af86a8-4ecb-4c9e-aaf6-4294c7351aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pdfparser\object_stream">
+      <UniqueIdentifier>{9a6b326c-6d91-49d5-815c-0b29f7c2131e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,9 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="take_footer_test.hpp">
-      <Filter>pdfparser\ipdfstream</Filter>
-    </ClInclude>
-    <ClInclude Include="take_indirect_object_test.hpp">
       <Filter>pdfparser\ipdfstream</Filter>
     </ClInclude>
     <ClInclude Include="take_trailer_test.hpp">
@@ -51,40 +48,40 @@
       <Filter>pdfparser\ipdfstream</Filter>
     </ClInclude>
     <ClInclude Include="take_array_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_boolean_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_dictionary_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_hexadecimal_string_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_indirect_reference_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_integer_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_literal_string_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_name_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_null_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_real_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_stream_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="take_object_test.hpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
     <ClInclude Include="literal_trim.hpp">
       <Filter>pdfparser_test</Filter>
@@ -143,11 +140,11 @@
     <ClInclude Include="get_contents_test.hpp">
       <Filter>pdfparser\contents_parser</Filter>
     </ClInclude>
+    <ClInclude Include="take_indirect_object_test.hpp">
+      <Filter>pdfparser\object_stream</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="take_indirect_object_test.cpp">
-      <Filter>pdfparser\ipdfstream</Filter>
-    </ClCompile>
     <ClCompile Include="take_trailer_test.cpp">
       <Filter>pdfparser\ipdfstream</Filter>
     </ClCompile>
@@ -155,40 +152,40 @@
       <Filter>pdfparser\ipdfstream</Filter>
     </ClCompile>
     <ClCompile Include="take_stream_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_array_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_boolean_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_dictionary_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_hexadecimal_string_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_indirect_reference_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_integer_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_literal_string_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_name_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_null_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_real_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_object_test.cpp">
-      <Filter>pdfparser\ipdfstream\take_object_test</Filter>
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
     <ClCompile Include="take_footer_test.cpp">
       <Filter>pdfparser\ipdfstream</Filter>
@@ -237,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="get_contents_test.cpp">
       <Filter>pdfparser\contents_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="take_indirect_object_test.cpp">
+      <Filter>pdfparser\object_stream</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

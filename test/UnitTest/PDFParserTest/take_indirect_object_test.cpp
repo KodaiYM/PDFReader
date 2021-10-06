@@ -1,13 +1,14 @@
 #include "literal_trim.hpp"
-#include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.object_cache.hpp"
+#include "pdfparser.object_stream.hpp"
+#include "pdfparser.parse_error.hpp"
 #include "take_indirect_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace ipdfstream_test;
+using namespace object_stream_test;
 using namespace xref_types;
 
 void take_indirect_object_test::test_sample() {
@@ -41,10 +42,10 @@ endobj
 endobj
 )";
 
-	ipdfstream str_parser(stream.rdbuf());
-	str_parser.add_xref_table(
+	object_stream obj_stream(stream.rdbuf());
+	obj_stream.add_xref_table(
 	    xref_table{xref_inuse_entry{8, 0, offset_of_objnum8}});
-	auto object = str_parser.take_indirect_object(xref_inuse_entry{7, 0, 0});
+	auto object = obj_stream.take_indirect_object(xref_inuse_entry{7, 0, 0});
 	Assert::IsTrue(
 	    stream_object{dictionary_object{{"Length", indirect_reference{8, 0}}},
 	                  stream_contents} == std::get<stream_object>(object));
@@ -59,9 +60,9 @@ void take_indirect_object_test::test_inconsistent_object_number() {
 endobj
 )"_trimmed;
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_indirect_object(xref_inuse_entry{8, 0, 0});
+		obj_stream.take_indirect_object(xref_inuse_entry{8, 0, 0});
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(
 		    parse_error::indirect_object_is_inconsistent_with_xref_table ==
@@ -82,9 +83,9 @@ void take_indirect_object_test::test_inconsistent_generation_number() {
 endobj
 )"_trimmed;
 
-	ipdfstream str_parser(stream.rdbuf());
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_indirect_object(xref_inuse_entry{7, 1, 0});
+		obj_stream.take_indirect_object(xref_inuse_entry{7, 1, 0});
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(
 		    parse_error::indirect_object_is_inconsistent_with_xref_table ==

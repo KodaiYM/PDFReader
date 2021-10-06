@@ -34,23 +34,24 @@ ipdfstringstream --|> std::istringstream
 std::istringstream --|> std::istream
 
 class ipdfstream {
-}
-ipdfstream *-- object_cache
-ipdfstream --|> object_stream
-
-class object_cache {
-	間接オブジェクトのキャッシュ
-}
-
-class object_stream {
+	トークン取得
 	PDFオブジェクト取得
 }
-object_stream --|> tokenizer
+ipdfstream *-- object_cache
+ipdfstream --|> tokenizer
+tokenizer --|> istream_extended
+istream_extended --|> std::istream
 
+' メンバー追加要素
+document_reader *--> dictionary_object : "トレーラー辞書"
+page_tree_parser *--> dictionary_object : "ルート辞書"
+page_parser *--> dictionary_object : "ページ辞書"
+ipdfstream *-- xref_table
 class tokenizer {
 	トークン取得
 }
-tokenizer --|> istream_extended
 
-istream_extended --|> std::istream
+class istream_extended {
+	std::istream の機能拡張
+}
 @enduml

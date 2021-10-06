@@ -1,25 +1,26 @@
 #pragma once
 
-#include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.object_stream.hpp"
+#include "pdfparser.parse_error.hpp"
 
 using namespace pdfparser;
 
-// definition of template member functions of ipdfstream
+// definition of template member functions of object_stream
 #pragma region stream_parser_template_definitions
 template <class Variant, std::size_t... Seq>
-Variant ipdfstream::take_object_Variant_impl(std::index_sequence<Seq...>) {
+Variant object_stream::take_object_Variant_impl(std::index_sequence<Seq...>) {
 	return take_object<std::variant_alternative_t<Seq, Variant>...>();
 }
 
 template <class Variant>
-Variant ipdfstream::take_object() {
+Variant object_stream::take_object() {
 	return take_object_Variant_impl<Variant>(
 	    std::make_index_sequence<std::variant_size_v<Variant>>());
 }
 
 template <class... ObjectTypes,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
-std::variant<ObjectTypes...> ipdfstream::take_object() {
+std::variant<ObjectTypes...> object_stream::take_object() {
 	using namespace object_types;
 
 	constexpr bool contains_boolean =
@@ -192,7 +193,7 @@ std::variant<ObjectTypes...> ipdfstream::take_object() {
 
 template <class DictionaryObject>
 object_types::stream_object
-    ipdfstream::take_stream_object(DictionaryObject&& stream_dictionary) {
+    object_stream::take_stream_object(DictionaryObject&& stream_dictionary) {
 	using namespace object_types;
 
 	static_assert(
@@ -242,7 +243,7 @@ object_types::stream_object
 template <
     class Variant, class... ObjectTypesContainingRef,
     std::enable_if_t<is_same_template_v<std::variant, Variant>, std::nullptr_t>>
-Variant ipdfstream::dereference(
+Variant object_stream::dereference(
     const std::variant<ObjectTypesContainingRef...>& object) {
 	return dereference_Variant_impl<Variant>(
 	    std::make_index_sequence<std::variant_size_v<Variant>>(), object);
@@ -251,15 +252,15 @@ Variant ipdfstream::dereference(
 template <
     class Variant,
     std::enable_if_t<is_same_template_v<std::variant, Variant>, std::nullptr_t>>
-Variant
-    ipdfstream::dereference(const object_types::indirect_reference& reference) {
+Variant object_stream::dereference(
+    const object_types::indirect_reference& reference) {
 	return dereference_Variant_impl<Variant>(
 	    std::make_index_sequence<std::variant_size_v<Variant>>(), reference);
 }
 
 template <class... ObjectTypes, class... ObjectTypesContainingRef,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
-std::variant<ObjectTypes...> ipdfstream::dereference(
+std::variant<ObjectTypes...> object_stream::dereference(
     const std::variant<ObjectTypesContainingRef...>& object) {
 	using namespace object_types;
 	static_assert(
@@ -282,15 +283,15 @@ std::variant<ObjectTypes...> ipdfstream::dereference(
 
 template <class... ObjectTypes,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
-std::variant<ObjectTypes...>
-    ipdfstream::dereference(const object_types::indirect_reference& reference) {
+std::variant<ObjectTypes...> object_stream::dereference(
+    const object_types::indirect_reference& reference) {
 	return dereference_variant_fixed<ObjectTypes...>(reference);
 }
 
 template <class ObjectType, class... ObjectTypesContainingRef,
           std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
                            std::nullptr_t>>
-ObjectType ipdfstream::dereference(
+ObjectType object_stream::dereference(
     const std::variant<ObjectTypesContainingRef...>& object) {
 	using namespace object_types;
 	static_assert(
@@ -308,27 +309,27 @@ ObjectType ipdfstream::dereference(
 template <class ObjectType,
           std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
                            std::nullptr_t>>
-ObjectType
-    ipdfstream::dereference(const object_types::indirect_reference& reference) {
+ObjectType object_stream::dereference(
+    const object_types::indirect_reference& reference) {
 	return std::get<ObjectType>(dereference_variant_fixed<ObjectType>(reference));
 }
 
 template <class Variant, class... ObjectTypesContainingRef, std::size_t... Seq>
-Variant ipdfstream::dereference_Variant_impl(
+Variant object_stream::dereference_Variant_impl(
     std::index_sequence<Seq...>,
     const std::variant<ObjectTypesContainingRef...>& object) {
 	return dereference<std::variant_alternative_t<Seq, Variant>...>(object);
 }
 
 template <class Variant, std::size_t... Seq>
-Variant ipdfstream::dereference_Variant_impl(
+Variant object_stream::dereference_Variant_impl(
     std::index_sequence<Seq...>,
     const object_types::indirect_reference& reference) {
 	return dereference<std::variant_alternative_t<Seq, Variant>...>(reference);
 }
 
 template <class... ObjectTypes>
-std::variant<ObjectTypes...> ipdfstream::dereference_variant_fixed(
+std::variant<ObjectTypes...> object_stream::dereference_variant_fixed(
     const object_types::indirect_reference& reference) {
 	using namespace object_types;
 	using namespace xref_types;
