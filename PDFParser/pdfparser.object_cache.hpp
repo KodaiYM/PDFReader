@@ -11,7 +11,7 @@
 #include <utility>
 #include <variant>
 
-// hash for object_pool::m_object_map
+// hash for object_cache::m_object_map
 namespace std {
 template <typename Key, typename Value>
 struct hash<std::pair<Key, Value>> {
@@ -30,7 +30,7 @@ struct hash<std::pair<Key, Value>> {
 } // namespace std
 
 namespace pdfparser {
-class object_pool {
+class object_cache {
 public:
 	bool contains(const std::pair<xref_types::object_t, xref_types::generation_t>&
 	                  object_id) const noexcept;

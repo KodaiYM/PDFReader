@@ -237,8 +237,8 @@ object_types::stream_object
 }
 #pragma endregion // region stream_parser_template_definitions
 
-// definition of template member functions from old object_pool
-#pragma region stream_parser_template_definitions_on_old_object_pool
+// definition of template member functions from old object_cache
+#pragma region stream_parser_template_definitions_on_old_object_cache
 template <
     class Variant, class... ObjectTypesContainingRef,
     std::enable_if_t<is_same_template_v<std::variant, Variant>, std::nullptr_t>>
@@ -336,7 +336,7 @@ std::variant<ObjectTypes...> ipdfstream::dereference_variant_fixed(
 	const std::pair<object_t, generation_t> object_id = {
 	    reference.object_number, reference.generation_number};
 
-	if (!m_object_pool.contains(object_id)) {
+	if (!m_object_cache.contains(object_id)) {
 		object_types::any_direct_object new_object = object_types::null;
 		if (auto xref_info = m_xref_table.find(object_id.first, object_id.second);
 		    xref_info != m_xref_table.end() &&
@@ -345,7 +345,7 @@ std::variant<ObjectTypes...> ipdfstream::dereference_variant_fixed(
 			    std::get<xref_types::xref_inuse_entry>(*xref_info));
 		}
 
-		m_object_pool.add(object_id, std::move(new_object));
+		m_object_cache.add(object_id, std::move(new_object));
 	}
 
 	return std::visit(
@@ -357,6 +357,6 @@ std::variant<ObjectTypes...> ipdfstream::dereference_variant_fixed(
 			    throw type_mismatch();
 		    }
 	    },
-	    m_object_pool.get(object_id));
+	    m_object_cache.get(object_id));
 }
-#pragma endregion // stream_parser_template_definitions_on_old_object_pool
+#pragma endregion // stream_parser_template_definitions_on_old_object_cache

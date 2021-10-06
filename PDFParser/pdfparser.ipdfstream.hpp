@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pdfparser.object_not_found_error.hpp"
-#include "pdfparser.object_pool.hpp"
+#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_types.hpp"
 #include "pdfparser.parse_error.hpp"
 #include "pdfparser.tokenizer.hpp"
@@ -26,7 +26,6 @@ public:
 	/// seek to end and parse stream footer (xref table and trailer) and
 	/// get trailer dictionary
 	/// </summary>
-	/// <param name="">reference to object_pool</param>
 	/// <returns>trailer dictionary</returns>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
@@ -448,7 +447,7 @@ public:
 	using base::base;
 
 private:
-	object_pool            m_object_pool;
+	object_cache           m_object_cache;
 	xref_types::xref_table m_xref_table;
 
 private:

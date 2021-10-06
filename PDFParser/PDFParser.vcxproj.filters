@@ -19,9 +19,6 @@
     <Filter Include="pdfparser\document_reader">
       <UniqueIdentifier>{05357ed6-e3e3-40ab-b74f-cefed1657c20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="pdfparser\document_reader\object_pool">
-      <UniqueIdentifier>{43153da4-ade5-4025-a85e-9fab6e828253}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PDFReader">
       <UniqueIdentifier>{f07dab9f-cea9-41be-9cd8-016b93b2fb73}</UniqueIdentifier>
     </Filter>
@@ -85,13 +82,16 @@
     <Filter Include="pdfparser\document_reader\ipdfstream\ipdfstringstream">
       <UniqueIdentifier>{1c5e83bf-b49b-48ed-98f5-a6acb8ea0b20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pdfparser\document_reader\object_cache">
+      <UniqueIdentifier>{43153da4-ade5-4025-a85e-9fab6e828253}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="pdfparser.object_pool.hpp">
-      <Filter>pdfparser\document_reader\object_pool</Filter>
+    <ClInclude Include="pdfparser.object_cache.hpp">
+      <Filter>pdfparser\document_reader\object_cache</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.object_types.hpp">
       <Filter>pdfparser\document_reader\ipdfstream\object_types</Filter>
@@ -233,8 +233,8 @@
     <ClCompile Include="pdfparser.ipdffstream.cpp">
       <Filter>pdfparser\document_reader\ipdfstream\ipdffstream</Filter>
     </ClCompile>
-    <ClCompile Include="pdfparser.object_pool.cpp">
-      <Filter>pdfparser\document_reader\object_pool</Filter>
+    <ClCompile Include="pdfparser.object_cache.cpp">
+      <Filter>pdfparser\document_reader\object_cache</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.istream_extended.cpp">
       <Filter>pdfparser\document_reader\ipdfstream\tokenizer\istream_extended</Filter>

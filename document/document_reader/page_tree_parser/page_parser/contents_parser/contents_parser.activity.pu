@@ -12,7 +12,7 @@ start
 	:contents_builder : pdfcontents_builder;
 	:contents_operands : std::vector<any_direct_object>;
 	while (true) is (y)
-		:object = m_stream.take_object<any_direct_object>(object_pool(m_stream));
+		:object = m_stream.take_object<any_direct_object>();
 		if (object_not_found_error が出た) then (y)
 			:contents_operator = m_stream.take_token();
 			if (!contents_operands.has_value()) then (y)

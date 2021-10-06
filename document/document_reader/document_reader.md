@@ -6,7 +6,7 @@
 | pdfparser::document_error  | ドキュメントの構文上のエラーを表す |
 
 ## 使用例
-- get_pages を呼び出すと、[ファイル解析クラス](ipdfstream/ipdfstream.md)や[オブジェクトプールクラス](object_pool/object_pool.md)を使い、[PDFの全ページを解析](page_tree_parser/page_tree_parser.md)する。
+- get_pages を呼び出すと、[ファイル解析クラス](ipdfstream/ipdfstream.md)や[オブジェクトプールクラス](object_cache/object_cache.md)を使い、[PDFの全ページを解析](page_tree_parser/page_tree_parser.md)する。
 
 ## クラス図一覧
 - [ドキュメント解析クラス図](document_reader.class.pu)

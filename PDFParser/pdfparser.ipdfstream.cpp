@@ -468,11 +468,11 @@ object_types::any_direct_object ipdfstream::take_indirect_object(
 }
 #pragma endregion // stream_parser_definitions
 
-// definition of member functions from old object_pool
-#pragma region stream_parser_definitions_on_old_object_pool
+// definition of member functions from old object_cache
+#pragma region stream_parser_definitions_on_old_object_cache
 void           ipdfstream::add_xref_table(
     const xref_types::xref_table& referenced_xref_table) noexcept {
 	m_xref_table = std::move(referenced_xref_table);
 }
 
-#pragma endregion // stream_parser_definitions_on_old_object_pool
+#pragma endregion // stream_parser_definitions_on_old_object_cache

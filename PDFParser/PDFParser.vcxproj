@@ -158,7 +158,7 @@
     <ClInclude Include="pdfparser.object_not_found_error.hpp" />
     <ClInclude Include="pdfparser.istream_extended_error.hpp" />
     <ClInclude Include="pdfparser.istream_extended.hpp" />
-    <ClInclude Include="pdfparser.object_pool.hpp" />
+    <ClInclude Include="pdfparser.object_cache.hpp" />
     <ClInclude Include="pdfparser.parse_error.hpp" />
     <ClInclude Include="pdfparser.object_types.hpp" />
     <ClInclude Include="pdfparser.document_reader.hpp" />
@@ -176,7 +176,7 @@
     <ClCompile Include="pdfparser.ipdffstream.cpp" />
     <ClCompile Include="pdfparser.ipdfstream.cpp" />
     <ClCompile Include="pdfparser.istream_extended.cpp" />
-    <ClCompile Include="pdfparser.object_pool.cpp" />
+    <ClCompile Include="pdfparser.object_cache.cpp" />
     <ClCompile Include="pdfparser.pdfcontents_builder.cpp" />
     <ClCompile Include="pdfparser.graphics_state_stack.cpp" />
     <ClCompile Include="pdfparser.object_not_found_error.cpp" />

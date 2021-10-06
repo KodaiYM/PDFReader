@@ -1,6 +1,6 @@
 #include "literal_trim.hpp"
 #include "pdfparser.ipdfstream.hpp"
-#include "pdfparser.object_pool.hpp"
+#include "pdfparser.object_cache.hpp"
 #include "take_dictionary_object_test.hpp"
 
 #include <sstream>

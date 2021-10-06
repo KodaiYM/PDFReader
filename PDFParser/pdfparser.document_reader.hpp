@@ -3,7 +3,7 @@
 #include "PDFReader.PDFPage.hpp"
 #include "pdfparser.document_error.hpp"
 #include "pdfparser.ipdfstream.hpp"
-#include "pdfparser.object_pool.hpp"
+#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_types.hpp"
 #include "pdfparser.space.hpp"
 #include "pdfparser.xref_types.hpp"

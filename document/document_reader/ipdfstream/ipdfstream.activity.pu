@@ -547,17 +547,17 @@ start
 @startuml dereference of reference
 partition "dereference<...ObjectTypes>(in reference : const indirect_reference&)" {
 start
-	if (!m_object_pool.contains(pair{reference.object_number, reference.generation_number})) then (y)
+	if (!m_object_cache.contains(pair{reference.object_number, reference.generation_number})) then (y)
 		if (m_xref_table.contains(reference.object_number, reference.generation_number) && m_xref_table.at(reference.object_number, reference.generation_number) は xref_inuse_entry) then (y)
 			:new_object = take_indirect_object(*this, m_xref_table.at(reference.object_number, reference.generation_number));
 		else
 			:new_object = null;
 		endif
 
-		:m_object_pool.add(pair{reference.object_number, reference.generation_number}, new_object);
+		:m_object_cache.add(pair{reference.object_number, reference.generation_number}, new_object);
 	endif
 
-	:object = m_object_pool.get(pair{reference.object_number, reference.generation_number});
+	:object = m_object_cache.get(pair{reference.object_number, reference.generation_number});
 	if (object が ObjectTypes のいずれかの型を持つ)
 		:return object;
 		stop

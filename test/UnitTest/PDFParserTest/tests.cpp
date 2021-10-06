@@ -8,7 +8,7 @@
 #include "pdfparser.istream_extended.cpp"
 #include "pdfparser.istream_extended_error.cpp"
 #include "pdfparser.object_not_found_error.cpp"
-#include "pdfparser.object_pool.cpp"
+#include "pdfparser.object_cache.cpp"
 #include "pdfparser.object_types.cpp"
 #include "pdfparser.page_parser.cpp"
 #include "pdfparser.page_tree_parser.cpp"

@@ -2,7 +2,7 @@
 hide empty members
 namespace pdfparser {
 class ipdfstream {
-	-m_object_pool : object_pool
+	-m_object_cache : object_cache
 	-m_xref_table : xref_table
 	+ipdfstream(inout sb : std::streambuf*)
 
@@ -28,7 +28,7 @@ class ipdfstream {
 
 	+add_xref_table(in referenced_xref_table : const xref_table&) : void
 
-	' from object_pool
+	' from object_cache
 	' NOTE: variant 版は必要になったら実装
 	+dereference<variant<...>>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
 	+dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
@@ -41,7 +41,7 @@ class ipdfstream {
 	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
 }
 ipdfstream --|> tokenizer
-ipdfstream *--> object_pool
+ipdfstream *--> object_cache
 ipdfstream --> xref_table
 ipdfstream ..> xref_types
 ipdfstream ..> object_types
@@ -56,8 +56,8 @@ class tokenizer {
 class xref_table {
 	[[xref_types.class.pu]]
 }
-class object_pool {
-	[[object_pool.class.pu]]
+class object_cache {
+	[[object_cache.class.pu]]
 }
 annotation xref_types <<(N, yellow) namespace>> {
 	[[xref_types.class.pu]]

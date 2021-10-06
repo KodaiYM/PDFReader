@@ -1,15 +1,15 @@
-@startuml object_pool
+@startuml object_cache
 hide empty members
 namespace pdfparser {
-class object_pool {
+class object_cache {
 	-m_object_map : unordered_map<pair<object_t, generation_t>, any_direct_object>
 
-	+object_pool()
+	+object_cache()
 	+contains(in object_id : const pair<object_t, generation_t>&) : bool
 	+get(in object_id : const pair<object_t, generation_t>&) : const any_direct_object&
 	+add(in object_id : pair<object_t, generation_t>, in object : any_direct_object) : void
 }
-object_pool --> object_types
+object_cache --> object_types
 
 annotation object_types <<(N, yellow) namespace>> {
 	[[object_types.class.pu]]
