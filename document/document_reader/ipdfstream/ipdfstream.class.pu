@@ -4,8 +4,8 @@ namespace pdfparser {
 class ipdfstream {
 	+ipdfstream(inout sb : std::streambuf*)
 
-	+take_footer()  : dictionary_object
-	+take_xref_table()                            : xref_table
+	+take_footer() : dictionary_object
+	+take_xref_table() : xref_table
 	+take_xref_entry(in object_number : object_t) : xref_entry
 	+take_trailer() : dictionary_object
 }

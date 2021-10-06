@@ -195,6 +195,15 @@
     <ClInclude Include="pdfparser.parse_error.hpp">
       <Filter>pdfparser\document_reader\ipdfstream\object_stream</Filter>
     </ClInclude>
+    <ClInclude Include="pdfparser.object_types.ipp">
+      <Filter>pdfparser\document_reader\ipdfstream\object_types</Filter>
+    </ClInclude>
+    <ClInclude Include="variant_cast.hpp">
+      <Filter>pdfparser</Filter>
+    </ClInclude>
+    <ClInclude Include="variant_cast.ipp">
+      <Filter>pdfparser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">

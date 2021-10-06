@@ -2,7 +2,7 @@
 hide empty members
 namespace pdfparser {
 class contents_parser {
-	-m_stream : ipdfstream&
+	-m_content_stream : ipdfstream&
 
 	+contents_parser(content_stream : ipdfstream&)
 	+get_contents() : PDFContents
@@ -10,7 +10,7 @@ class contents_parser {
 contents_parser ..> ipdfstream
 contents_parser ..> PDFContents
 
-class ipdfstream<InputStreamT> {
+class ipdfstream {
 	[[ipdfstream.class.pu]]
 }
 class PDFContents {

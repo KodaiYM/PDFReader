@@ -190,52 +190,6 @@ std::variant<ObjectTypes...> object_stream::take_object() {
 	throw object_not_found_error(
 	    object_not_found_error::specified_object_not_found);
 }
-
-template <class DictionaryObject>
-object_types::stream_object
-    object_stream::take_stream_object(DictionaryObject&& stream_dictionary) {
-	using namespace object_types;
-
-	static_assert(
-	    std::is_same_v<dictionary_object, std::decay_t<DictionaryObject>>);
-
-	if (!attempt_token("stream")) {
-		throw object_not_found_error(
-		    object_not_found_error::stream_object_not_found);
-	}
-
-	promise({"\r\n", "\n"});
-
-	const auto length_it = stream_dictionary.find("Length");
-	if (length_it == stream_dictionary.end()) {
-		throw parse_error(parse_error::stream_dictionary_absence_of_Length_entry);
-	}
-
-	const std::size_t stream_length =
-	    dereference<integer_object>(length_it->second);
-
-	std::string stream_data;
-	stream_data.reserve(stream_length);
-	for (std::size_t repeat_ = 0; repeat_ < stream_length; ++repeat_) {
-		try {
-			// HACK: stream_length
-			// バイト読み取り中に、Filterに対する明示的なEODマーカーが出現した場合にエラーにする
-			stream_data.push_back(get());
-		} catch (istream_extended_error&) {
-			throw parse_error(parse_error::stream_data_is_shorter_than_Length);
-		}
-	}
-	// at least one EOL is required
-	promise({"\r\n", "\n", "\r"});
-
-	// additional EOLs are permitted
-	ignore_if_present(whitespace_flags::EOL);
-
-	promise_token({"endstream"});
-
-	return stream_object{std::forward<DictionaryObject>(stream_dictionary),
-	                     std::move(stream_data)};
-}
 #pragma endregion // region stream_parser_template_definitions
 
 // definition of template member functions from old object_cache
@@ -271,7 +225,7 @@ std::variant<ObjectTypes...> object_stream::dereference(
 		    using ThisType = std::decay_t<decltype(concrete_object)>;
 
 		    if constexpr (std::is_same_v<indirect_reference, ThisType>) {
-			    return dereference_variant_fixed<ObjectTypes...>(concrete_object);
+			    return dereference_Variant_fixed<ObjectTypes...>(concrete_object);
 		    } else if constexpr ((... || std::is_same_v<ObjectTypes, ThisType>)) {
 			    return concrete_object;
 		    } else {
@@ -285,7 +239,7 @@ template <class... ObjectTypes,
           std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t>>
 std::variant<ObjectTypes...> object_stream::dereference(
     const object_types::indirect_reference& reference) {
-	return dereference_variant_fixed<ObjectTypes...>(reference);
+	return dereference_Variant_fixed<ObjectTypes...>(reference);
 }
 
 template <class ObjectType, class... ObjectTypesContainingRef,
@@ -311,7 +265,7 @@ template <class ObjectType,
                            std::nullptr_t>>
 ObjectType object_stream::dereference(
     const object_types::indirect_reference& reference) {
-	return std::get<ObjectType>(dereference_variant_fixed<ObjectType>(reference));
+	return std::get<ObjectType>(dereference_Variant_fixed<ObjectType>(reference));
 }
 
 template <class Variant, class... ObjectTypesContainingRef, std::size_t... Seq>
@@ -325,11 +279,12 @@ template <class Variant, std::size_t... Seq>
 Variant object_stream::dereference_Variant_impl(
     std::index_sequence<Seq...>,
     const object_types::indirect_reference& reference) {
-	return dereference<std::variant_alternative_t<Seq, Variant>...>(reference);
+	return dereference_Variant_fixed<std::variant_alternative_t<Seq, Variant>...>(
+	    reference);
 }
 
 template <class... ObjectTypes>
-std::variant<ObjectTypes...> object_stream::dereference_variant_fixed(
+std::variant<ObjectTypes...> object_stream::dereference_Variant_fixed(
     const object_types::indirect_reference& reference) {
 	using namespace object_types;
 	using namespace xref_types;

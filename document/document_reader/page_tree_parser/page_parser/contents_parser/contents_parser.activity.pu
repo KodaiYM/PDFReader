@@ -1,7 +1,7 @@
 @startuml contents_parser
 partition "contents_parser(stream : ipdfstream&)" {
 start
-	:m_stream = stream;
+	:m_content_stream = stream;
 stop
 }
 @enduml
@@ -12,9 +12,11 @@ start
 	:contents_builder : pdfcontents_builder;
 	:contents_operands : std::vector<any_direct_object>;
 	while (true) is (y)
-		:object = m_stream.take_object<any_direct_object>();
+		:before_take_object_pos = m_content_stream.tell();
+		:object = m_content_stream.take_object<any_direct_object>();
 		if (object_not_found_error が出た) then (y)
-			:contents_operator = m_stream.take_token();
+			:m_content_stream.seek(before_take_object_pos);
+			:contents_operator = m_content_stream.take_token();
 			if (!contents_operands.has_value()) then (y)
 				break
 			endif
@@ -41,31 +43,39 @@ start
 			case ("w")
 				:contents_builder.set_line_width(number_to_double(std::get<number_object>(contents_operands.at(0))));
 			case ("g")
-				:contents_builder.set_fill_color_gray(number_to_double(std::get<number_object>(contents_operands.at(0))));
+				:intensity = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:color = chroma::grayscale_color{intensity};
+				:contents_builder.set_fill_color(color);
 			case ("G")
-				:contents_builder.set_stroke_color_gray(number_to_double(std::get<number_object>(contents_operands.at(0))));
+				:intensity = number_to_double(std::get<number_object>(contents_operands.at(0)));
+				:color = chroma::grayscale_color{intensity};
+				:contents_builder.set_stroke_color(color);
 			case ("k")
 				:cyan = number_to_double(std::get<number_object>(contents_operands.at(0)));
 				:megenta = number_to_double(std::get<number_object>(contents_operands.at(1)));
 				:yellow = number_to_double(std::get<number_object>(contents_operands.at(2)));
 				:black = number_to_double(std::get<number_object>(contents_operands.at(3)));
-				:contents_builder.set_fill_color_cmyk(cyan, megenta, yellow, black);
+				:color = chroma::cmyk_color{cyan, megenta, yellow, black};
+				:contents_builder.set_fill_color(color);
 			case ("K")
 				:cyan = number_to_double(std::get<number_object>(contents_operands.at(0)));
 				:megenta = number_to_double(std::get<number_object>(contents_operands.at(1)));
 				:yellow = number_to_double(std::get<number_object>(contents_operands.at(2)));
 				:black = number_to_double(std::get<number_object>(contents_operands.at(3)));
-				:contents_builder.set_stroke_color_cmyk(cyan, megenta, yellow, black);
+				:color = chroma::cmyk_color{cyan, megenta, yellow, black};
+				:contents_builder.set_stroke_color(color);
 			case ("rg")
 				:red = number_to_double(std::get<number_object>(contents_operands.at(0)));
 				:green = number_to_double(std::get<number_object>(contents_operands.at(1)));
 				:blue = number_to_double(std::get<number_object>(contents_operands.at(2)));
-				:contents_builder.set_fill_color_rgb(red, green, blue);
+				:color = chroma::rgb_color{red, green, blue};
+				:contents_builder.set_fill_color(color);
 			case ("RG")
 				:red = number_to_double(std::get<number_object>(contents_operands.at(0)));
 				:green = number_to_double(std::get<number_object>(contents_operands.at(1)));
 				:blue = number_to_double(std::get<number_object>(contents_operands.at(2)));
-				:contents_builder.set_stroke_color_rgb(red, green, blue);
+				:color = chroma::rgb_color{red, green, blue};
+				:contents_builder.set_stroke_color(color);
 			case ("BT")
 				:contents_builder.begin_text();
 			case ("Tc")

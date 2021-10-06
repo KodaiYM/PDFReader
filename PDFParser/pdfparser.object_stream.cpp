@@ -339,6 +339,48 @@ object_types::stream_object object_stream::take_stream_object() {
 	}
 	return take_stream_object(std::move(stream_dictionary));
 }
+
+object_types::stream_object object_stream::take_stream_object(
+    object_types::dictionary_object stream_dictionary) {
+	using namespace object_types;
+
+	if (!attempt_token("stream")) {
+		throw object_not_found_error(
+		    object_not_found_error::stream_object_not_found);
+	}
+
+	promise({"\r\n", "\n"});
+
+	const auto length_it = stream_dictionary.find("Length");
+	if (length_it == stream_dictionary.end()) {
+		throw parse_error(parse_error::stream_dictionary_absence_of_Length_entry);
+	}
+
+	const std::size_t stream_length =
+	    dereference<integer_object>(length_it->second);
+
+	std::string stream_data;
+	stream_data.reserve(stream_length);
+	for (std::size_t repeat_ = 0; repeat_ < stream_length; ++repeat_) {
+		try {
+			// HACK: stream_length
+			// バイト読み取り中に、Filterに対する明示的なEODマーカーが出現した場合にエラーにする
+			stream_data.push_back(get());
+		} catch (istream_extended_error&) {
+			throw parse_error(parse_error::stream_data_is_shorter_than_Length);
+		}
+	}
+	// at least one EOL is required
+	promise({"\r\n", "\n", "\r"});
+
+	// additional EOLs are permitted
+	ignore_if_present(whitespace_flags::EOL);
+
+	promise_token({"endstream"});
+
+	return stream_object{std::move(stream_dictionary), std::move(stream_data)};
+}
+
 object_types::null_object object_stream::take_null_object() {
 	if (attempt_token("null")) {
 		return object_types::null;

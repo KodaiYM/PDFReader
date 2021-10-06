@@ -8,8 +8,8 @@ abstract pdfcontents_builder {
 	+set_line_cap_style(line_cap_style : line_style::cap_type) : void
 	+set_miter_limit(miter_limit : double) : void
 	+set_line_width(line_width : double) : void
-	+set_fill_color_gray(fill_color : color) : void
-	+set_stroke_color_gray(stroke_color : color) : void
+	+set_fill_color(fill_color : color) : void
+	+set_stroke_color(stroke_color : color) : void
 	+set_character_spacing(character_spacing : double) : void
 	+set_leading(leading : double) : void
 	+set_text_rendering_mode(text_rendering_mode : text_style::rendering_mode) : void

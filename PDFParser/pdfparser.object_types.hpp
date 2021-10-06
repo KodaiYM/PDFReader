@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pdfparser.xref_types.hpp"
+#include "type_traits_extended.hpp"
 
 #include <cassert>
 #include <functional>
@@ -152,7 +153,31 @@ private:
 	using base = std::vector<any_direct_object_or_ref>;
 
 public:
+	template <class Variant,
+	          std::enable_if_t<is_same_template_v<std::variant, Variant>,
+	                           std::nullptr_t> = nullptr>
+	operator std::vector<Variant>();
+
+	template <class... ObjectTypes, std::enable_if_t<sizeof...(ObjectTypes) >= 2,
+	                                                 std::nullptr_t> = nullptr>
+	operator std::vector<std::variant<ObjectTypes...>>();
+
+	template <class ObjectType,
+	          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
+	                           std::nullptr_t> = nullptr>
+	operator std::vector<ObjectType>();
+
+public:
 	using base::base;
+
+private:
+	template <class Variant, std::size_t... Seq>
+	std::vector<Variant>
+	    operator_vector_Variant_impl(std::index_sequence<Seq...>);
+
+	template <class... ObjectTypes>
+	std::vector<std::variant<ObjectTypes...>>
+	    operator_vector_Variant_fixed() const&;
 };
 class dictionary_object
     : public std::unordered_map<name_object, non_null_direct_object_or_ref> {
@@ -193,38 +218,4 @@ struct indirect_reference {
 constexpr null_object null;
 } // namespace pdfparser::object_types
 
-// definition of inline functions
-namespace pdfparser::object_types {
-bool stream_object::operator==(const stream_object& rhs) const noexcept {
-	return std::tie(m_stream_dictionary, m_encoded_data, m_decoded_data) ==
-	       std::tie(rhs.m_stream_dictionary, rhs.m_encoded_data,
-	                rhs.m_decoded_data);
-}
-bool stream_object::operator!=(const stream_object& rhs) const noexcept {
-	return !(*this == rhs);
-}
-constexpr bool null_object::operator==(const null_object&) const noexcept {
-	return true;
-}
-constexpr bool null_object::operator!=(const null_object& rhs) const noexcept {
-	return !(*this == rhs);
-}
-constexpr bool indirect_reference::operator==(
-    const indirect_reference& rhs) const noexcept {
-	return std::tie(object_number, generation_number) ==
-	       std::tie(rhs.object_number, rhs.generation_number);
-}
-constexpr bool indirect_reference::operator!=(
-    const indirect_reference& rhs) const noexcept {
-	return !(*this == rhs);
-}
-} // namespace pdfparser::object_types
-
-// definition of template functions
-namespace pdfparser::object_types {
-template <class DictionaryT, class DataT>
-stream_object::stream_object(DictionaryT&& stream_dictionary,
-                             DataT&&       encoded_data)
-    : m_stream_dictionary(std::forward<DictionaryT>(stream_dictionary)),
-      m_encoded_data(std::forward<DataT>(encoded_data)) {}
-} // namespace pdfparser::object_types
+#include "pdfparser.object_types.ipp"

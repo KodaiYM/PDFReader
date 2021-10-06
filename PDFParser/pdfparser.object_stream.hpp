@@ -195,9 +195,8 @@ public:
 	/// take stream object (optimized version for successive calls to
 	/// take_stream_object and take_dictionary_object)
 	/// </summary>
-	template <class DictionaryObject>
 	object_types::stream_object
-	    take_stream_object(DictionaryObject&& stream_dictionary);
+	    take_stream_object(object_types::dictionary_object stream_dictionary);
 
 	/// <summary>
 	/// take null object
@@ -397,7 +396,7 @@ private:
 	    const object_types::indirect_reference& reference);
 
 	template <class... ObjectTypes>
-	std::variant<ObjectTypes...> dereference_variant_fixed(
+	std::variant<ObjectTypes...> dereference_Variant_fixed(
 	    const object_types::indirect_reference& reference);
 };
 
