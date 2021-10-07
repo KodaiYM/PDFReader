@@ -1,11 +1,11 @@
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.object_stream.hpp"
 #include "take_boolean_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace object_stream_test;
 
 void take_boolean_object_test::test_true() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -13,9 +13,9 @@ void take_boolean_object_test::test_true() {
 
 	stream << "true";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_boolean_object();
+	auto object = obj_stream.take_boolean_object();
 	Assert::IsTrue(true == object);
 }
 void take_boolean_object_test::test_false() {
@@ -24,8 +24,8 @@ void take_boolean_object_test::test_false() {
 
 	stream << "false";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_boolean_object();
+	auto object = obj_stream.take_boolean_object();
 	Assert::IsTrue(false == object);
 }

@@ -1,0 +1,20 @@
+@startuml line_style
+hide empty members
+namespace pdfparser::line_style {
+enum cap_type <<enumeration>> {
+	<<Const>>
+	+{static} butt   = 0
+	+{static} round  = 1
+	+{static} square = 2
+}
+class dash_pattern_type {
+	+pattern_array : vector<double>
+	+start_phase   : double
+}
+enum join_type <<enumeration>> {
+	+{static} miter = 0
+	+{static} round = 1
+	+{static} bevel = 2
+}
+}
+@enduml

@@ -1,0 +1,28 @@
+@startuml ipdfstream
+hide empty members
+namespace pdfparser {
+enum object_not_found_error::error_code <<Enumeration>> {
+	<<Const>>
+	+{static} boolean_object_not_found     : int = 0
+	+{static} integer_object_not_found     : int = 1
+	+{static} real_object_not_found        : int = 2
+	+{static} string_object_not_found      : int = 3
+	+{static} name_object_not_found        : int = 4
+	+{static} array_object_not_found       : int = 5
+	+{static} dictionary_object_not_found  : int = 6
+	+{static} stream_object_not_found      : int = 7
+	+{static} null_object_not_found        : int = 8
+	+{static} indirect_reference_not_found : int = 9
+	+{static} any_object_not_found         : int = 10
+}
+class object_not_found_error {
+	+enum error_code
+	-m_error_code : const error_code
+
+	+object_not_found_error(in er_code : error_code)
+	+code() : error_code
+}
+object_not_found_error --|> std::runtime_error
+object_not_found_error --> "1" object_not_found_error::error_code
+}
+@enduml

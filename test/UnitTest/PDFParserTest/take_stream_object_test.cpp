@@ -1,13 +1,14 @@
 #include "literal_trim.hpp"
-#include "pdfparser.object_pool.hpp"
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.object_cache.hpp"
+#include "pdfparser.object_stream.hpp"
+#include "pdfparser.parse_error.hpp"
 #include "take_stream_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace object_stream_test;
 
 void take_stream_object_test::test_sample_CRLF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -18,9 +19,8 @@ void take_stream_object_test::test_sample_CRLF() {
 	       << " stream contents \n\n"
 	       << "endstream";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_stream_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_stream_object();
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
 	                             " stream contents \n"} == object);
 }
@@ -33,9 +33,8 @@ void take_stream_object_test::test_sample_LF() {
 	       << " stream contents \n\n"
 	       << "endstream";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_stream_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_stream_object();
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
 	                             " stream contents \n"} == object);
 }
@@ -61,12 +60,11 @@ endobj
 )"_trimmed;
 
 	stream.seekg(beginning_of_stream);
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	obj_pool.add_xref_table(
+	object_stream obj_stream(stream.rdbuf());
+	obj_stream.add_xref_table(
 	    xref_types::xref_table{xref_types::xref_inuse_entry{1, 0, 0}});
 
-	auto object = str_parser.take_stream_object(obj_pool);
+	auto object = obj_stream.take_stream_object();
 	Assert::IsTrue(
 	    stream_object{dictionary_object{{"Length", indirect_reference{1, 0}}},
 	                  " stream contents "} == object);
@@ -82,10 +80,9 @@ stream
 endstream
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_stream_object(obj_pool);
+		obj_stream.take_stream_object();
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::stream_dictionary_absence_of_Length_entry ==
 		               parse_e.code());
@@ -106,10 +103,9 @@ stream
 endstream
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_stream_object(obj_pool);
+		obj_stream.take_stream_object();
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::stream_data_is_shorter_than_Length ==
 		               parse_e.code());

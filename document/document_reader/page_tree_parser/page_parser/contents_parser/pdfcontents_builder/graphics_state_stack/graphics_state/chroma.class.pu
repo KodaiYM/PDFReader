@@ -1,0 +1,25 @@
+@startuml chroma
+hide empty members
+namespace pdfparser::chroma {
+class rgb_color {
+	+red   : double
+	+green : double
+	+blue : double
+}
+class cmyk_color {
+	+cyan    : double
+	+magenta : double
+	+yellow  : double
+	+black   : double
+}
+class grayscale_color {
+	+intensity : double
+}
+}
+annotation pdfparser::chroma<<(N, yellow) namespace>> {
+	+{static} rgb_black       : rgb_color  = {0, 0, 0}
+	+{static} cmyk_black      : cmyk_color = {0, 0, 0, 1}
+	+{static} grayscale_black : grayscale_color = {0}
+	+color : typedef = variant<rgb_color, cmyk_color, grayscale_color>
+}
+@enduml

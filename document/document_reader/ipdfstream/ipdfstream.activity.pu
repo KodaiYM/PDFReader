@@ -1,0 +1,93 @@
+@startuml ipdfstream
+partition "ipdfstream(inout sb : std::streambuf*)" {
+start
+	:object_stream(sb);
+stop
+}
+@enduml
+
+@startuml take_footer
+partition "take_footer()" {
+start
+	:seek_to_end();
+	:seek_forward_head_of_line();
+	:seek_forward_head_of_line();
+	:seek_forward_head_of_line();
+
+	' startxref
+	:promise_token("startxref");
+
+	' xref バイトオフセット
+	:xref_byte_offset = take_integer_object() : std::streamoff;
+
+	' %%EOF
+	:promise({"\r\n", "\n", "\r"});
+	:promise("%%EOF");
+
+	' Cross Reference Table
+	:seek(xref_byte_offset);
+	:xref_table = take_xref_table();
+
+	' Trailer
+	:add_xref_table(xref_table);
+	:return take_trailer();
+stop
+}
+@enduml
+
+@startuml take_xref_table
+partition "take_xref_table()" {
+start
+	:this_xref_table : xref_table;
+	:promise_token("xref");
+
+	:first_object_number = take_integer_object() : object_t;
+	:number_of_entries = take_integer_object() : object_t;
+
+	if (first_object_number + number_of_entries - 1 がオーバーフロー) then (y)
+		:throw std::overflow_error("overflow");
+		stop
+	endif
+
+	:entry_offset = 0 : object_t;
+	while (entry_offset < number_of_entries)
+		:this_xref_table.insert(take_xref_entry(first_object_number + entry_offset));
+		:++number_of_entries;
+	endwhile
+	:return this_xref_table;
+stop
+}
+@enduml
+
+@startuml take_xref_entry
+partition "take_xref_entry(in object_number : object_t)" {
+start
+	:first_integer = take_integer_object();
+	:second_integer = take_integer_object() : generation_t;
+
+	:keyword = take_token();
+
+	if ("n" == keyword) then (y)
+		:byte_offset = first_10_digitsを decltype(this_xref_entry.byte_offset) 型の整数に変換;
+		:return xref_inuse_entry{object_number, generation_number, byte_offset};
+	elseif ("f" == keyword)
+		:next_free_object_number = first_10_digitsを object_t 型の整数に変換;
+		:return xref_free_entry{object_number, generation_number, next_free_object_number};
+	else
+		:throw parse_error(xref_entry_keyword_invalid);
+		stop
+	endif
+stop
+}
+@enduml
+
+@startuml take_trailer
+partition "take_trailer()" {
+start
+	:promise_token("trailer");
+
+	:trailer_dictionary = take_dictionary_object();
+	:return trailer_dictionary;
+stop
+}
+@enduml

@@ -1,0 +1,54 @@
+@startuml build
+partition "build()" {
+start
+	:return gcnew PDFContents();
+stop
+}
+@enduml
+
+@startuml concat_CTM
+partition "concat_CTM(concat_matrix : const AffineMatrix&)" {
+start
+	:m_graphics_states.top().current_transformation_matrix *= concat_matrix;
+stop
+}
+@enduml
+
+@startuml set_text_matrices
+partition "set_text_matrices(next_line_x : double, next_line_y : double)" {
+start
+	:m_text_matrix = m_text_line_matrix = AffineMatrix(1, 0, 0, 1, next_line_x, next_line_y);
+stop
+}
+@enduml
+
+@startuml concat_text_matrices
+partition "concat_text_matrices(next_line_offset_x : double, next_line_offset_y : double)" {
+start
+	:m_text_matrix = m_text_line_matrix = AffineMatrix(1, 0, 0, 1, next_line_offset_x, next_line_offset_y) * m_text_line_matrix;
+stop
+}
+@enduml
+
+@startuml move_to_next_line
+partition "move_to_next_line()" {
+start
+	:concat_text_matrices(0, -m_graphics_states.top().leading);
+stop
+}
+@enduml
+
+@startuml begin_text
+partition "begin_text()" {
+start
+	:m_text_matrix = m_text_line_matrix = AffineMatrix::Identity();
+stop
+}
+@enduml
+
+@startuml end_text
+partition "end_text()" {
+start
+stop
+}
+@enduml

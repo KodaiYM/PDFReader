@@ -2,7 +2,7 @@
 
 #include "testtool.h"
 
-namespace stream_parser_test::take_object_test {
+namespace object_stream_test {
 [TestClass] public ref class take_hexadecimal_string_test {
 public:
 	[TestMethod] void test_mix_letters();
@@ -11,4 +11,4 @@ public:
 	[TestMethod] void test_non_hexadecimal_digit_found();
 	[TestMethod] void test_lack_of_greater_than_sign();
 };
-} // namespace stream_parser_test::take_object_test
+} // namespace object_stream_test

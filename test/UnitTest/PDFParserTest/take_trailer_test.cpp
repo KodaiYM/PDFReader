@@ -1,13 +1,13 @@
 #include "literal_trim.hpp"
-#include "pdfparser.object_pool.hpp"
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.object_cache.hpp"
 #include "take_trailer_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test;
+using namespace ipdfstream_test;
 
 void take_trailer_test::test_sample_trailer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -23,20 +23,18 @@ trailer
 	>>
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	// check if no-throw
-	str_parser.take_trailer(obj_pool);
+	str_parser.take_trailer();
 }
 void take_trailer_test::test_no_white_space_after_keyword_trailer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 	stream << "trailer<<>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	// check if no-throw
-	str_parser.take_trailer(obj_pool);
+	str_parser.take_trailer();
 }

@@ -21,21 +21,21 @@ void tell_test::test_MIX_EOL() {
 	stream.ignore();
 	stream.ignore();
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	Assert::IsTrue(6 == str_extended.tell());
 }
 void tell_test::test_tell_at_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	Assert::IsTrue(0 == str_extended.tell());
 }
 void tell_test::test_tell_with_eofbit_ON() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	(void)str_extended.eof(); // setstate std::ios_base::eofbit
 	Assert::IsTrue(0 == str_extended.tell());
 }

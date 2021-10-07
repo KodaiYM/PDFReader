@@ -1,0 +1,18 @@
+@startuml space
+hide empty members
+namespace pdfparser {
+class Coordinates {
+	+x : double
+	+y : double
+}
+class RectangleData<<struct>> {
+	+less_coordinates    : Coordinates
+	+greater_coordinates : Coordinates
+
+	+RectangleData(diagonal_coordinate1 : Coordinates, diagonal_coordinate2 : Coordinates)
+}
+class AffineMatrix {
+	-m_matrix : Matrix3d
+}
+}
+@enduml

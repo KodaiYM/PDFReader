@@ -15,7 +15,7 @@ void seek_forward_head_of_line_test::test_beginning_of_file() {
 	                         std::ios_base::binary);
 	stream << "abc\ndef";
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	try {
 		str_extended.seek_forward_head_of_line();
 	} catch (istream_extended_error& parse_e) {
@@ -50,7 +50,7 @@ void seek_forward_head_of_line_test::test_beginning_of_line() {
 	stream << "ghi\n";
 	stream.seekg(head_of_ghi);
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -74,7 +74,7 @@ void seek_forward_head_of_line_test::test_middle_of_line() {
 	stream << "f\n";
 	stream.seekg(middle_of_def);
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -90,7 +90,7 @@ void seek_forward_head_of_line_test::test_CR_only() {
 	stream << "\r";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -106,7 +106,7 @@ void seek_forward_head_of_line_test::test_LF_only() {
 	stream << "\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -122,7 +122,7 @@ void seek_forward_head_of_line_test::test_CRLF_only() {
 	stream << "\r\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -138,7 +138,7 @@ void seek_forward_head_of_line_test::test_CR() {
 	stream << "xxx\r";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -154,7 +154,7 @@ void seek_forward_head_of_line_test::test_LF() {
 	stream << "xxx\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -170,7 +170,7 @@ void seek_forward_head_of_line_test::test_CRLF() {
 	stream << "xxx\r\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -188,7 +188,7 @@ void seek_forward_head_of_line_test::test_CR_CRCR() {
 	stream << "\r";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -206,7 +206,7 @@ void seek_forward_head_of_line_test::test_CR_LFCR() {
 	stream << "\r";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -224,7 +224,7 @@ void seek_forward_head_of_line_test::test_LF_LFLF() {
 	stream << "\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -242,7 +242,7 @@ void seek_forward_head_of_line_test::test_CRLF_CRCRLF() {
 	stream << "\r\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }
@@ -260,7 +260,7 @@ void seek_forward_head_of_line_test::test_CRLF_LFCRLF() {
 	stream << "\r\n";
 	stream.seekg(stream.tellp());
 
-	istream_extended str_extended(std::move(stream));
+	istream_extended str_extended(stream.rdbuf());
 	str_extended.seek_forward_head_of_line();
 	Assert::IsTrue(expected == str_extended.tell());
 }

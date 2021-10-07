@@ -1,0 +1,57 @@
+@startuml overview
+hide empty members
+class document_reader {}
+document_reader *--> page_tree_parser
+document_reader o--> ipdfstream
+
+class page_tree_parser {}
+page_tree_parser *--> page_parser
+page_tree_parser o--> ipdfstream
+
+class page_parser {}
+page_parser *--> contents_parser
+page_parser o--> ipdfstream
+
+class contents_parser {}
+contents_parser o--> ipdfstream
+
+
+' PDF入力ストリーム
+class ipdffstream {
+	PDFファイルストリーム
+}
+ipdffstream --|> ipdfstream
+ipdffstream --|> std::ifstream
+
+std::ifstream --|> std::istream
+
+class ipdfstringstream {
+	PDF文字列ストリーム
+}
+ipdfstringstream --|> ipdfstream
+ipdfstringstream --|> std::istringstream
+
+std::istringstream --|> std::istream
+
+class ipdfstream {
+	トークン取得
+	PDFオブジェクト取得
+}
+ipdfstream *-- object_cache
+ipdfstream --|> tokenizer
+tokenizer --|> istream_extended
+istream_extended --|> std::istream
+
+' メンバー追加要素
+document_reader *--> dictionary_object : "トレーラー辞書"
+page_tree_parser *--> dictionary_object : "ルート辞書"
+page_parser *--> dictionary_object : "ページ辞書"
+ipdfstream *-- xref_table
+class tokenizer {
+	トークン取得
+}
+
+class istream_extended {
+	std::istream の機能拡張
+}
+@enduml

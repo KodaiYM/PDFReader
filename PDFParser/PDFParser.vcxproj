@@ -82,6 +82,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/D DLLTEST_EXPORT /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -95,6 +96,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/D DLLTEST_EXPORT /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -108,6 +110,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/D DLLTEST_EXPORT /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -121,6 +124,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/D DLLTEST_EXPORT /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -128,34 +132,65 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="character_types.hpp" />
-    <ClInclude Include="PDFParser.PagesModel.hpp" />
+    <ClInclude Include="pdfparser.ipdffstream.hpp" />
+    <ClInclude Include="pdfparser.contents_parser.hpp" />
+    <ClCompile Include="pdfparser.contents_parser.cpp" />
+    <ClCompile Include="pdfparser.document_reader.cpp" />
+    <ClInclude Include="pdfparser.graphics_state_stack.hpp" />
+    <ClInclude Include="pdfparser.chroma.hpp" />
+    <ClInclude Include="pdfparser.graphics_state.hpp" />
+    <ClInclude Include="pdfparser.ipdfstringstream.hpp" />
+    <ClInclude Include="pdfparser.line_style.hpp" />
+    <ClInclude Include="pdfparser.object_stream.hpp" />
+    <ClInclude Include="pdfparser.object_stream.ipp" />
+    <ClInclude Include="pdfparser.object_types.ipp" />
+    <ClInclude Include="pdfparser.page_parser.hpp" />
+    <ClCompile Include="pdfparser.ipdfstringstream.cpp" />
+    <ClCompile Include="pdfparser.object_stream.cpp" />
+    <ClCompile Include="pdfparser.page_parser.cpp" />
+    <ClInclude Include="pdfparser.page_tree_parser.hpp" />
+    <ClCompile Include="pdfparser.page_tree_parser.cpp" />
+    <ClInclude Include="pdfparser.pdfcontents_builder.hpp" />
+    <ClInclude Include="pdfparser.pdfpage_builder.hpp" />
+    <ClInclude Include="pdfparser.space.hpp" />
+    <ClInclude Include="pdfparser.text_style.hpp" />
+    <ClInclude Include="PDFReader.PagesModel.hpp" />
+    <ClInclude Include="PDFReader.PDFContents.hpp" />
     <ClInclude Include="type_traits_extended.hpp" />
-    <ClInclude Include="pdfparser.data_types.hpp" />
     <ClInclude Include="pdfparser.document_error.hpp" />
     <ClInclude Include="pdfparser.object_not_found_error.hpp" />
     <ClInclude Include="pdfparser.istream_extended_error.hpp" />
     <ClInclude Include="pdfparser.istream_extended.hpp" />
-    <ClInclude Include="pdfparser.object_pool.hpp" />
+    <ClInclude Include="pdfparser.object_cache.hpp" />
     <ClInclude Include="pdfparser.parse_error.hpp" />
     <ClInclude Include="pdfparser.object_types.hpp" />
-    <ClInclude Include="pdfparser.document_parser.hpp" />
-    <ClInclude Include="PDFParser.PDFPage.hpp" />
+    <ClInclude Include="pdfparser.document_reader.hpp" />
+    <ClInclude Include="PDFReader.PDFPage.hpp" />
     <ClInclude Include="pdfparser.xref_types.hpp" />
     <ClInclude Include="pdfparser.pdftoken.hpp" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="pdfparser.stream_parser.hpp" />
+    <ClInclude Include="pdfparser.ipdfstream.hpp" />
     <ClInclude Include="pdfparser.whitespace_flags.hpp" />
     <ClInclude Include="pdfparser.tokenizer.hpp" />
     <ClInclude Include="pdfparser.tokenize_error.hpp" />
+    <ClInclude Include="variant_cast.hpp" />
+    <ClInclude Include="variant_cast.ipp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="pdfparser.data_types.cpp" />
+    <ClCompile Include="pdfparser.ipdffstream.cpp" />
+    <ClCompile Include="pdfparser.ipdfstream.cpp" />
+    <ClCompile Include="pdfparser.istream_extended.cpp" />
+    <ClCompile Include="pdfparser.object_cache.cpp" />
+    <ClCompile Include="pdfparser.pdfcontents_builder.cpp" />
+    <ClCompile Include="pdfparser.graphics_state_stack.cpp" />
     <ClCompile Include="pdfparser.object_not_found_error.cpp" />
-    <ClCompile Include="PDFParser.PagesModel.cpp" />
+    <ClCompile Include="pdfparser.pdfpage_builder.cpp" />
+    <ClCompile Include="pdfparser.space.cpp" />
+    <ClCompile Include="pdfparser.tokenizer.cpp" />
+    <ClCompile Include="PDFReader.PagesModel.cpp" />
     <ClCompile Include="pdfparser.parse_error.cpp" />
     <ClCompile Include="pdfparser.istream_extended_error.cpp" />
-    <ClCompile Include="pdfparser.document_parser.cpp" />
     <ClCompile Include="pdfparser.pdftoken.cpp" />
     <ClCompile Include="pdfparser.xref_types.cpp" />
     <ClCompile Include="pdfparser.tokenize_error.cpp" />

@@ -1,0 +1,32 @@
+@startuml ipdfstream
+hide empty members
+namespace pdfparser {
+class istream_extended {
+	+istream_extended(inout sb : std::streambuf*)
+
+	+peek() : optional<char>
+	+get()  : char
+	+eof()  : bool
+
+	+tell()                                : std::streamoff
+	+seek(in byte_offset : std::streamoff) : void
+	+seek_to_end()                         : void
+	+seek_forward_head_of_line()           : void
+	+operator++()                          : istream_extended&
+
+	+ignore_if_present(in flags : whitespace_flags)           : void
+	+attempt(in attempt_str : string_view)                    : bool
+	+promise(in promise_list : initializer_list<string_view>) : void
+}
+istream_extended --|> std::istream
+istream_extended ..> whitespace_flags
+istream_extended ..> istream_extended_error
+
+enum whitespace_flags <<Enumeration>> {
+	[[whitespace_flags.class.pu]]
+}
+class istream_extended_error {
+	[[istream_extended_error.class.pu]]
+}
+}
+@enduml

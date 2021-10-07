@@ -1,13 +1,13 @@
 #include "literal_trim.hpp"
-#include "pdfparser.object_pool.hpp"
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.object_cache.hpp"
 #include "take_footer_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test;
+using namespace ipdfstream_test;
 
 void take_footer_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -26,11 +26,10 @@ startxref
 %%EOF
 )";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
-	               str_parser.take_footer(obj_pool));
+	               str_parser.take_footer());
 }
 void take_footer_test::test_EOF_EOF_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -49,11 +48,10 @@ startxref
 %%EOF)";
 	stream << "\r\n";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
-	               str_parser.take_footer(obj_pool));
+	               str_parser.take_footer());
 }
 void take_footer_test::test_EOF_EOF_only() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -71,11 +69,10 @@ startxref
 0
 %%EOF)";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
-	               str_parser.take_footer(obj_pool));
+	               str_parser.take_footer());
 }
 
 void take_footer_test::test_xref_byte_offset_not_found() {
@@ -85,11 +82,10 @@ void take_footer_test::test_xref_byte_offset_not_found() {
 	stream << "startxref\r\n"
 	       << "%%EOF\n";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	try {
-		str_parser.take_footer(obj_pool);
+		str_parser.take_footer();
 	} catch (const istream_extended_error& istr_ext_e) {
 		Assert::IsTrue(
 		    istream_extended_error::failed_to_seek_forward_head_of_line ==
@@ -122,11 +118,10 @@ trailer
 )"_trimmed
 	       << '\n';
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
-	               str_parser.take_footer(obj_pool));
+	               str_parser.take_footer());
 }
 void take_footer_test::test_xref_SP_xref_comment_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -147,9 +142,8 @@ startxref
 %%EOF
 )";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	ipdfstream str_parser(stream.rdbuf());
 
 	Assert::IsTrue(object_types::dictionary_object{{"Size", 1}} ==
-	               str_parser.take_footer(obj_pool));
+	               str_parser.take_footer());
 }

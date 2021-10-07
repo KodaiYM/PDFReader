@@ -1,13 +1,14 @@
 #include "literal_trim.hpp"
-#include "pdfparser.object_pool.hpp"
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.object_cache.hpp"
+#include "pdfparser.object_stream.hpp"
+#include "pdfparser.parse_error.hpp"
 #include "take_array_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace object_stream_test;
 
 void take_array_object_test::test_simple_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -15,9 +16,8 @@ void take_array_object_test::test_simple_array() {
 
 	stream << "[1 2 3]";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_array_object();
 	Assert::IsTrue(array_object{1, 2, 3} == object);
 }
 void take_array_object_test::test_valid_array() {
@@ -40,9 +40,8 @@ void take_array_object_test::test_valid_array() {
 ]
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_array_object();
 
 	Assert::IsTrue(
 	    array_object{
@@ -66,9 +65,8 @@ void take_array_object_test::test_empty_array() {
 
 	stream << "[]";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_array_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_array_object();
 	Assert::IsTrue(array_object{} == object);
 }
 void take_array_object_test::test_lack_of_right_square_bracket() {
@@ -77,10 +75,9 @@ void take_array_object_test::test_lack_of_right_square_bracket() {
 
 	stream << "[0 1 2";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_array_object(obj_pool);
+		obj_stream.take_array_object();
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::array_lack_of_right_square_bracket ==
 		               parse_e.code());

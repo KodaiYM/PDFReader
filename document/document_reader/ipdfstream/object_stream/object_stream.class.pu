@@ -1,0 +1,74 @@
+@startuml object_stream
+hide empty members
+namespace pdfparser {
+class object_stream {
+	-m_object_cache : object_cache
+	-m_xref_table : xref_table
+	+object_stream(inout sb : std::streambuf*)
+
+	+take_object<variant<...>>() : variant<...>
+	+take_object<...ObjectTypes>() : variant<ObjectTypes...>
+	+take_boolean_object    () : boolean_object
+	+take_integer_object    () : integer_object
+	+take_real_object       () : real_object
+	+take_string_object     () : string_object
+	+take_name_object       () : name_object
+	+take_array_object      () : array_object
+	+take_dictionary_object () : dictionary_object
+	+take_stream_object     () : stream_object
+	+take_null_object       () : null_object
+	+take_indirect_reference() : indirect_reference
+
+	+take_indirect_object(in object_info : const xref_inuse_entry&) : any_direct_object
+
+	+add_xref_table(in referenced_xref_table : const xref_table&) : void
+
+	' from object_cache
+	' NOTE: variant 版は必要になったら実装
+	+dereference<variant<...>>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
+	+dereference<...ObjectTypes>(in object : const std::variant<...ObjectTypesContainingRef>&) : variant<ObjectTypes...>
+
+	' NOTE: variant 版は必要になったら実装
+	+dereference<variant<...>>  (in reference : const indirect_reference&) : variant<...>
+	+dereference<...ObjectTypes>(in reference : const indirect_reference&) : variant<ObjectTypes...>
+
+	+dereference<ObjectType>(in reference : const std::variant<...ObjectTypesContainingRef>&) : Object
+	+dereference<ObjectType>(in reference : const indirect_reference&) : Object
+}
+object_stream --|> tokenizer
+object_stream *--> object_cache
+object_stream *--> xref_table
+object_stream ..> xref_types
+object_stream ..> object_types
+object_stream ..> parse_error
+object_stream ..> object_not_found_error
+object_stream ..> type_mismatch
+
+
+class tokenizer {
+	[[tokenizer.class.pu]]
+}
+class xref_table {
+	[[xref_types.class.pu]]
+}
+class object_cache {
+	[[object_cache.class.pu]]
+}
+annotation xref_types <<(N, yellow) namespace>> {
+	[[xref_types.class.pu]]
+}
+annotation object_types <<(N, yellow) namespace>> {
+	[[object_types.class.pu]]
+}
+class parse_error {
+	[[parse_error.class.pu]]
+}
+class object_not_found_error {
+	[[object_not_found_error.class.pu]]
+}
+class type_mismatch {
+	+type_mismatch()
+}
+type_mismatch --|> std::runtime_error
+}
+@enduml

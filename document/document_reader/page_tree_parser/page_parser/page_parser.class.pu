@@ -1,0 +1,24 @@
+@startuml page_parser
+hide empty members
+namespace pdfparser {
+class page_parser {
+	-m_stream   : ipdfstream&
+	-m_page_object   : const dictionary_object&
+
+	+page_parser(stream : ipdfstream&, page_object : const dictionary_object&)
+	+get_page() : PDFPage
+}
+page_parser ..> ipdfstream
+page_parser ..> dictionary_object
+page_parser ..> PDFPage
+
+class ipdfstream {
+	[[ipdfstream.class.pu]]
+}
+class dictionary_object {
+	[[object_types.class.pu]]
+}
+class PDFPage {
+	[[PDFPage.class.pu]]
+}
+@enduml

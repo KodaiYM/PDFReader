@@ -1,13 +1,14 @@
 #include "literal_trim.hpp"
-#include "pdfparser.object_pool.hpp"
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.object_cache.hpp"
+#include "pdfparser.object_stream.hpp"
+#include "pdfparser.parse_error.hpp"
 #include "take_dictionary_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace object_stream_test;
 
 void take_dictionary_object_test::test_sample() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -27,9 +28,8 @@ void take_dictionary_object_test::test_sample() {
 >>
 )"_trimmed;
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_dictionary_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{
 	                   {"Type", name_object{"Example"}},              // these
 	                   {"SubType", name_object{"DictionaryExample"}}, // comments
@@ -51,9 +51,8 @@ void take_dictionary_object_test::test_empty() {
 
 	stream << "<<>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_dictionary_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{} == dictionary_object(object));
 }
 void take_dictionary_object_test::test_null_value() {
@@ -62,9 +61,8 @@ void take_dictionary_object_test::test_null_value() {
 
 	stream << "<</key null /key2 null /key3 (string) /key4 null>>";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
-	auto          object = str_parser.take_dictionary_object(obj_pool);
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{{"key3", string_object{"string"}}} ==
 	               object);
 }
@@ -74,10 +72,9 @@ void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 
 	stream << "<</key (value)";
 
-	stream_parser str_parser(std::move(stream));
-	object_pool   obj_pool(str_parser);
+	object_stream obj_stream(stream.rdbuf());
 	try {
-		str_parser.take_dictionary_object(obj_pool);
+		obj_stream.take_dictionary_object();
 	} catch (const parse_error& parse_e) {
 		Assert::IsTrue(parse_error::dictionary_lack_of_double_greater_than_sign ==
 		               parse_e.code());

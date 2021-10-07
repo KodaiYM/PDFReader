@@ -1,0 +1,50 @@
+@startuml overall
+hide empty members
+class document_reader {
+	PDF全体の読み取り
+}
+document_reader o--> object_parser : > 生成
+document_reader o--> object_pool : > 生成
+document_reader *--> page_tree_parser : > ページツリー解析
+
+class object_parser {
+	PDFオブジェクトの解析
+}
+class object_pool {
+	間接参照オブジェクトの保持
+}
+class page_tree_parser {
+	ページツリーの解析
+}
+object_parser *--> tokenizer : > トークン分割
+object_parser --> object_pool : > 間接参照
+object_pool o--> object_parser : > 間接参照
+page_tree_parser o--> object_parser : > 使う
+page_tree_parser o--> object_pool : > 使う
+page_tree_parser --> page_parser : > ページ解析
+
+class tokenizer {
+	トークン化
+}
+tokenizer --|> istream_extended
+
+class istream_extended {
+	std::istream の拡張
+}
+istream_extended *--> InputStreamT
+
+class InputStreamT {
+	std::istream の実装クラス
+}
+
+class page_parser {
+	ページオブジェクトの解析
+}
+page_parser o--> object_pool : > エントリの参照
+page_parser --> contents_parser : > コンテンツの解析
+
+class contents_parser {
+	コンテンツストリームの解析
+}
+contents_parser *--> object_parser : > コンテンツ解析
+@enduml

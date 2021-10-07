@@ -1,0 +1,13 @@
+@startuml graphics_state_stack
+hide empty members
+namespace pdfparser {
+class graphics_state_stack {
+	+graphics_state_stack()
+	+store()   : void
+	+restore() : void
+	+top() : graphics_state&
+	-m_graphics_states : stack<graphics_state>
+}
+graphics_state_stack --> "*" graphics_state
+}
+@enduml

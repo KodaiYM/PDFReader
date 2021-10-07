@@ -1,11 +1,11 @@
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.object_stream.hpp"
 #include "take_real_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace object_stream_test;
 
 void take_real_object_test::test_unsigned_leading_period() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -13,9 +13,9 @@ void take_real_object_test::test_unsigned_leading_period() {
 
 	stream << ".0123";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(0.0123 == object);
 }
 void take_real_object_test::test_unsigned_trailing_period() {
@@ -24,9 +24,9 @@ void take_real_object_test::test_unsigned_trailing_period() {
 
 	stream << "0123.";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(123.0 == object);
 }
 void take_real_object_test::test_unsigned_embedded_period() {
@@ -35,9 +35,9 @@ void take_real_object_test::test_unsigned_embedded_period() {
 
 	stream << "34.5";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(34.5 == object);
 }
 void take_real_object_test::test_plus_leading_period() {
@@ -46,9 +46,9 @@ void take_real_object_test::test_plus_leading_period() {
 
 	stream << "+.002";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(0.002 == object);
 }
 void take_real_object_test::test_plus_trailing_period() {
@@ -57,9 +57,9 @@ void take_real_object_test::test_plus_trailing_period() {
 
 	stream << "+0123.";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(123.0 == object);
 }
 void take_real_object_test::test_plus_embedded_period() {
@@ -68,9 +68,9 @@ void take_real_object_test::test_plus_embedded_period() {
 
 	stream << "+0123.6";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(123.6 == object);
 }
 void take_real_object_test::test_minus_leading_period() {
@@ -79,9 +79,9 @@ void take_real_object_test::test_minus_leading_period() {
 
 	stream << "-.002";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(-0.002 == object);
 }
 void take_real_object_test::test_minus_trailing_period() {
@@ -90,9 +90,9 @@ void take_real_object_test::test_minus_trailing_period() {
 
 	stream << "-04.";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(-4.0 == object);
 }
 void take_real_object_test::test_minus_embedded_period() {
@@ -101,8 +101,8 @@ void take_real_object_test::test_minus_embedded_period() {
 
 	stream << "-3.62";
 
-	stream_parser str_parser(std::move(stream));
+	object_stream obj_stream(stream.rdbuf());
 
-	auto object = str_parser.take_real_object();
+	auto object = obj_stream.take_real_object();
 	Assert::IsTrue(-3.62 == object);
 }

@@ -15,7 +15,7 @@ void take_token_test::test_sp_separated_regular_token() {
 
 	stream << "token1 token2";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsTrue("token1"sv == tknizer.take_token());
 }
 void take_token_test::test_eof_separated_regular_token() {
@@ -24,7 +24,7 @@ void take_token_test::test_eof_separated_regular_token() {
 
 	stream << "token";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsTrue("token"sv == tknizer.take_token());
 }
 void take_token_test::test_delimiter_separated_regular_token() {
@@ -33,7 +33,7 @@ void take_token_test::test_delimiter_separated_regular_token() {
 
 	stream << "token1/token2";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsTrue("token1"sv == tknizer.take_token());
 }
 
@@ -43,7 +43,7 @@ void take_token_test::test_double_delimiter_token() {
 
 	stream << "<<something";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsTrue("<<"sv == tknizer.take_token());
 }
 void take_token_test::test_single_delimiter_token() {
@@ -52,7 +52,7 @@ void take_token_test::test_single_delimiter_token() {
 
 	stream << "/something";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsTrue("/"sv == tknizer.take_token());
 }
 
@@ -66,7 +66,7 @@ void take_token_test::test_comment_ignorable() {
 token%comment3
 )"_trimmed;
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsTrue("token"sv == tknizer.take_token());
 }
 
@@ -76,13 +76,13 @@ void take_token_test::test_whitespace_eof() {
 
 	stream << " ";
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsFalse(tknizer.take_token().has_value());
 }
 void take_token_test::test_at_eof() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
-	tokenizer tknizer(std::move(stream));
+	tokenizer tknizer(stream.rdbuf());
 	Assert::IsFalse(tknizer.take_token().has_value());
 }

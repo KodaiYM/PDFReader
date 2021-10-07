@@ -1,11 +1,11 @@
-#include "pdfparser.stream_parser.hpp"
+#include "pdfparser.object_stream.hpp"
 #include "take_null_object_test.hpp"
 
 #include <sstream>
 
 using namespace pdfparser;
 using namespace object_types;
-using namespace stream_parser_test::take_object_test;
+using namespace object_stream_test;
 
 void take_null_object_test::test_null() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -13,7 +13,7 @@ void take_null_object_test::test_null() {
 
 	stream << "null";
 
-	stream_parser str_parser(std::move(stream));
-	auto          object = str_parser.take_null_object();
+	object_stream obj_stream(stream.rdbuf());
+	auto          object = obj_stream.take_null_object();
 	Assert::IsTrue(null == object);
 }
