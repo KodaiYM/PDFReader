@@ -3,6 +3,10 @@
 
 using namespace pdfparser;
 
+PDFReader::PDFContents ^ pdfparser::pdfcontents_builder::build() {
+	return gcnew PDFReader::PDFContents;
+}
+
 void pdfcontents_builder::concat_CTM(const AffineMatrix& concat_matrix) {
 	m_graphics_states.top().current_transformation_matrix *= concat_matrix;
 }

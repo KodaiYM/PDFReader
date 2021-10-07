@@ -1,3 +1,11 @@
+@startuml build
+partition "build()" {
+start
+	:return gcnew PDFContents();
+stop
+}
+@enduml
+
 @startuml concat_CTM
 partition "concat_CTM(concat_matrix : const AffineMatrix&)" {
 start

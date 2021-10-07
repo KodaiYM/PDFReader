@@ -1,6 +1,8 @@
 @startuml pdfcontents_builder
 hide empty members
 abstract pdfcontents_builder {
+	+builder() : PDFContents^
+
 	+concat_CTM(concat_matrix : const AffineMatrix&) : void
 	+set_line_dash_pattern(line_dash_pattern : line_style::dash_pattern_type) : void
 	+set_flatness(flatness : double) : void

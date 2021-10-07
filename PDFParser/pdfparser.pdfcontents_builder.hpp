@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PDFReader.PDFContents.hpp"
 #include "pdfparser.chroma.hpp"
 #include "pdfparser.graphics_state_stack.hpp"
 #include "pdfparser.line_style.hpp"
@@ -9,6 +10,8 @@
 namespace pdfparser {
 class pdfcontents_builder {
 public:
+	PDFReader::PDFContents ^ build();
+
 	void concat_CTM(const AffineMatrix& concat_matrix);
 	void set_line_dash_pattern(
 	    line_style::dash_pattern_type line_dash_pattern) noexcept;
