@@ -1,7 +1,17 @@
 @startuml document_error
 hide empty members
 namespace pdfparser {
-class document_error {
+interface document_error {
+	+virtual what() = 0 : string
 }
+
+abstract position_indicatable_error {
+	-m_offset_from_stream_head : std::streamoff
+	+position_indicatable_error(in offset_from_stream_head : std::streamoff)
+	+tell_offset() : std::streamoff
+	+what() final : string
+	+virtual detail() = 0 : string
+}
+position_indicatable_error ..|> document_error
 }
 @enduml

@@ -8,11 +8,12 @@ class istream_extended {
 	+get()  : char
 	+eof()  : bool
 
-	+tell()                                : std::streamoff
+	+length() : std::streamsize
+	+tell() : std::streamoff
 	+seek(in byte_offset : std::streamoff) : void
-	+seek_to_end()                         : void
-	+seek_forward_head_of_line()           : void
-	+operator++()                          : istream_extended&
+	+seek_to_end() : void
+	+seek_forward_head_of_line() : void
+	+operator++() : istream_extended&
 
 	+ignore_if_present(in flags : whitespace_flags)           : void
 	+attempt(in attempt_str : string_view)                    : bool
@@ -20,13 +21,9 @@ class istream_extended {
 }
 istream_extended --|> std::istream
 istream_extended ..> whitespace_flags
-istream_extended ..> istream_extended_error
 
 enum whitespace_flags <<Enumeration>> {
 	[[whitespace_flags.class.pu]]
-}
-class istream_extended_error {
-	[[istream_extended_error.class.pu]]
 }
 }
 @enduml

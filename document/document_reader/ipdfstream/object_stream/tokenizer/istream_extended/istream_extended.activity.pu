@@ -1,6 +1,7 @@
 @startuml istream_extended
 partition "istream_extended(inout sb : std::streambuf*)" {
 start
+	:assert(sb != nullptr);
 	:std::istream(sb);
 
 	:exceptions(failbit | badbit);
@@ -23,6 +24,11 @@ stop
 @startuml get
 partition "get()" {
 start
+	if (eof()) then (y)
+		:throw failed_to_get(tell());
+		stop
+	endif
+
 	:next_ch = peek();
 	:++*this;
 	:return next_ch.value();
@@ -42,6 +48,18 @@ stop
 }
 @enduml
 
+@startuml length
+partition "length()" {
+start
+	:original_pos = tell();
+	:seek_to_end();
+	:end_pos = tell();
+	:seek(original_pos);
+	:return end_pos;
+stop
+}
+@enduml
+
 @startuml tell
 partition "tell()" {
 start
@@ -51,13 +69,14 @@ stop
 @enduml
 
 @startuml seek
-partition "seek(in byte_offset : InputStreamT::off_type)" {
+partition "seek(in byte_offset : std::streamoff)" {
 start
-	:seekg(byte_offset, std::ios_base::beg);
-	if (失敗した) then (y)
-		:throw istream_extended_error(failed_to_seek);
+	if (length() <= byte_offset) then (y)
+		:throw failed_to_seek(byte_offset);
 		stop
 	endif
+
+	:seekg(byte_offset, std::ios_base::beg);
 stop
 }
 @enduml
@@ -74,11 +93,11 @@ stop
 @startuml seek_forward_head_of_line
 partition "seek_forward_head_of_line()" {
 start
-	:1バイト戻る;
-	if (戻れなかった) then (y)
-		:throw istream_extended_error(failed_to_seek_forward_head_of_line);
+	if (ファイルの先頭) then (y)
+		:throw failed_to_seek_forward_head_of_line(tell());
 		stop
 	endif
+	:1バイト戻る;
 	switch (1バイト先読み?)
 	case ('\\r')
 		:何もしない;
@@ -107,11 +126,7 @@ stop
 @startuml operator++
 partition "operator++()" {
 start
-	:seekg(1, std::ios_base::cur);
-	if (失敗した) then (y)
-		:throw istream_extended_error(failed_to_seek);
-		stop
-	endif
+	:seek(tell() + 1);
 	:return *this;
 stop
 }
@@ -140,7 +155,7 @@ start
 		endif
 	endwhile
 
-	:throw istream_extended_error(promise_failed);
+	:throw promise_failed(tell(), {promise_list.begin(), promise_list.end()});
 stop
 }
 @enduml

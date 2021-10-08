@@ -1,6 +1,7 @@
 @startuml tokenizer
 partition "tokenizer(inout sb : std::streambuf*)" {
 start
+	:assert(sb != nullptr);
 	:istream_extended(sb);
 stop
 }
@@ -9,6 +10,8 @@ stop
 @startuml no_token
 partition "no_token()" {
 start
+	:ignore_if_present(any_whitespace_characters | comment);
+
 	:before_no_token_pos = tell();
 	if (take_token().has_value()) then (y)
 		:seek(before_no_token_pos);
@@ -26,6 +29,8 @@ start
 @startuml attempt_token
 partition "attempt_token(in attempt_token : string_view)" {
 start
+	:ignore_if_present(any_whitespace_characters | comment);
+
 	:before_take_token_pos = tell();
 	if (attempt_token == take_token()) then (y)
 		:return true;
@@ -42,13 +47,15 @@ start
 @startuml promise_token
 partition "promise_token(in promise_token_list : initializer_list<string_view>)" {
 start
+	:ignore_if_present(any_whitespace_characters | comment);
+
 	while (attempt_token in promise_token_list) is (y)
 		if (attempt_token(attempt_token)) then (y)
 			stop
 		endif
 	endwhile
 
-	:throw tokenize_error(promise_token_failed);
+	:throw promise_token_failed{tell(), {promise_token_list.begin(), promise_token_list.end()}};
 stop
 }
 @enduml
@@ -87,7 +94,8 @@ start
 		:++*this;
 		:regular_characters.push_back(先読みした文字);
 	endwhile
-	' 少なくとも1文字は読み取れているはず
+	
+	:assert(!regular_characters.empty());
 	:return pdftoken(regular_token, regular_characters);
 stop
 }

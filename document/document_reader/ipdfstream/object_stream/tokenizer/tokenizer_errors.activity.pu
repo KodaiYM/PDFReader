@@ -1,0 +1,22 @@
+@startuml promise_token_failed
+partition "detail()" {
+start
+	:message : stringstream;
+	:message << "以下のいずれかのトークンを期待しましたが、いずれも取得できませんでした。\\n";
+
+	while (promise_token_str in m_promise_token_list) is (y)
+		:message << promise_token_str;
+		:message << " (";
+		:old_flags = message.setf(std::ios_base::hex | std::ios_base::uppercase);
+		while (character in promise_token_str) is (y)
+			:message << static_cast<unsigned int>(character);
+		endwhile
+		:message.flags(old_flags);
+		:message << ")";
+		:message << '\\n';
+	endwhile
+
+	:return message.str();
+stop
+}
+@enduml

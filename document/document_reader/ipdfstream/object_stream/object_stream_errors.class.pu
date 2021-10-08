@@ -1,0 +1,79 @@
+@startuml object_stream_errors
+hide empty members
+namespace pdfparser {
+class boolean_object_not_found {}
+boolean_object_not_found ..|> position_indicatable_error
+
+class real_object_not_found {}
+real_object_not_found ..|> position_indicatable_error
+
+class string_object_not_found {}
+string_object_not_found ..|> position_indicatable_error
+
+class name_object_not_found {}
+name_object_not_found ..|> position_indicatable_error
+
+class array_object_not_found {}
+array_object_not_found ..|> position_indicatable_error
+
+class null_object_not_found {}
+null_object_not_found ..|> position_indicatable_error
+
+class stream_object_not_found {}
+stream_object_not_found ..|> position_indicatable_error
+
+class indirect_reference_not_found {}
+indirect_reference_not_found ..|> position_indicatable_error
+
+class integer_object_not_found {}
+integer_object_not_found ..|> position_indicatable_error
+
+class dictionary_object_not_found {}
+dictionary_object_not_found ..|> position_indicatable_error
+
+class specified_object_not_found {}
+specified_object_not_found ..|> position_indicatable_error
+
+class literal_string_lack_of_right_parenthesis {}
+literal_string_lack_of_right_parenthesis ..|> position_indicatable_error
+
+class hexadecimal_string_lack_of_greater_than_sign {}
+hexadecimal_string_lack_of_greater_than_sign ..|> position_indicatable_error
+
+class hexadecimal_string_non_hexadecimal_digit_found {}
+hexadecimal_string_non_hexadecimal_digit_found ..|> position_indicatable_error
+
+class array_lack_of_right_square_bracket {}
+array_lack_of_right_square_bracket ..|> position_indicatable_error
+
+class array_invalid_element {}
+array_invalid_element ..|> position_indicatable_error
+
+class dictionary_lack_of_double_greater_than_sign {}
+dictionary_lack_of_double_greater_than_sign ..|> position_indicatable_error
+
+class dictionary_invalid_key {}
+dictionary_invalid_key ..|> position_indicatable_error
+
+class dictionary_invalid_value {}
+dictionary_invalid_value ..|> position_indicatable_error
+
+class stream_dictionary_absence_of_Length_entry {}
+stream_dictionary_absence_of_Length_entry ..|> position_indicatable_error
+
+class stream_data_is_shorter_than_Length {}
+stream_data_is_shorter_than_Length ..|> position_indicatable_error
+
+class indirect_object_is_inconsistent_with_xref_table {
+	indirect_object_is_inconsistent_with_xref_table(in offset_from_stream_head : std::streamoff, in object_info : const xref_inuse_entry&)
+}
+indirect_object_is_inconsistent_with_xref_table ..|> position_indicatable_error
+
+class type_mismatch {}
+type_mismatch ..|> document_error
+
+abstract position_indicatable_error {}
+interface document_error {}
+document_error ..|> position_indicatable_error
+}
+@enduml

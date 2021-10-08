@@ -12,8 +12,8 @@
 
 ## クラス図一覧
 - [オブジェクト解析クラス図](object_stream.class.pu)
-- [オブジェクト取得エラークラス図](object_not_found_error.class.pu)
-- [オブジェクト解析構文エラークラス図](parse_error.class.pu)
+- [エラー一覧クラス図](object_stream_errors.class.pu)
 
 ## フローチャート
 - [オブジェクト解析アクティビティ図](object_stream.activity.pu)
+- [エラー一覧アクティビティ図](object_stream_errors.activity.pu)
