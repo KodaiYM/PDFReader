@@ -39,9 +39,7 @@ void seek_test::test_over_EOF() {
 	istream_extended str_extended(stream.rdbuf());
 	try {
 		str_extended.seek(5);
-	} catch (const istream_extended_error& parse_e) {
-		Assert::IsTrue(istream_extended_error::failed_to_seek == parse_e.code());
-
+	} catch (failed_to_seek&) {
 		// success
 		return;
 	}

@@ -1,4 +1,5 @@
 #include "pdfparser.istream_extended.hpp"
+#include "pdfparser.istream_extended_errors.hpp"
 #include "seek_forward_head_of_line_test.hpp"
 
 #include <sstream>
@@ -18,10 +19,8 @@ void seek_forward_head_of_line_test::test_beginning_of_file() {
 	istream_extended str_extended(stream.rdbuf());
 	try {
 		str_extended.seek_forward_head_of_line();
-	} catch (istream_extended_error& parse_e) {
-		Assert::IsTrue(
-		    istream_extended_error::failed_to_seek_forward_head_of_line ==
-		    parse_e.code());
+	} catch (failed_to_seek_forward_head_of_line& e) {
+		Assert::IsTrue(0 == e.tell_position());
 
 		// success
 		return;

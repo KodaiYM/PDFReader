@@ -143,6 +143,9 @@
     <ClInclude Include="take_indirect_object_test.hpp">
       <Filter>pdfparser\object_stream</Filter>
     </ClInclude>
+    <ClInclude Include="length_test.hpp">
+      <Filter>pdfparser\istream_extended</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="take_trailer_test.cpp">
@@ -237,6 +240,12 @@
     </ClCompile>
     <ClCompile Include="take_indirect_object_test.cpp">
       <Filter>pdfparser\object_stream</Filter>
+    </ClCompile>
+    <ClCompile Include="length_test.cpp">
+      <Filter>pdfparser\istream_extended</Filter>
+    </ClCompile>
+    <ClCompile Include="promise_test.cpp">
+      <Filter>pdfparser\istream_extended</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
