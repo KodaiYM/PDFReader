@@ -48,7 +48,7 @@ endobj
 	auto object = obj_stream.take_indirect_object(xref_inuse_entry{7, 0, 0});
 	Assert::IsTrue(
 	    stream_object{dictionary_object{{"Length", indirect_reference{8, 0}}},
-	                  stream_contents} == std::get<stream_object>(object));
+	                  stream_contents} == static_cast<stream_object>(object));
 }
 void take_indirect_object_test::test_inconsistent_object_number() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |

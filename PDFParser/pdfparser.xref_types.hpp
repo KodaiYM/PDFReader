@@ -104,8 +104,8 @@ namespace pdfparser { namespace xref_types {
 		using table_type = std::map<key_type, value_type>;
 		table_type m_table;
 
-		friend class iterator;
-		friend class const_iterator;
+		friend iterator;
+		friend const_iterator;
 	};
 
 	class xref_table_const_iterator {

@@ -1,10 +1,12 @@
 #pragma once
 
+#include "pdfparser.portion_of_stream.hpp"
+
 #include <string>
 #include <string_view>
 
 namespace pdfparser {
-struct pdftoken {
+struct pdftoken: portion_of_stream {
 	enum token_type { delimiter_token, regular_token };
 
 public:
@@ -20,7 +22,8 @@ public:
 	                               operator std::string_view() const noexcept;
 
 public:
-	pdftoken(token_type type, std::string token_str) noexcept;
+	pdftoken(std::streampos position, token_type type,
+	         std::string token_str) noexcept;
 
 private:
 	/// <summary>token type of this token</summary>

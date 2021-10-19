@@ -3,7 +3,6 @@
 #include "character_types.hpp"
 #include "pdfparser.istream_extended.hpp"
 #include "pdfparser.pdftoken.hpp"
-#include "pdfparser.tokenize_error.hpp"
 
 #include <algorithm>
 #include <cassert>

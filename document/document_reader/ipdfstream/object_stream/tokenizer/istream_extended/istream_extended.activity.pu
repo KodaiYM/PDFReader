@@ -93,7 +93,7 @@ stop
 @startuml seek_forward_head_of_line
 partition "seek_forward_head_of_line()" {
 start
-	if (ファイルの先頭) then (y)
+	if (0 == tell()) then (y)
 		:throw failed_to_seek_forward_head_of_line(tell());
 		stop
 	endif
@@ -102,10 +102,10 @@ start
 	case ('\\r')
 		:何もしない;
 	case ('\\n')
-		:1バイト戻る;
-		if (戻れなかった) then (y)
+		if (0 == tell()) then (y)
 			stop
 		endif
+		:1バイト戻る;
 
 		if (1バイト先読み != '\\r') then (y)
 			:1バイト進む;
@@ -113,11 +113,12 @@ start
 	endswitch
 
 	repeat
-		:1バイト戻る;
-		if (戻れなかった) then (y)
+		if (0 == tell()) then (y)
 			stop
 		endif
+		:1バイト戻る;
 	repeat while (1バイト先読み != '\\r', '\\n')
+
 	:1バイト進む;
 stop
 }
@@ -128,6 +129,14 @@ partition "operator++()" {
 start
 	:seek(tell() + 1);
 	:return *this;
+stop
+}
+@enduml
+
+@startuml ignore_if_present
+partition "ignore_if_present(flags : ignore_flag)" {
+start
+	:flagsに指定のある空白類のみ読み飛ばす;
 stop
 }
 @enduml
@@ -155,15 +164,7 @@ start
 		endif
 	endwhile
 
-	:throw promise_failed(tell(), {promise_list.begin(), promise_list.end()});
-stop
-}
-@enduml
-
-@startuml ignore_if_present
-partition "ignore_if_present(flags : ignore_flag)" {
-start
-	:flagsに指定のある空白類のみ読み飛ばす;
+	:throw promise_failed(tell(), promise_list.begin(), promise_list.end());
 stop
 }
 @enduml

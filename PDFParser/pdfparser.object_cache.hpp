@@ -34,15 +34,15 @@ class object_cache {
 public:
 	bool contains(const std::pair<xref_types::object_t, xref_types::generation_t>&
 	                  object_id) const noexcept;
-	const object_types::any_direct_object&
+	const object_types::onstream_direct_object&
 	     get(const std::pair<xref_types::object_t, xref_types::generation_t>&
 	             object_id) const;
 	void add(std::pair<xref_types::object_t, xref_types::generation_t> object_id,
-	         object_types::any_direct_object                           object);
+	         object_types::onstream_direct_object                      object);
 
 private:
 	std::unordered_map<std::pair<xref_types::object_t, xref_types::generation_t>,
-	                   object_types::any_direct_object>
+	                   object_types::onstream_direct_object>
 	    m_object_map;
 };
 } // namespace pdfparser

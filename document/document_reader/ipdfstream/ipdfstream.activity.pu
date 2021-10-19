@@ -47,7 +47,7 @@ start
 	:number_of_entries = take_integer_object() : object_t;
 
 	if (first_object_number + number_of_entries - 1 がオーバーフロー) then (y)
-		:throw object_number_overflow_in_xref_table(first_object_number_pos, first_object_number, number_of_entries);
+		:throw object_number_overflow_in_xref_table(first_object_number_pos);
 		stop
 	endif
 

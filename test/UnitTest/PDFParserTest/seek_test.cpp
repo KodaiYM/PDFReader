@@ -1,5 +1,5 @@
 #include "pdfparser.istream_extended.hpp"
-#include "pdfparser.istream_extended_error.hpp"
+#include "pdfparser.istream_extended_errors.hpp"
 #include "seek_test.hpp"
 
 #include <sstream>

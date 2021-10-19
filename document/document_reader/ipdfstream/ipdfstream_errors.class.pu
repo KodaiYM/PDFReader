@@ -5,7 +5,7 @@ class xref_entry_keyword_invalid {}
 xref_entry_keyword_invalid ..|> position_indicatable_error
 
 class object_number_overflow_in_xref_table {
-	object_number_overflow_in_xref_table(in first_object_number_pos : std::streamoff, in first_object_number : object_t, in number_of_entries : object_t)
+	object_number_overflow_in_xref_table(in position : std::streampos)
 }
 object_number_overflow_in_xref_table ..|> position_indicatable_error
 

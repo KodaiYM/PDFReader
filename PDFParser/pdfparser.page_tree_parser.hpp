@@ -10,16 +10,19 @@ public:
 	System::Collections::Generic::List<PDFReader::PDFPage ^> ^ get_pages();
 
 public:
-	page_tree_parser(ipdfstream&                            stream,
-	                 const object_types::dictionary_object& root_node);
+	page_tree_parser(ipdfstream&                                     stream,
+	                 const object_types::onstream_dictionary_object& root_node);
 
 private:
 	System::Collections::Generic::List<PDFReader::PDFPage ^> ^
-	    get_pages(const object_types::dictionary_object& page_node,
-	              const object_types::dictionary_object& inherited_attributes);
+	    get_pages(const object_types::onstream_dictionary_object& page_node,
+	              const std::unordered_map<
+	                  object_types::onstream_name_object,
+	                  object_types::onstream_non_null_direct_object_or_ref>&
+	                  inherited_attributes);
 
 private:
-	ipdfstream&                            m_stream;
-	const object_types::dictionary_object& m_root_node;
+	ipdfstream&                                     m_stream;
+	const object_types::onstream_dictionary_object& m_root_node;
 };
 } // namespace pdfparser

@@ -111,6 +111,10 @@ start
 
 	if (front_token が [+-]?10進整数 の形) then (y)
 		:first_integer = front_token を解釈した整数;
+		if (オーバーフロー) then (y)
+			:throw integer_object_overflows(before_take_integer_pos);
+			stop
+		endif
 		:return first_integer;
 	endif
 
@@ -128,6 +132,10 @@ start
 
 	if (front_token が [+-]?10進整数.10進整数 の形（但し、10進整数のどちらかは空でも良い）) then (y)
 		:return real_object(front_token を解釈した小数);
+		if (オーバーフロー) then (y)
+			:throw real_object_overflows(before_take_real_pos);
+			stop
+		endif
 		stop
 	endif
 
@@ -206,6 +214,7 @@ start
 		:return string_object(literal_string);
 		stop
 	endif
+
 	' Hexadecimal String
 	if (attempt_token("<")) then (y)
 		:hexadecimal_string : string_object;
@@ -218,12 +227,13 @@ start
 				stop
 			endif
 
+			:hex_token_last_pos = tell();
 			:hex_view = hex_token : string_view;
 			while (hex_digit in hex_view) is (y)
 				:++hex_digit_pos;
 
 				if (hex_digit != 0-9, A-F, a-f) then (y)
-					:throw hexadecimal_string_non_hexadecimal_digit_found(tell() - (hex_view.length() - hex_digitの位置));
+					:throw hexadecimal_string_non_hexadecimal_digit_found(hex_token_last_pos - hex_view.length() + hex_digitの位置);
 					stop
 				endif
 
@@ -305,22 +315,6 @@ stop
 }
 @enduml
 
-@startuml take_null_object
-partition "take_null_object()" {
-start
-	:ignore_if_present(any_whitespace_characters | comment);
-	:before_take_null_pos = tell();
-
-	if (attempt_token("null")) then (y)
-		:return null;
-		stop
-	endif
-
-	:throw null_object_not_found(before_take_null_pos);
-stop
-}
-@enduml
-
 @startuml take_dictionary_object
 partition "take_dictionary_object()" {
 start
@@ -337,9 +331,6 @@ start
 			endif
 
 			:name = take_name_object();
-			if (name_object_not_found が出た) then (y)
-				:throw dictionary_invalid_key(tell());
-			endif
 
 			:value = take_object();
 			if (specified_object_not_found が出た) then (y)
@@ -388,7 +379,7 @@ start
 	:stream_data : std::string = stream_lengthバイト読み取り;
 	' HACK: stream_length バイト読み取り中に、Filterに対する明示的なEODマーカーが出現した場合にエラーにする
 	if (stream_lengthバイト読み取れなかった) then (y)
-		:throw stream_data_is_shorter_than_Length(head_of_data);
+		:throw stream_data_is_shorter_than_Length(head_of_data, stream_length);
 		stop
 	endif
 
@@ -399,6 +390,22 @@ start
 	:promise_token("endstream");
 	
 	:return stream_object(dictionary, stream_data);
+stop
+}
+@enduml
+
+@startuml take_null_object
+partition "take_null_object()" {
+start
+	:ignore_if_present(any_whitespace_characters | comment);
+	:before_take_null_pos = tell();
+
+	if (attempt_token("null")) then (y)
+		:return null;
+		stop
+	endif
+
+	:throw null_object_not_found(before_take_null_pos);
 stop
 }
 @enduml

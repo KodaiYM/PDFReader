@@ -1,24 +1,36 @@
-@startuml position_indicatable_error_tell_offset
-partition "tell_offset()" {
+@startuml document_error_what
+partition "what()" {
 start
-	:return m_offset_from_stream_head;
+	:return m_message.get();
 stop
 }
 @enduml
 
-@startuml position_indicatable_error_what
-partition "what()" {
+@startuml position_indicatable_error_tell_position
+partition "tell_position()" {
 start
-	:message : stringstream;
-	:message << "at " << m_offset_from_stream_head << " byte\\n";
-	:content = detail() : stringstream;
+	:return m_position;
+stop
+}
+@enduml
+
+@startuml position_indicatable_error
+partition "position_indicatable_error(in position : std::streampos, in message : std::string_view)" {
+start
+	:m_position = position;
+
+	:message_stream : stringstream;
+	:message_stream << "at " << m_position << " byte\\n";
+	:content = stringstream;
+	:content << message;
 	:content << "\\n\\n" << '(' << typeid(*this).name() << ')';
-	:message << "  ";
+
 	:line : std::string;
 	while (std::getline(content, line)) is (y)
-		:message << "  " << line << '\\n';
+		:message_stream << "  " << line << '\\n';
 	endwhile
-	:return message.str();
+
+	:document_error(message_stream.str());
 stop
 }
 @enduml

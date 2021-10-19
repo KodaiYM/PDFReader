@@ -24,7 +24,7 @@ public:
 	explicit document_reader(ipdfstream& stream);
 
 private:
-	ipdfstream&                     m_stream;
-	object_types::dictionary_object m_trailer_dictionary;
+	ipdfstream&                              m_stream;
+	object_types::onstream_dictionary_object m_trailer_dictionary;
 };
 } // namespace pdfparser

@@ -1,34 +1,34 @@
 @startuml failed_to_get
-partition "detail()" {
+partition "failed_to_get(in position : std::streampos)" {
 start
-	:return "次の文字の取得に失敗しました。";
+	:position_indicatable_error(position, "次の文字の取得に失敗しました。");
 stop
 }
 @enduml
 
-@startuml failed_to_seek_what
-partition "detail()" {
+@startuml failed_to_seek
+partition "failed_to_seek(in seekpos : std::streampos)" {
 start
-	:return m_seekpos + "バイト目にシーク出来ませんでした。";
+	:document_error(seekpos + "バイト目にシーク出来ませんでした。");
 stop
 }
 @enduml
 
 @startuml failed_to_seek_forward_head_of_line
-partition "detail()" {
+partition "failed_to_seek_forward_head_of_line(in position : std::streampos)" {
 start
-	:return "前の行にシーク出来ませんでした。";
+	:position_indicatable_error(position, "前の行にシーク出来ませんでした。");
 stop
 }
 @enduml
 
-@startuml promise_failed_what
-partition "detail()" {
+@startuml promise_failed
+partition "promise_failed<InputIterator>(in position : std::streampos, in first : InputIterator, in last : InputIterator)" {
 start
 	:message : stringstream;
 	:message << "以下の文字列のいずれかの文字列を期待しましたが、いずれも取得できませんでした。\\n";
 
-	while (promise_str in m_promise_list) is (y)
+	while (promise_str in [first, last)) is (y)
 		:message << promise_str;
 		:message << " (";
 		:old_flags = message.setf(std::ios_base::hex | std::ios_base::uppercase);
@@ -40,7 +40,7 @@ start
 		:message << '\\n';
 	endwhile
 
-	:return message.str();
+	:position_indicatable_error(position, message.str());
 stop
 }
 @enduml

@@ -1,0 +1,11 @@
+@startuml contents_parser_errors
+hide empty members
+namespace pdfparser {
+class unknown_operator {
+	+unknown_operator(operator_str : std::string_view, position : std::streampos)
+}
+unknown_operator ..|> position_indicatable_error
+
+abstract position_indicatable_error {}
+}
+@enduml

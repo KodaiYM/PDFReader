@@ -1,24 +1,8 @@
 #pragma once
 
-#include "pdfparser.object_cache.hpp"
-#include "pdfparser.object_not_found_error.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_types.hpp"
-#include "pdfparser.parse_error.hpp"
-#include "pdfparser.tokenizer.hpp"
 #include "pdfparser.xref_types.hpp"
-
-#include <algorithm>
-#include <array>
-#include <cassert>
-#include <cctype>
-#include <charconv>
-#include <cinttypes>
-#include <fstream>
-#include <memory>
-#include <regex>
-#include <sstream>
-#include <string_view>
 
 namespace pdfparser {
 class ipdfstream: public object_stream {
@@ -32,10 +16,10 @@ public:
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	object_types::dictionary_object take_footer();
+	object_types::onstream_dictionary_object take_footer();
 
 	/// <summary>
 	/// take cross reference table
@@ -70,14 +54,14 @@ public:
 	/// <exception cref="tokenize_error(promise_token_failed)">
 	/// thrown when keyword "trailer" is not found
 	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	object_types::dictionary_object take_trailer();
+	object_types::onstream_dictionary_object take_trailer();
 
 private:
 	using base = object_stream;

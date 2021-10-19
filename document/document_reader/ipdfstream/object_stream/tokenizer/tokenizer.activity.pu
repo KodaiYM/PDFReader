@@ -55,7 +55,7 @@ start
 		endif
 	endwhile
 
-	:throw promise_token_failed{tell(), {promise_token_list.begin(), promise_token_list.end()}};
+	:throw promise_token_failed(tell(), promise_token_list.begin(), promise_token_list.end());
 stop
 }
 @enduml

@@ -18,7 +18,7 @@ void take_object_test::test_any_direct_object_boolean() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
-	Assert::IsTrue(true == std::get<boolean_object>(object));
+	Assert::IsTrue(true == static_cast<boolean_object>(object));
 }
 void take_object_test::test_any_direct_object_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -28,7 +28,7 @@ void take_object_test::test_any_direct_object_integer() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
-	Assert::IsTrue(10 == static_cast<int>(std::get<integer_object>(object)));
+	Assert::IsTrue(10 == static_cast<int>(static_cast<integer_object>(object)));
 }
 void take_object_test::test_any_direct_object_real() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -38,7 +38,7 @@ void take_object_test::test_any_direct_object_real() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
-	Assert::IsTrue(1.2 == std::get<real_object>(object));
+	Assert::IsTrue(1.2 == static_cast<real_object>(object));
 }
 void take_object_test::test_any_direct_object_string() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -48,7 +48,7 @@ void take_object_test::test_any_direct_object_string() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
-	Assert::IsTrue("str" == std::get<string_object>(object));
+	Assert::IsTrue("str" == static_cast<string_object>(object));
 }
 void take_object_test::test_any_direct_object_name() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -58,7 +58,7 @@ void take_object_test::test_any_direct_object_name() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
-	Assert::IsTrue("name" == std::get<name_object>(object));
+	Assert::IsTrue("name" == static_cast<name_object>(object));
 }
 void take_object_test::test_any_direct_object_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -69,7 +69,7 @@ void take_object_test::test_any_direct_object_array() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
 	Assert::IsTrue(array_object{string_object("s"), 1, 0.4} ==
-	               std::get<array_object>(object));
+	               static_cast<array_object>(object));
 }
 void take_object_test::test_any_direct_object_dictionary() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -80,7 +80,7 @@ void take_object_test::test_any_direct_object_dictionary() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
 	Assert::IsTrue(dictionary_object{{"key", string_object("value")}} ==
-	               std::get<dictionary_object>(object));
+	               static_cast<dictionary_object>(object));
 }
 void take_object_test::test_any_direct_object_stream() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -96,7 +96,7 @@ endstream
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 9}}, "123456789"} ==
-	               std::get<stream_object>(object));
+	               static_cast<stream_object>(object));
 }
 void take_object_test::test_any_direct_object_null() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -106,7 +106,7 @@ void take_object_test::test_any_direct_object_null() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
-	Assert::IsTrue(null == std::get<null_object>(object));
+	Assert::IsTrue(null_object{} == static_cast<null_object>(object));
 }
 void take_object_test::test_any_direct_object_indirect_reference() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -117,7 +117,7 @@ void take_object_test::test_any_direct_object_indirect_reference() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_object<any_direct_object_or_ref>();
 	Assert::IsTrue(indirect_reference{1, 2} ==
-	               std::get<indirect_reference>(object));
+	               static_cast<indirect_reference>(object));
 }
 
 void take_object_test::test_no_object() {

@@ -1,27 +1,90 @@
-#include "pdfparser.object_not_found_error.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <regex>
 
 using namespace pdfparser;
 
 // definition of member functions of object_stream
-#pragma region               stream_parser_definitions
-object_types::boolean_object object_stream::take_boolean_object() {
+#pragma region                              object_stream_definitions
+object_types::onstream_direct_object_or_ref object_stream::take_object() {
 	using namespace object_types;
 
-	if (attempt_token("true")) {
-		return boolean_object(true);
-	} else if (attempt_token("false")) {
-		return boolean_object(false);
+	const auto before_take_object_pos = tell();
+
+	try {
+		return take_boolean_object();
+	} catch (boolean_object_not_found&) { seek(before_take_object_pos); }
+
+	try {
+		return take_real_object();
+	} catch (real_object_not_found&) { seek(before_take_object_pos); }
+
+	try {
+		return take_string_object();
+	} catch (string_object_not_found&) { seek(before_take_object_pos); }
+
+	try {
+		return take_name_object();
+	} catch (name_object_not_found&) { seek(before_take_object_pos); }
+
+	try {
+		return take_array_object();
+	} catch (array_object_not_found&) { seek(before_take_object_pos); }
+
+	try {
+		return take_null_object();
+	} catch (null_object_not_found) { seek(before_take_object_pos); }
+
+	{
+		std::optional<onstream_dictionary_object> dictionary;
+		try {
+			dictionary = take_dictionary_object();
+		} catch (dictionary_object_not_found&) { seek(before_take_object_pos); }
+
+		if (dictionary.has_value()) {
+			auto before_take_stream_pos = tell();
+			try {
+				return take_stream_object(dictionary.value());
+			} catch (stream_object_not_found&) {
+				seek(before_take_stream_pos);
+				return std::move(dictionary).value();
+			}
+		}
 	}
 
-	throw object_not_found_error(
-	    object_not_found_error::boolean_object_not_found);
+	try {
+		return take_indirect_reference();
+	} catch (indirect_reference_not_found&) { seek(before_take_object_pos); }
+
+	try {
+		return take_integer_object();
+	} catch (integer_object_not_found&) { seek(before_take_object_pos); }
+
+	throw specified_object_not_found(before_take_object_pos);
 }
 
-object_types::integer_object object_stream::take_integer_object() {
+object_types::onstream_boolean_object object_stream::take_boolean_object() {
+	using namespace object_types;
+
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+
+	const auto take_pos = tell();
+	if (attempt_token("true")) {
+		return onstream_boolean_object(take_pos, true);
+	} else if (attempt_token("false")) {
+		return onstream_boolean_object(take_pos, false);
+	}
+
+	throw boolean_object_not_found(take_pos);
+}
+
+object_types::onstream_integer_object object_stream::take_integer_object() {
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
+
 	auto front_token = take_token();
 
 	if (front_token.has_value()) {
@@ -29,19 +92,24 @@ object_types::integer_object object_stream::take_integer_object() {
 		std::string_view front_view = front_token.value();
 
 		if (std::regex_match(front_view.begin(), front_view.end(), integer_re)) {
-			// may throw std::out_of_range
 			static_assert(
-			    std::is_same_v<long long, object_types::integer_object::int_type>);
-			return std::stoll(std::string(front_view), nullptr, 10);
+			    std::is_same_v<long long,
+			                   object_types::onstream_integer_object::int_type>);
+
+			try {
+				return {take_pos, std::stoll(std::string(front_view), nullptr, 10)};
+			} catch (std::out_of_range&) { throw integer_object_overflows(take_pos); }
 		}
 	}
 
-	throw object_not_found_error(
-	    object_not_found_error::integer_object_not_found);
+	throw integer_object_not_found(take_pos);
 }
 
-object_types::real_object object_stream::take_real_object() {
+object_types::onstream_real_object object_stream::take_real_object() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
 	auto front_token = take_token();
 
@@ -53,20 +121,24 @@ object_types::real_object object_stream::take_real_object() {
 		    std::regex_match(front_view.begin(), front_view.end(), result,
 		                     real_re) &&
 		    (result[1].length() > 0 || result[2].length() > 0)) {
-			// may throw std::out_of_range
-			return std::stod(std::string(front_view));
+			try {
+				return {take_pos, std::stod(std::string(front_view))};
+			} catch (std::out_of_range&) { throw real_object_overflows(take_pos); }
 		}
 	}
 
-	throw object_not_found_error(object_not_found_error::real_object_not_found);
+	throw real_object_not_found(take_pos);
 }
 
-object_types::string_object object_stream::take_string_object() {
+object_types::onstream_string_object object_stream::take_string_object() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
 	// Litral String
 	if (attempt_token("(")) {
-		string_object literal_string;
+		onstream_string_object literal_string{take_pos, ""};
 		// NOTE: at least size_t seems to be enough.
 		std::size_t number_of_left_parenthesis  = 1;
 		std::size_t number_of_right_parenthesis = 0;
@@ -155,7 +227,7 @@ object_types::string_object object_stream::take_string_object() {
 		}
 
 		if (number_of_left_parenthesis != number_of_right_parenthesis) {
-			throw parse_error(parse_error::literal_string_lack_of_right_parenthesis);
+			throw literal_string_lack_of_right_parenthesis(take_pos);
 		}
 
 		return literal_string;
@@ -163,7 +235,7 @@ object_types::string_object object_stream::take_string_object() {
 
 	// Hexadecimal String
 	if (attempt_token("<")) {
-		string_object hexadecimal_string;
+		onstream_string_object hexadecimal_string{take_pos, ""};
 
 		unsigned char           character     = 0;
 		int                     hex_digit_pos = 0;
@@ -172,20 +244,19 @@ object_types::string_object object_stream::take_string_object() {
 		while ((hex_token_opt = take_token()) != ">"sv) {
 			// reached end of file
 			if (!hex_token_opt.has_value()) {
-				throw parse_error(
-				    parse_error::hexadecimal_string_lack_of_greater_than_sign);
+				throw hexadecimal_string_lack_of_greater_than_sign(take_pos);
 			}
 
-			std::string_view hex_view = hex_token_opt.value();
-			while (!hex_view.empty()) {
+			auto             hex_token_last_pos = tell();
+			std::string_view hex_view           = hex_token_opt.value();
+			for (std::size_t i = 0; i < hex_view.length(); ++i) {
 				++hex_digit_pos;
 				assert(1 == hex_digit_pos || 2 == hex_digit_pos);
 
-				char hex_digit = hex_view.front();
-				hex_view.remove_prefix(1);
+				char hex_digit = hex_view.at(i);
 				if (!std::isxdigit(hex_digit)) {
-					throw parse_error(
-					    parse_error::hexadecimal_string_non_hexadecimal_digit_found);
+					throw hexadecimal_string_non_hexadecimal_digit_found(
+					    hex_token_last_pos - hex_view.length() + i);
 				}
 
 				character |= std::stoi(std::string({hex_digit}), nullptr, 16)
@@ -205,11 +276,14 @@ object_types::string_object object_stream::take_string_object() {
 		return hexadecimal_string;
 	}
 
-	throw object_not_found_error(object_not_found_error::string_object_not_found);
+	throw string_object_not_found(take_pos);
 }
 
-object_types::name_object object_stream::take_name_object() {
+object_types::onstream_name_object object_stream::take_name_object() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
 	if (attempt_token("/")) {
 		if (auto next_ch = peek();
@@ -231,85 +305,62 @@ object_types::name_object object_stream::take_name_object() {
 			} else {
 				name_str = name_token;
 			}
-			return name_object{name_str};
+			return onstream_name_object{take_pos, name_str};
 		} else {
 			// empty name object
-			return name_object{};
+			return onstream_name_object{take_pos, ""};
 		}
 	}
 
-	throw object_not_found_error(object_not_found_error::name_object_not_found);
+	throw name_object_not_found(take_pos);
 }
 
-object_types::array_object object_stream::take_array_object() {
+object_types::onstream_array_object object_stream::take_array_object() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
 	if (attempt_token("[")) {
-		array_object array;
+		onstream_array_object array{take_pos, {}};
 
 		while (!attempt_token("]")) {
 			if (no_token()) {
-				throw parse_error(parse_error::array_lack_of_right_square_bracket);
+				throw array_lack_of_right_square_bracket(take_pos);
 			}
 
-			try {
-				array.push_back(take_object<any_direct_object_or_ref>());
-			} catch (const object_not_found_error& obj_e) {
-				if (object_not_found_error::specified_object_not_found ==
-				    obj_e.code()) {
-					throw parse_error(parse_error::array_invalid_element);
-				} else {
-					throw;
-				}
-			}
+			array.push_back(take_object());
 		}
 
 		return array;
 	}
 
-	throw object_not_found_error(object_not_found_error::array_object_not_found);
+	throw array_object_not_found(take_pos);
 }
 
-object_types::dictionary_object object_stream::take_dictionary_object() {
+object_types::onstream_dictionary_object
+    object_stream::take_dictionary_object() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
 	if (attempt_token("<<")) {
-		dictionary_object dictionary;
+		onstream_dictionary_object dictionary{take_pos, {}};
 
 		while (!attempt_token(">>")) {
 			if (no_token()) {
-				throw parse_error(
-				    parse_error::dictionary_lack_of_double_greater_than_sign);
+				throw dictionary_lack_of_double_greater_than_sign(take_pos);
 			}
 
-			name_object name;
-			try {
-				name = take_name_object();
-			} catch (const object_not_found_error& obj_e) {
-				if (object_not_found_error::name_object_not_found == obj_e.code()) {
-					throw parse_error(parse_error::dictionary_invalid_key);
-				} else {
-					throw;
-				}
-			}
-
-			any_direct_object_or_ref value;
-			try {
-				value = take_object<any_direct_object_or_ref>();
-			} catch (const object_not_found_error& obj_e) {
-				if (object_not_found_error::specified_object_not_found ==
-				    obj_e.code()) {
-					throw parse_error(parse_error::dictionary_invalid_value);
-				} else {
-					throw;
-				}
-			}
+			auto name  = take_name_object();
+			auto value = take_object();
 
 			// emplace to dictionary
 			std::visit(
 			    [&dictionary, &name](auto&& concrete_value) {
 				    using T = std::decay_t<decltype(concrete_value)>;
-				    if constexpr (!std::is_same_v<null_object, T>) {
+				    if constexpr (!std::is_same_v<onstream_null_object, T>) {
 					    dictionary.emplace(std::move(name), std::move(concrete_value));
 				    }
 			    },
@@ -319,55 +370,54 @@ object_types::dictionary_object object_stream::take_dictionary_object() {
 		return dictionary;
 	}
 
-	throw object_not_found_error(
-	    object_not_found_error::dictionary_object_not_found);
+	throw dictionary_object_not_found(take_pos);
 }
 
-object_types::stream_object object_stream::take_stream_object() {
+object_types::onstream_stream_object object_stream::take_stream_object() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
-	dictionary_object stream_dictionary;
+	std::optional<onstream_dictionary_object> stream_dictionary;
 	try {
 		stream_dictionary = take_dictionary_object();
-	} catch (const object_not_found_error& obj_e) {
-		if (object_not_found_error::dictionary_object_not_found == obj_e.code()) {
-			throw object_not_found_error(
-			    object_not_found_error::stream_object_not_found);
-		} else {
-			throw;
-		}
+	} catch (dictionary_object_not_found&) {
+		throw stream_object_not_found(take_pos);
 	}
-	return take_stream_object(std::move(stream_dictionary));
+
+	return take_stream_object(std::move(stream_dictionary.value()));
 }
 
-object_types::stream_object object_stream::take_stream_object(
-    object_types::dictionary_object stream_dictionary) {
+object_types::onstream_stream_object object_stream::take_stream_object(
+    object_types::onstream_dictionary_object stream_dictionary) {
 	using namespace object_types;
 
 	if (!attempt_token("stream")) {
-		throw object_not_found_error(
-		    object_not_found_error::stream_object_not_found);
+		throw stream_object_not_found(stream_dictionary.position());
 	}
 
 	promise({"\r\n", "\n"});
 
 	const auto length_it = stream_dictionary.find("Length");
 	if (length_it == stream_dictionary.end()) {
-		throw parse_error(parse_error::stream_dictionary_absence_of_Length_entry);
+		throw stream_dictionary_absence_of_Length_entry(
+		    stream_dictionary.position());
 	}
 
-	const std::size_t stream_length =
-	    dereference<integer_object>(length_it->second);
+	const std::streamsize stream_length = static_cast<onstream_integer_object>(
+	    dereference(length_it->second.get()));
 
 	std::string stream_data;
 	stream_data.reserve(stream_length);
-	for (std::size_t repeat_ = 0; repeat_ < stream_length; ++repeat_) {
-		try {
+	auto head_of_data = tell();
+	for (std::streamsize repeat_ = 0; repeat_ < stream_length; ++repeat_) {
+		if (eof()) {
+			throw stream_data_is_shorter_than_Length(head_of_data, stream_length);
+		} else {
 			// HACK: stream_length
 			// バイト読み取り中に、Filterに対する明示的なEODマーカーが出現した場合にエラーにする
 			stream_data.push_back(get());
-		} catch (istream_extended_error&) {
-			throw parse_error(parse_error::stream_data_is_shorter_than_Length);
 		}
 	}
 	// at least one EOL is required
@@ -378,58 +428,66 @@ object_types::stream_object object_stream::take_stream_object(
 
 	promise_token({"endstream"});
 
-	return stream_object{std::move(stream_dictionary), std::move(stream_data)};
+	return onstream_stream_object{std::move(stream_dictionary),
+	                              std::move(stream_data)};
 }
 
-object_types::null_object object_stream::take_null_object() {
+object_types::onstream_null_object object_stream::take_null_object() {
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
+
 	if (attempt_token("null")) {
-		return object_types::null;
+		return object_types::onstream_null_object{take_pos};
 	}
 
-	throw object_not_found_error(object_not_found_error::null_object_not_found);
+	throw null_object_not_found(take_pos);
 }
 
-object_types::indirect_reference object_stream::take_indirect_reference() {
+object_types::onstream_indirect_reference
+    object_stream::take_indirect_reference() {
 	using namespace object_types;
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto take_pos = tell();
 
 	xref_types::object_t     object_number;
 	xref_types::generation_t generation_number;
 	try {
 		object_number     = take_integer_object();
 		generation_number = take_integer_object();
-	} catch (const object_not_found_error& obj_e) {
-		if (object_not_found_error::integer_object_not_found == obj_e.code()) {
-			throw object_not_found_error(
-			    object_not_found_error::indirect_reference_not_found);
-		} else {
-			throw;
-		}
+	} catch (integer_object_not_found&) {
+		throw indirect_reference_not_found(take_pos);
 	}
 
 	if (attempt_token("R")) {
-		return indirect_reference{object_number, generation_number};
+		return onstream_indirect_reference{take_pos,
+		                                   {object_number, generation_number}};
 	}
 
-	throw object_not_found_error(
-	    object_not_found_error::indirect_reference_not_found);
+	throw indirect_reference_not_found(take_pos);
 }
 
-object_types::any_direct_object object_stream::take_indirect_object(
+object_types::onstream_direct_object object_stream::take_indirect_object(
     const xref_types::xref_inuse_entry& object_info) {
 	auto before_take_indirect_object_pos = tell();
 	seek(object_info.byte_offset);
+
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	auto begin_of_indirect_object = tell();
 
 	xref_types::object_t     first_integer  = take_integer_object();
 	xref_types::generation_t second_integer = take_integer_object();
 	if (first_integer != object_info.object_number ||
 	    second_integer != object_info.generation_number) {
-		throw parse_error(
-		    parse_error::indirect_object_is_inconsistent_with_xref_table);
+		throw indirect_object_is_inconsistent_with_xref_table(
+		    begin_of_indirect_object, first_integer, second_integer, object_info);
 	}
 
 	promise_token({"obj"});
 
-	auto object = take_object<object_types::any_direct_object>();
+	object_types::onstream_direct_object object = take_object();
 
 	promise_token({"endobj"});
 
@@ -437,12 +495,12 @@ object_types::any_direct_object object_stream::take_indirect_object(
 
 	return object;
 }
-#pragma endregion // stream_parser_definitions
+#pragma endregion // object_stream_definitions
 
 // definition of member functions from old object_cache
-#pragma region stream_parser_definitions_on_old_object_cache
+#pragma region object_stream_definitions_on_old_object_cache
 void           object_stream::add_xref_table(
     const xref_types::xref_table& referenced_xref_table) noexcept {
 	m_xref_table = std::move(referenced_xref_table);
 }
-#pragma endregion // stream_parser_definitions_on_old_object_cache
+#pragma endregion // object_stream_definitions_on_old_object_cache

@@ -1,10 +1,10 @@
 @startuml promise_token_failed
-partition "detail()" {
+partition "promise_token_failed<InputIterator>(in position : std::streampos, in first : InputIterator, in last : InputIterator)" {
 start
 	:message : stringstream;
 	:message << "以下のいずれかのトークンを期待しましたが、いずれも取得できませんでした。\\n";
 
-	while (promise_token_str in m_promise_token_list) is (y)
+	while (promise_token_str in [first, last)) is (y)
 		:message << promise_token_str;
 		:message << " (";
 		:old_flags = message.setf(std::ios_base::hex | std::ios_base::uppercase);
@@ -16,7 +16,7 @@ start
 		:message << '\\n';
 	endwhile
 
-	:return message.str();
+	:position_indicatable_error(position, message.str());
 stop
 }
 @enduml

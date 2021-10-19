@@ -10,8 +10,8 @@ stop
 @startuml get_pages
 partition "get_pages()" {
 start
-	:root_dictionary = m_stream.dereference<dictionary_object>(m_trailer_dictionary.at("Root"));
-	:page_tree_root = m_stream.dereference<dictionary_object>(root_dictionary.at("Pages"));
+	:root_dictionary = m_trailer_dictionary.at("Root");
+	:page_tree_root = root_dictionary.at("Pages");
 	:this_page_tree_parser = page_tree_parser(m_stream, page_tree_root);
 	:return this_page_tree_parser.get_pages();
 stop

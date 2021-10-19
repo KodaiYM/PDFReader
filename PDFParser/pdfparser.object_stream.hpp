@@ -20,35 +20,14 @@ public:
 	/// cref="pdfparser::object_not_found_error(specified_object_not_found)">
 	/// thrown when none of the objects in VariantType are found
 	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	template <class Variant>
-	Variant take_object();
-
-	/// <summary>
-	/// Take one of the objects specified in the template argument
-	/// </summary>
-	/// <typeparam name="...ObjectTypes">object types</typeparam>
-	/// <returns>taken object</returns>
-	/// <exception
-	/// cref="pdfparser::object_not_found_error(specified_object_not_found)">
-	/// thrown when none of the objects in ObjectTypes are found
-	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
-	/// <exception cref="istream_extended_error"></exception>
-	/// <exception cref="std::out_of_range"></exception>
-	/// <exception cref="std::overflow_error"></exception>
-	/// <exception cref="object_not_found_error"></exception>
-	/// <exception cref="parse_error"></exception>
-	/// <exception cref="tokenize_error"></exception>
-	template <class... ObjectTypes, std::enable_if_t<sizeof...(ObjectTypes) >= 2,
-	                                                 std::nullptr_t> = nullptr>
-	std::variant<ObjectTypes...> take_object();
+	object_types::onstream_direct_object_or_ref take_object();
 
 	/// <summary>
 	/// take boolean object
@@ -57,7 +36,7 @@ public:
 	/// <exception
 	/// cref="object_not_found_error(boolean_object_not_found)">
 	/// </exception>
-	object_types::boolean_object take_boolean_object();
+	object_types::onstream_boolean_object take_boolean_object();
 
 	/// <summary>
 	/// take integer object
@@ -68,7 +47,7 @@ public:
 	/// <exception cref="std::out_of_range">
 	/// thrown when read number does not fit into long long
 	/// </exception>
-	object_types::integer_object take_integer_object();
+	object_types::onstream_integer_object take_integer_object();
 
 	/// <summary>
 	/// take real object
@@ -79,7 +58,7 @@ public:
 	/// <exception cref="std::out_of_range">
 	/// thrown when read number does not fit double
 	/// </exception>
-	object_types::real_object take_real_object();
+	object_types::onstream_real_object take_real_object();
 
 	/// <summary>
 	/// take string object
@@ -100,7 +79,7 @@ public:
 	/// thrown when character except for hexadecimal digit is found for
 	/// hexadecimal string
 	/// </exception>
-	object_types::string_object take_string_object();
+	object_types::onstream_string_object take_string_object();
 
 	/// <summary>
 	/// take name object
@@ -108,7 +87,7 @@ public:
 	/// <returns>name object</returns>
 	/// <exception
 	/// cref="object_not_found_error(name_object_not_found)"></exception>
-	object_types::name_object take_name_object();
+	object_types::onstream_name_object take_name_object();
 
 	/// <summary>
 	/// take array object
@@ -125,14 +104,14 @@ public:
 	/// <exception cref="std::out_of_range">
 	/// thrown when integer does not fit into long long
 	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	object_types::array_object take_array_object();
+	object_types::onstream_array_object take_array_object();
 
 	/// <summary>
 	/// take dictionary object
@@ -150,14 +129,14 @@ public:
 	/// <exception cref="parse_error(dictionary_invalid_value)">
 	/// thrown when dictionary value cannot be taken
 	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	object_types::dictionary_object take_dictionary_object();
+	object_types::onstream_dictionary_object take_dictionary_object();
 
 	/// <summary>
 	/// take stream object
@@ -182,21 +161,21 @@ public:
 	/// <exception cref="tokenize_error(promise_token_failed)">
 	/// thrown when keyword "endstream" is not found
 	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	object_types::stream_object take_stream_object();
+	object_types::onstream_stream_object take_stream_object();
 
 	/// <summary>
 	/// take stream object (optimized version for successive calls to
 	/// take_stream_object and take_dictionary_object)
 	/// </summary>
-	object_types::stream_object
-	    take_stream_object(object_types::dictionary_object stream_dictionary);
+	object_types::onstream_stream_object take_stream_object(
+	    object_types::onstream_dictionary_object stream_dictionary);
 
 	/// <summary>
 	/// take null object
@@ -204,7 +183,7 @@ public:
 	/// <returns>null object</returns>
 	/// <exception
 	/// cref="object_not_found_error(null_object_not_found)"></exception>
-	object_types::null_object take_null_object();
+	object_types::onstream_null_object take_null_object();
 
 	/// <summary>
 	/// take indirect reference
@@ -219,7 +198,7 @@ public:
 	/// thrown if overflow occurs when casting from long long to object_t or
 	/// generation_t
 	/// </exception>
-	object_types::indirect_reference take_indirect_reference();
+	object_types::onstream_indirect_reference take_indirect_reference();
 
 	/// <summary>
 	/// take indirect object
@@ -248,14 +227,14 @@ public:
 	/// <exception cref="tokenize_error(promise_token_failed)">
 	/// thrown when failed to take token "obj" or "endobj"
 	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
+	/// <exception cref="onstream_type_mismatch"></exception>
 	/// <exception cref="istream_extended_error"></exception>
 	/// <exception cref="std::out_of_range"></exception>
 	/// <exception cref="std::overflow_error"></exception>
 	/// <exception cref="object_not_found_error"></exception>
 	/// <exception cref="parse_error"></exception>
 	/// <exception cref="tokenize_error"></exception>
-	object_types::any_direct_object
+	object_types::onstream_direct_object
 	    take_indirect_object(const xref_types::xref_inuse_entry& object_info);
 
 public:
@@ -266,107 +245,12 @@ public:
 	void add_xref_table(
 	    const xref_types::xref_table& referenced_xref_table) noexcept;
 
-	template <class Variant, class... ObjectTypesContainingRef,
-	          std::enable_if_t<is_same_template_v<std::variant, Variant>,
-	                           std::nullptr_t> = nullptr>
-	Variant dereference(const std::variant<ObjectTypesContainingRef...>& object);
+	template <class... ObjectTypesContainingRef>
+	object_types::onstream_direct_object dereference(
+	    const object_types::variant_object<ObjectTypesContainingRef...>& object);
 
-	template <class Variant,
-	          std::enable_if_t<is_same_template_v<std::variant, Variant>,
-	                           std::nullptr_t> = nullptr>
-	Variant dereference(const object_types::indirect_reference& reference);
-
-	/// <summary>
-	/// If object is an indirect_reference, call dereference(object) and return
-	/// the result. Otherwise, returns object as is.
-	/// </summary>
-	/// <typeparam name="...ObjectTypes">
-	/// Object type pack to be dereferenced</typeparam>
-	/// <typeparam name="...ObjectTypesContainingRef">
-	/// variant type pack</typeparam>
-	/// <param name="object">direct object or indirect_reference</param>
-	/// <returns>dereferenced object</returns>
-	/// <exception cref="type_mismatch">
-	/// thrown when referenced object's type is not one of the specified types.
-	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
-	/// <exception cref="istream_extended_error"></exception>
-	/// <exception cref="std::out_of_range"></exception>
-	/// <exception cref="std::overflow_error"></exception>
-	/// <exception cref="object_not_found_error"></exception>
-	/// <exception cref="parse_error"></exception>
-	/// <exception cref="tokenize_error"></exception>
-	template <
-	    class... ObjectTypes, class... ObjectTypesContainingRef,
-	    std::enable_if_t<sizeof...(ObjectTypes) >= 2, std::nullptr_t> = nullptr>
-	std::variant<ObjectTypes...>
-	    dereference(const std::variant<ObjectTypesContainingRef...>& object);
-
-	/// <summary>get the indirect object referenced by reference.</summary>
-	/// <typeparam name="...ObjectTypes">
-	/// Object type pack to be dereferenced</typeparam>
-	/// <param name="reference">indirect reference to be referenced</param>
-	/// <returns>
-	/// object with the specified object number and generation number
-	/// </returns>
-	/// <exception cref="type_mismatch">
-	/// thrown when referenced object's type is not one of the specified types.
-	/// </exception>
-	/// <exception cref="istream_extended_error"></exception>
-	/// <exception cref="std::out_of_range"></exception>
-	/// <exception cref="std::overflow_error"></exception>
-	/// <exception cref="object_not_found_error"></exception>
-	/// <exception cref="parse_error"></exception>
-	/// <exception cref="tokenize_error"></exception>
-	template <class... ObjectTypes, std::enable_if_t<sizeof...(ObjectTypes) >= 2,
-	                                                 std::nullptr_t> = nullptr>
-	std::variant<ObjectTypes...>
-	    dereference(const object_types::indirect_reference& reference);
-
-	/// <summary>
-	/// If object is an indirect_reference, call dereference(object) and return
-	/// the result. Otherwise, returns object as is.
-	/// </summary>
-	/// <typeparam name="ObjectType">Object type to be dereferenced</typeparam>
-	/// <typeparam name="...ObjectTypesContainingRef">
-	/// variant type pack</typeparam>
-	/// <param name="object">direct object or indirect_reference</param>
-	/// <returns>dereferenced object</returns>
-	/// <exception cref="type_mismatch">
-	/// thrown when referenced object's type is not ObjectType
-	/// </exception>
-	/// <exception cref="type_mismatch"></exception>
-	/// <exception cref="istream_extended_error"></exception>
-	/// <exception cref="std::out_of_range"></exception>
-	/// <exception cref="std::overflow_error"></exception>
-	/// <exception cref="object_not_found_error"></exception>
-	/// <exception cref="parse_error"></exception>
-	/// <exception cref="tokenize_error"></exception>
-	template <class ObjectType, class... ObjectTypesContainingRef,
-	          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
-	                           std::nullptr_t> = nullptr>
-	ObjectType
-	    dereference(const std::variant<ObjectTypesContainingRef...>& object);
-
-	/// <summary>get the indirect object referenced by reference.</summary>
-	/// <typeparam name="ObjectType">Object type to be dereferenced</typeparam>
-	/// <param name="reference">indirect reference to be referenced</param>
-	/// <returns>
-	/// object with the specified object number and generation number
-	/// </returns>
-	/// <exception cref="type_mismatch">
-	/// thrown when referenced object's type is not ObjectType
-	/// </exception>
-	/// <exception cref="istream_extended_error"></exception>
-	/// <exception cref="std::out_of_range"></exception>
-	/// <exception cref="std::overflow_error"></exception>
-	/// <exception cref="object_not_found_error"></exception>
-	/// <exception cref="parse_error"></exception>
-	/// <exception cref="tokenize_error"></exception>
-	template <class ObjectType,
-	          std::enable_if_t<!is_same_template_v<std::variant, ObjectType>,
-	                           std::nullptr_t> = nullptr>
-	ObjectType dereference(const object_types::indirect_reference& reference);
+	inline object_types::onstream_direct_object
+	    dereference(const object_types::onstream_indirect_reference& reference);
 
 private:
 	using base = tokenizer;
@@ -393,16 +277,11 @@ private:
 	template <class Variant, std::size_t... Seq>
 	Variant dereference_Variant_impl(
 	    std::index_sequence<Seq...>,
-	    const object_types::indirect_reference& reference);
+	    const object_types::onstream_indirect_reference& reference);
 
 	template <class... ObjectTypes>
 	std::variant<ObjectTypes...> dereference_Variant_fixed(
-	    const object_types::indirect_reference& reference);
-};
-
-class type_mismatch: public std::runtime_error {
-public:
-	type_mismatch() : std::runtime_error("type mismatch") {}
+	    const object_types::onstream_indirect_reference& reference);
 };
 } // namespace pdfparser
 

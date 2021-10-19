@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pdfparser.istream_extended_error.hpp"
+#include "pdfparser.istream_extended_errors.hpp"
 #include "pdfparser.whitespace_flags.hpp"
 
 #include <algorithm>
@@ -25,14 +25,15 @@ public:
 	/// <returns>
 	/// next character
 	/// </returns>
-	/// <exception cref="pdfparser::istream_extended_error(failed_to_seek)">
-	/// thrown when failed to ++*this
-	/// </exception>
 	[[nodiscard]] char get();
 
 	/// <summary>check whether end of file or not</summary>
 	/// <returns>true if and only if stream is on EOF</returns>
 	[[nodiscard]] bool eof() noexcept;
+
+	/// <summary>get stream length</summary>
+	/// <returns>stream length</returns>
+	[[nodiscard]] std::streamsize length();
 
 	/// <summary>
 	/// get current stream position (byte offset from beginning of file)
@@ -44,30 +45,20 @@ public:
 	/// move stream position to byte_offset_from_beginning_of_file
 	/// </summary>
 	/// <param name="byte_offset">byte offset from beginning of file</param>
-	/// <exception cref="pdfparser::istream_extended_error(failed_to_seek)">
-	/// thrown with error code failed_to_seek when failed to seek
-	/// </exception>
 	void seek(std::streamoff byte_offset);
 
 	/// <summary>seek to end of stream</summary>
-	void seek_to_end() noexcept;
+	void seek_to_end();
 
 	/// <summary>
 	/// If the current position is the beginning of a line,
 	///  seek to the beginning of the previous line;
 	/// otherwise, seek to the beginning of the current line.
 	/// </summary>
-	/// <exception
-	/// cref="pdfparser::istream_extended_error(failed_to_seek_forward_head_of_line)">
-	/// thrown when the current position is the beginning of the stream
-	/// </exception>
 	void seek_forward_head_of_line();
 
 	/// <summary>advance the stream by one character</summary>
 	/// <returns>*this</returns>
-	/// <exception cref="pdfparser::istream_extended_error(failed_to_seek)">
-	/// thrown when failed to seek
-	/// </exception>
 	istream_extended& operator++();
 
 	/// <summary>
@@ -94,9 +85,6 @@ public:
 	/// <param name="promise_list">
 	/// list of strings which one of them is promised to be able to attempt
 	/// </param>
-	/// <exception cref="pdfparser::istream_extended_error(promise_failed)">
-	/// thrown when none of the strings can be attempted
-	/// </exception>
 	void promise(std::initializer_list<std::string_view> promise_list);
 
 public:
@@ -104,7 +92,7 @@ public:
 	/// construct with stream buffer
 	/// </summary>
 	/// <param name="sb">buffer</param>
-	istream_extended(std::streambuf* sb);
+	explicit istream_extended(std::streambuf* sb);
 
 	virtual ~istream_extended() = default;
 };

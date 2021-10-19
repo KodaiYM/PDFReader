@@ -2,14 +2,10 @@
 hide empty members
 namespace pdfparser {
 class promise_token_failed {
-	-m_promise_token_list : forward_list<string>
-	+promise_token_failed(in offset_from_stream_head, in promise_token_list : forward_list<string>)
-	+detail() : string
+	+promise_token_failed<InputIterator>(in position : std::streampos, in first : InputIterator, in last : InputIterator)
 }
 promise_token_failed ..|> position_indicatable_error
 
-interface document_error {
-	+what() : string
-}
+abstract position_indicatable_error {}
 }
 @enduml
