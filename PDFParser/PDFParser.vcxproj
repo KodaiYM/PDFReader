@@ -168,6 +168,7 @@
     <ClInclude Include="pdfparser.page_parser.hpp" />
     <ClCompile Include="pdfparser.ipdfstringstream.cpp" />
     <ClCompile Include="pdfparser.object_stream.cpp" />
+    <ClCompile Include="pdfparser.object_types.cpp" />
     <ClCompile Include="pdfparser.page_parser.cpp" />
     <ClInclude Include="pdfparser.page_tree_parser.hpp" />
     <ClCompile Include="pdfparser.page_tree_parser.cpp" />

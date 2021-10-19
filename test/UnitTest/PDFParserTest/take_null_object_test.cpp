@@ -15,5 +15,6 @@ void take_null_object_test::test_null() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_null_object();
-	Assert::IsTrue(null == object);
+	Assert::IsTrue(null_object{} == object);
+	Assert::IsTrue(0 == object.position());
 }

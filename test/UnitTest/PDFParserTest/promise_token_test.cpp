@@ -1,4 +1,5 @@
 #include "pdfparser.tokenizer.hpp"
+#include "pdfparser.tokenizer_errors.hpp"
 #include "promise_token_test.hpp"
 
 #include <sstream>
@@ -25,8 +26,8 @@ void promise_token_test::test_when_throw() {
 	tokenizer tknizer(stream.rdbuf());
 	try {
 		tknizer.promise_token({"token2", "token3", "token4"});
-	} catch (const tokenize_error& tknize_e) {
-		Assert::IsTrue(tokenize_error::promise_token_failed == tknize_e.code());
+	} catch (const promise_token_failed& e) {
+		Assert::IsTrue(0 == e.tell_position());
 
 		// success
 		return;

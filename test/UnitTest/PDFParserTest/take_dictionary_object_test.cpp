@@ -1,7 +1,7 @@
 #include "literal_trim.hpp"
 #include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 #include "take_dictionary_object_test.hpp"
 
 #include <sstream>
@@ -44,6 +44,7 @@ void take_dictionary_object_test::test_sample() {
 	                        {"VeryLastItem", string_object{"OK"}} //
 	                    }}                                        //
 	               } == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_dictionary_object_test::test_empty() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -54,6 +55,7 @@ void take_dictionary_object_test::test_empty() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{} == dictionary_object(object));
+	Assert::IsTrue(0 == object.position());
 }
 void take_dictionary_object_test::test_null_value() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -65,6 +67,7 @@ void take_dictionary_object_test::test_null_value() {
 	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{{"key3", string_object{"string"}}} ==
 	               object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -75,9 +78,8 @@ void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_dictionary_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::dictionary_lack_of_double_greater_than_sign ==
-		               parse_e.code());
+	} catch (const dictionary_lack_of_double_greater_than_sign& e) {
+		Assert::IsTrue(0 == e.tell_position());
 
 		// success
 		return;

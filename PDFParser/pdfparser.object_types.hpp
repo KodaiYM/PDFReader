@@ -41,11 +41,7 @@ public:
 	                               !std::is_same_v<IntegerT, bool>,
 	                           std::nullptr_t> = nullptr>
 	constexpr operator IntegerT() const;
-
-	[[nodiscard]] constexpr bool
-	    operator==(const integer_object& rhs) const noexcept;
-	[[nodiscard]] constexpr bool
-	    operator!=(const integer_object& rhs) const noexcept;
+	constexpr operator int_type() const noexcept;
 
 public:
 	template <typename IntegerT                = int_type,
@@ -140,6 +136,7 @@ struct array_object: array_object_base<struct direct_object_or_ref> {
 	using base = array_object_base;
 	using base::base;
 };
+bool operator==(const array_object& lhs, const array_object& rhs) noexcept;
 class onstream_array_object
     : public portion_of_stream,
       public array_object_base<struct onstream_direct_object_or_ref> {
@@ -165,6 +162,8 @@ struct dictionary_object
 	using base = dictionary_object_base;
 	using base::base;
 };
+bool operator==(const dictionary_object& lhs,
+                const dictionary_object& rhs) noexcept;
 class onstream_dictionary_object
     : public portion_of_stream,
       public dictionary_object_base<

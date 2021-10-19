@@ -69,13 +69,8 @@ constexpr integer_object::operator IntegerT() const {
 	return static_cast<IntegerT>(m_value);
 }
 
-[[nodiscard]] constexpr bool
-    integer_object::operator==(const integer_object& rhs) const noexcept {
-	return m_value == rhs.m_value;
-}
-[[nodiscard]] constexpr bool
-    integer_object::operator!=(const integer_object& rhs) const noexcept {
-	return !(*this == rhs);
+constexpr integer_object::operator int_type() const noexcept {
+	return m_value;
 }
 #pragma endregion // region integer_object
 

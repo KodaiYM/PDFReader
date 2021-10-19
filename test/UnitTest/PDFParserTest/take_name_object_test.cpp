@@ -20,6 +20,7 @@ void take_name_object_test::test_valid_name() {
 
 	auto object = obj_stream.take_name_object();
 	Assert::IsTrue(R"(;*_-.$@!"&'=~^\|`+:,?)" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_name_object_test::test_empty_name() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -31,6 +32,7 @@ void take_name_object_test::test_empty_name() {
 
 	auto object = obj_stream.take_name_object();
 	Assert::IsTrue("" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_name_object_test::test_hexadecimal_code() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -42,4 +44,5 @@ void take_name_object_test::test_hexadecimal_code() {
 
 	auto object = obj_stream.take_name_object();
 	Assert::IsTrue("A"s + '\x20' + "B" == object);
+	Assert::IsTrue(0 == object.position());
 }

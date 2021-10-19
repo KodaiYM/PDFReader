@@ -1,5 +1,5 @@
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 #include "take_hexadecimal_string_test.hpp"
 
 #include <sstream>
@@ -17,6 +17,7 @@ void take_hexadecimal_string_test::test_mix_letters() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_string_object();
 	Assert::IsTrue("\x0A\x1B\x2C\x3D\x4E\x5F\xE6\xD7\xC8\xB9\xA1" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_hexadecimal_string_test::test_whitespace() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -27,6 +28,7 @@ void take_hexadecimal_string_test::test_whitespace() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_string_object();
 	Assert::IsTrue("\x20\x3A\xF5" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_hexadecimal_string_test::test_odd_number_of_digits() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -37,6 +39,7 @@ void take_hexadecimal_string_test::test_odd_number_of_digits() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_string_object();
 	Assert::IsTrue("\x90\x1F\xA0" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -47,10 +50,8 @@ void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_string_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(
-		    parse_error::hexadecimal_string_non_hexadecimal_digit_found ==
-		    parse_e.code());
+	} catch (const hexadecimal_string_non_hexadecimal_digit_found& e) {
+		Assert::IsTrue(4 == e.tell_position());
 
 		// success
 		return;
@@ -66,9 +67,8 @@ void take_hexadecimal_string_test::test_lack_of_greater_than_sign() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_string_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::hexadecimal_string_lack_of_greater_than_sign ==
-		               parse_e.code());
+	} catch (const hexadecimal_string_lack_of_greater_than_sign& e) {
+		Assert::IsTrue(0 == e.tell_position());
 
 		// success
 		return;

@@ -293,6 +293,9 @@
     <ClCompile Include="pdfparser.document_error.cpp">
       <Filter>pdfparser\document_reader</Filter>
     </ClCompile>
+    <ClCompile Include="pdfparser.object_types.cpp">
+      <Filter>pdfparser\document_reader\ipdfstream\object_types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
