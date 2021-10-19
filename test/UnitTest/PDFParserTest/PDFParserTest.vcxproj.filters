@@ -247,5 +247,8 @@
     <ClCompile Include="promise_test.cpp">
       <Filter>pdfparser\istream_extended</Filter>
     </ClCompile>
+    <ClCompile Include="take_xref_entry_test.cpp">
+      <Filter>pdfparser\ipdfstream</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

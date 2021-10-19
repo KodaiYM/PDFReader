@@ -1,4 +1,5 @@
 #include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.ipdfstream_errors.hpp"
 #include "take_xref_table_test.hpp"
 
 #include <sstream>
@@ -36,7 +37,9 @@ void take_xref_table_test::test_overflow() {
 	ipdfstream str_parser(stream.rdbuf());
 	try {
 		str_parser.take_xref_table();
-	} catch (std::overflow_error&) {
+	} catch (const object_number_overflow_in_xref_table& e) {
+		Assert::IsTrue(5 == e.tell_position());
+
 		// success
 		return;
 	}

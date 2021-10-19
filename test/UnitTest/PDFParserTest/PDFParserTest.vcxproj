@@ -195,6 +195,7 @@
     <ClCompile Include="take_indirect_object_test.cpp" />
     <ClCompile Include="take_token_test.cpp" />
     <ClCompile Include="take_trailer_test.cpp" />
+    <ClCompile Include="take_xref_entry_test.cpp" />
     <ClCompile Include="take_xref_table_test.cpp" />
     <ClCompile Include="tell_test.cpp" />
     <ClCompile Include="tests.cpp" />

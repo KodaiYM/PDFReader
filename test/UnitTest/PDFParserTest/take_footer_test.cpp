@@ -1,5 +1,6 @@
 #include "literal_trim.hpp"
 #include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.ipdfstream_errors.hpp"
 #include "pdfparser.object_cache.hpp"
 #include "take_footer_test.hpp"
 
@@ -75,27 +76,6 @@ startxref
 	               str_parser.take_footer());
 }
 
-void take_footer_test::test_xref_byte_offset_not_found() {
-	std::stringstream stream(std::ios_base::in | std::ios_base::out |
-	                         std::ios_base::binary);
-
-	stream << "startxref\r\n"
-	       << "%%EOF\n";
-
-	ipdfstream str_parser(stream.rdbuf());
-
-	try {
-		str_parser.take_footer();
-	} catch (const istream_extended_error& istr_ext_e) {
-		Assert::IsTrue(
-		    istream_extended_error::failed_to_seek_forward_head_of_line ==
-		    istr_ext_e.code());
-
-		// success
-		return;
-	}
-	Assert::Fail();
-}
 void take_footer_test::test_startxref_SP_startxref_comment_EOL() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
