@@ -99,6 +99,11 @@ onstream_integer_object::operator IntegerT() const {
 		throw onstream_integer_object_overflows(position());
 	}
 }
+
+constexpr bool operator==(const integer_object& lhs,
+                          const integer_object& rhs) noexcept {
+	return lhs.m_value == rhs.m_value;
+}
 #pragma endregion // region onstream_integer_object
 
 #pragma region real_object

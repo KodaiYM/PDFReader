@@ -29,7 +29,7 @@ void take_object_test::test_any_direct_object_integer() {
 
 	object_stream           obj_stream(stream.rdbuf());
 	onstream_integer_object object = obj_stream.take_object();
-	Assert::IsTrue(10 == object);
+	Assert::IsTrue(integer_object{10} == object);
 	Assert::IsTrue(0 == object.position());
 }
 void take_object_test::test_any_direct_object_real() {

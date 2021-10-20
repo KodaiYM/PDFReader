@@ -52,7 +52,12 @@ public:
 
 private:
 	int_type m_value;
+
+	friend constexpr bool operator==(const integer_object& lhs,
+	                                 const integer_object& rhs) noexcept;
 };
+constexpr bool operator==(const integer_object& lhs,
+                          const integer_object& rhs) noexcept;
 class onstream_integer_object: public portion_of_stream, public integer_object {
 public:
 	// hide base conversion operator
