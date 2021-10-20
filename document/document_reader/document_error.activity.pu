@@ -23,7 +23,7 @@ start
 	:message_stream << "at " << m_position << " byte\\n";
 	:content = stringstream;
 	:content << message;
-	:content << "\\n\\n" << '(' << typeid(*this).name() << ')';
+	:content << "\\n\\n" << '(' << typeid(Derived).name() << ')';
 
 	:line : std::string;
 	while (std::getline(content, line)) is (y)

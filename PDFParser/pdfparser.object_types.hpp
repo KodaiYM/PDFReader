@@ -55,7 +55,17 @@ private:
 };
 class onstream_integer_object: public portion_of_stream, public integer_object {
 public:
+	// hide base conversion operator
+	template <typename IntegerT,
+	          std::enable_if_t<std::is_integral_v<IntegerT> &&
+	                               !std::is_same_v<IntegerT, bool>,
+	                           std::nullptr_t> = nullptr>
+	operator IntegerT() const;
+
+public:
 	inline onstream_integer_object(std::streampos position, integer_object value);
+	inline onstream_integer_object(std::streampos     position,
+	                               const std::string& str);
 };
 
 class real_object {

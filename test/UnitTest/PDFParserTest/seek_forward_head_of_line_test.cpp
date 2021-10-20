@@ -19,7 +19,7 @@ void seek_forward_head_of_line_test::test_beginning_of_file() {
 	istream_extended str_extended(stream.rdbuf());
 	try {
 		str_extended.seek_forward_head_of_line();
-	} catch (failed_to_seek_forward_head_of_line& e) {
+	} catch (const failed_to_seek_forward_head_of_line& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success

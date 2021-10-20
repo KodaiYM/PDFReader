@@ -5,7 +5,7 @@
 #include <string>
 
 namespace pdfparser {
-class failed_to_get final: public position_indicatable_error {
+class failed_to_get final: public position_indicatable_error<failed_to_get> {
 public:
 	explicit failed_to_get(std::streampos position)
 	    : position_indicatable_error(position, "次の文字の取得に失敗しました。") {
@@ -18,13 +18,13 @@ public:
 	                     "バイト目にシーク出来ませんでした。") {}
 };
 class failed_to_seek_forward_head_of_line final
-    : public position_indicatable_error {
+    : public position_indicatable_error<failed_to_seek_forward_head_of_line> {
 public:
 	explicit failed_to_seek_forward_head_of_line(std::streampos position)
 	    : position_indicatable_error(position,
 	                                 "前の行にシーク出来ませんでした。") {}
 };
-class promise_failed final: public position_indicatable_error {
+class promise_failed final: public position_indicatable_error<promise_failed> {
 public:
 	template <class InputIterator>
 	promise_failed(std::streampos position, InputIterator first,

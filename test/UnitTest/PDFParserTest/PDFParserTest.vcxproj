@@ -130,7 +130,7 @@
     <ClInclude Include="attempt_token_test.hpp" />
     <ClInclude Include="eof_test.hpp" />
     <ClInclude Include="get_contents_test.hpp" />
-    <ClInclude Include="get_test.hpp" />
+    <ClInclude Include="get_test.cpp" />
     <ClInclude Include="ignore_if_present_test.hpp" />
     <ClInclude Include="length_test.hpp" />
     <ClInclude Include="literal_trim.hpp" />
@@ -198,8 +198,21 @@
     <ClCompile Include="take_xref_entry_test.cpp" />
     <ClCompile Include="take_xref_table_test.cpp" />
     <ClCompile Include="tell_test.cpp" />
-    <ClCompile Include="tests.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <_WildCardClCompile Include="..\..\..\PDFParser\*.cpp" />
+  </ItemGroup>
+  <Target Name="AddWildCardItems" AfterTargets="BuildGenerateSources">
+    <ItemGroup>
+      <ClCompile Include="@(_WildCardClCompile)" />
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <ComputeCompileInputsTargets>
+      AddWildCardItems
+      $(ComputeCompileInputsTargets)
+    </ComputeCompileInputsTargets>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

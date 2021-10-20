@@ -111,10 +111,6 @@ start
 
 	if (front_token が [+-]?10進整数 の形) then (y)
 		:first_integer = front_token を解釈した整数;
-		if (オーバーフロー) then (y)
-			:throw integer_object_overflows(before_take_integer_pos);
-			stop
-		endif
 		:return first_integer;
 	endif
 

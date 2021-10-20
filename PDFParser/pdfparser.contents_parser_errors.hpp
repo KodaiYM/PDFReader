@@ -6,7 +6,7 @@
 #include <string_view>
 
 namespace pdfparser {
-class unknown_operator: public position_indicatable_error {
+class unknown_operator: public position_indicatable_error<unknown_operator> {
 public:
 	unknown_operator(std::string_view operator_str, std::streampos position)
 	    : position_indicatable_error(position,

@@ -34,12 +34,12 @@ template <typename IntegerT,
 constexpr integer_object::integer_object(IntegerT value) {
 	if (value >= 0) {
 		if (value > std::numeric_limits<int_type>::max()) {
-			throw std::overflow_error("overflow");
+			throw integer_object_overflows();
 		}
 	} else {
 		assert(value < 0);
 		if (value < std::numeric_limits<int_type>::min()) {
-			throw std::overflow_error("overflow");
+			throw integer_object_overflows();
 		}
 	}
 	m_value = value;
@@ -53,7 +53,7 @@ constexpr integer_object::operator IntegerT() const {
 	if constexpr (std::is_signed_v<IntegerT>) {
 		if (!(std::numeric_limits<IntegerT>::min() <= m_value &&
 		      m_value <= std::numeric_limits<IntegerT>::max())) {
-			throw std::overflow_error("overflow");
+			throw integer_object_overflows();
 		}
 	} else {
 		static_assert(std::is_unsigned_v<IntegerT>);
@@ -62,7 +62,7 @@ constexpr integer_object::operator IntegerT() const {
 
 		if (m_value < 0 || !(std::numeric_limits<IntegerT>::min() <= m_value_u &&
 		                     m_value_u <= std::numeric_limits<IntegerT>::max())) {
-			throw std::overflow_error("overflow");
+			throw integer_object_overflows();
 		}
 	}
 
@@ -78,6 +78,26 @@ constexpr integer_object::operator int_type() const noexcept {
 inline onstream_integer_object::onstream_integer_object(std::streampos position,
                                                         integer_object value)
     : portion_of_stream(std::move(position)), integer_object(std::move(value)) {
+}
+inline onstream_integer_object::onstream_integer_object(
+    std::streampos position, const std::string& str) try
+    : portion_of_stream(std::move(position)),
+      integer_object(std::stoll(str, nullptr, 10)) {
+	static_assert(std::is_same_v<long long, int_type>);
+} catch (std::out_of_range&) {
+	throw onstream_integer_object_overflows(position);
+}
+
+template <typename IntegerT,
+          std::enable_if_t<std::is_integral_v<IntegerT> &&
+                               !std::is_same_v<IntegerT, bool>,
+                           std::nullptr_t>>
+onstream_integer_object::operator IntegerT() const {
+	try {
+		return static_cast<const integer_object&>(*this).operator IntegerT();
+	} catch (integer_object_overflows&) {
+		throw onstream_integer_object_overflows(position());
+	}
 }
 #pragma endregion // region onstream_integer_object
 

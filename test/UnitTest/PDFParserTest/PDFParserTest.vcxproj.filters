@@ -128,7 +128,7 @@
     <ClInclude Include="take_token_test.hpp">
       <Filter>pdfparser\tokenizer</Filter>
     </ClInclude>
-    <ClInclude Include="get_test.hpp">
+    <ClInclude Include="get_test.cpp">
       <Filter>pdfparser\istream_extended</Filter>
     </ClInclude>
     <ClInclude Include="no_token.hpp">
@@ -194,9 +194,6 @@
       <Filter>pdfparser\ipdfstream</Filter>
     </ClCompile>
     <ClCompile Include="literal_trim.cpp">
-      <Filter>pdfparser_test</Filter>
-    </ClCompile>
-    <ClCompile Include="tests.cpp">
       <Filter>pdfparser_test</Filter>
     </ClCompile>
     <ClCompile Include="attempt_test.cpp">

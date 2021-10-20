@@ -3,7 +3,8 @@
 #include "pdfparser.document_error.hpp"
 
 namespace pdfparser {
-class xref_entry_keyword_invalid final: public position_indicatable_error {
+class xref_entry_keyword_invalid final
+    : public position_indicatable_error<xref_entry_keyword_invalid> {
 public:
 	explicit xref_entry_keyword_invalid(std::streampos position)
 	    : position_indicatable_error(
@@ -11,7 +12,7 @@ public:
 	          "クロスリファレンスエントリに無効なキーワードがあります。") {}
 };
 class object_number_overflow_in_xref_table final
-    : public position_indicatable_error {
+    : public position_indicatable_error<object_number_overflow_in_xref_table> {
 public:
 	explicit object_number_overflow_in_xref_table(std::streampos position)
 	    : position_indicatable_error(position,

@@ -95,7 +95,7 @@ void take_integer_object_test::test_EOF() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_integer_object();
-	} catch (integer_object_not_found& e) {
+	} catch (const integer_object_not_found& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success
@@ -112,7 +112,7 @@ void take_integer_object_test::test_plus_not_number() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_integer_object();
-	} catch (integer_object_not_found& e) {
+	} catch (const integer_object_not_found& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success
@@ -129,7 +129,7 @@ void take_integer_object_test::test_minus_not_number() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_integer_object();
-	} catch (integer_object_not_found& e) {
+	} catch (const integer_object_not_found& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success
@@ -146,7 +146,7 @@ void take_integer_object_test::test_sign_EOF() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_integer_object();
-	} catch (integer_object_not_found& e) {
+	} catch (const integer_object_not_found& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success
@@ -164,7 +164,7 @@ void take_integer_object_test::test_max_plus1() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_integer_object();
-	} catch (const integer_object_overflows& e) {
+	} catch (const onstream_integer_object_overflows& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success
@@ -182,7 +182,7 @@ void take_integer_object_test::test_min_minus1() {
 	object_stream obj_stream(stream.rdbuf());
 	try {
 		obj_stream.take_integer_object();
-	} catch (const integer_object_overflows& e) {
+	} catch (const onstream_integer_object_overflows& e) {
 		Assert::IsTrue(0 == e.tell_position());
 
 		// success

@@ -21,9 +21,7 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 		throw failed_to_get(tell());
 	}
 
-	auto next_ch = peek();
-	++*this;
-	return next_ch.value();
+	return traits_type::to_char_type(std::istream::get());
 }
 [[nodiscard]] bool istream_extended::eof() noexcept {
 	return std::istream::eof() ||
@@ -36,7 +34,7 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 	seek_to_end();
 	auto end_pos = tell();
 
-	seek(original_pos);
+	seekg(original_pos);
 
 	return end_pos;
 }
@@ -45,7 +43,7 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 	return rdbuf()->pubseekoff(0, std::ios_base::cur, std::ios_base::in);
 }
 void istream_extended::seek(std::streamoff byte_offset) {
-	if (length() <= byte_offset) {
+	if (length() < byte_offset) {
 		throw failed_to_seek(byte_offset);
 	}
 

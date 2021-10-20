@@ -2,6 +2,8 @@
 #include "pdfparser.object_stream_errors.hpp"
 
 #include <regex>
+#include <string>
+#include <string_view>
 
 using namespace pdfparser;
 
@@ -34,7 +36,7 @@ object_types::onstream_direct_object_or_ref object_stream::take_object() {
 
 	try {
 		return take_null_object();
-	} catch (null_object_not_found) { seek(before_take_object_pos); }
+	} catch (null_object_not_found&) { seek(before_take_object_pos); }
 
 	{
 		std::optional<onstream_dictionary_object> dictionary;
@@ -92,13 +94,7 @@ object_types::onstream_integer_object object_stream::take_integer_object() {
 		std::string_view front_view = front_token.value();
 
 		if (std::regex_match(front_view.begin(), front_view.end(), integer_re)) {
-			static_assert(
-			    std::is_same_v<long long,
-			                   object_types::onstream_integer_object::int_type>);
-
-			try {
-				return {take_pos, std::stoll(std::string(front_view), nullptr, 10)};
-			} catch (std::out_of_range&) { throw integer_object_overflows(take_pos); }
+			return {take_pos, std::string(front_view)};
 		}
 	}
 

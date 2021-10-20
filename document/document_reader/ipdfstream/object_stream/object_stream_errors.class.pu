@@ -34,9 +34,6 @@ dictionary_object_not_found ..|> position_indicatable_error
 class specified_object_not_found {}
 specified_object_not_found ..|> position_indicatable_error
 
-class integer_object_overflows {}
-integer_object_overflows ..|> position_indicatable_error
-
 class real_object_overflows {}
 real_object_overflows ..|> position_indicatable_error
 

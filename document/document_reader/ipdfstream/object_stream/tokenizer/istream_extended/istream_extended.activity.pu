@@ -29,9 +29,7 @@ start
 		stop
 	endif
 
-	:next_ch = peek();
-	:++*this;
-	:return next_ch.value();
+	:return std::istream::get();
 stop
 }
 @enduml
@@ -51,10 +49,10 @@ stop
 @startuml length
 partition "length()" {
 start
-	:original_pos = tell();
+	:original_pos = tellg();
 	:seek_to_end();
-	:end_pos = tell();
-	:seek(original_pos);
+	:end_pos = tellg();
+	:seekg(original_pos);
 	:return end_pos;
 stop
 }

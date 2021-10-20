@@ -19,7 +19,7 @@ void take_xref_table_test::test_maximum_xref_table() {
 	ipdfstream str_parser(stream.rdbuf());
 	try {
 		str_parser.take_xref_table();
-	} catch (std::overflow_error&) {
+	} catch (object_number_overflow_in_xref_table&) {
 		Assert::Fail(); // overflow error -> fail
 	} catch (...) {
 		// success
@@ -37,8 +37,8 @@ void take_xref_table_test::test_overflow() {
 	ipdfstream str_parser(stream.rdbuf());
 	try {
 		str_parser.take_xref_table();
-	} catch (const object_number_overflow_in_xref_table& e) {
-		Assert::IsTrue(5 == e.tell_position());
+	} catch (const onstream_integer_object_overflows& e) {
+		Assert::IsTrue(7 == e.tell_position());
 
 		// success
 		return;
