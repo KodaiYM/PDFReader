@@ -4,10 +4,10 @@
 #include "pdfparser.page_tree_parser_errors.hpp"
 
 using namespace pdfparser;
+using namespace pdfparser::object_types;
 
-page_tree_parser::page_tree_parser(
-    ipdfstream&                                     stream,
-    const object_types::onstream_dictionary_object& root_node)
+page_tree_parser::page_tree_parser(ipdfstream&                       stream,
+                                   const onstream_dictionary_object& root_node)
     : m_stream(stream), m_root_node(root_node) {}
 
 System::Collections::Generic::List<PDFReader::PDFPage ^> ^
@@ -17,13 +17,10 @@ System::Collections::Generic::List<PDFReader::PDFPage ^> ^
 
 System::Collections::Generic::List<PDFReader::PDFPage ^> ^
     page_tree_parser::get_pages(
-        const object_types::onstream_dictionary_object& page_node,
-        const std::unordered_map<
-            object_types::onstream_name_object,
-            object_types::onstream_non_null_direct_object_or_ref>&
+        const onstream_dictionary_object& page_node,
+        const std::unordered_map<onstream_name_object,
+                                 onstream_non_null_direct_object_or_ref>&
             inherited_attributes) {
-	using namespace object_types;
-
 	onstream_name_object type = m_stream.dereference(page_node.at("Type").get());
 	if ("Pages" == type) {
 		auto new_inherited_attributes = inherited_attributes;
@@ -36,7 +33,8 @@ System::Collections::Generic::List<PDFReader::PDFPage ^> ^
 		}
 
 		auto pages = gcnew System::Collections::Generic::List<PDFReader::PDFPage ^>;
-		const onstream_array_object& kids =
+
+		onstream_array_object kids =
 		    m_stream.dereference(page_node.at("Kids").get());
 		for (const auto& kid : kids) {
 			pages->AddRange(

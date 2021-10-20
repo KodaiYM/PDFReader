@@ -9,15 +9,13 @@
 #include <sstream>
 
 using namespace pdfparser;
+using namespace pdfparser::object_types;
 
-page_parser::page_parser(
-    ipdfstream&                                     stream,
-    const object_types::onstream_dictionary_object& page_object)
+page_parser::page_parser(ipdfstream&                       stream,
+                         const onstream_dictionary_object& page_object)
     : m_stream(stream), m_page_object(page_object) {}
 
 PDFReader::PDFPage ^ page_parser::get_page() {
-	using namespace object_types;
-
 	pdfpage_builder this_page_builder;
 
 	// Get Mediabox

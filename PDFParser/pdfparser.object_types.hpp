@@ -6,6 +6,7 @@
 #include "type_traits_extended.hpp"
 
 #include <cassert>
+#include <functional>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -282,11 +283,14 @@ constexpr decltype(auto) visit(Visitor&& visitor, VariantObject&& object);
 template <typename... ObjectTypes>
 class variant_object: public std::variant<ObjectTypes...> {
 public:
+	// NOTE:
+	// volatile を使う理由は、rvalue を const ObjectType& で受け取っていた場合に、
+	// この関数が呼ばれてしまうのを防ぐため
 	template <typename ObjectType,
 	          std::enable_if_t<
 	              std::disjunction_v<std::is_same<ObjectType, ObjectTypes>...>,
 	              std::nullptr_t> = nullptr>
-	inline operator const ObjectType&() const&;
+	inline operator const ObjectType&() const volatile&;
 
 	template <typename ObjectType,
 	          std::enable_if_t<

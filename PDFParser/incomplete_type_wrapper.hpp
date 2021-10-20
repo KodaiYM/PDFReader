@@ -7,7 +7,7 @@ template <class T>
 class incomplete_type_wrapper {
 public:
 	operator T&() & noexcept;
-	operator const T&() const& noexcept;
+	operator const T&() const volatile& noexcept;
 	operator T() && noexcept;
 
 	template <class U>
@@ -40,6 +40,9 @@ public:
 private:
 	std::unique_ptr<T> m_value;
 };
+static_assert(!std::is_invocable_v<
+              decltype(&incomplete_type_wrapper<int>::operator const int&),
+              incomplete_type_wrapper<int>&&>);
 
 template <typename T>
 bool operator==(const incomplete_type_wrapper<T>& lhs,

@@ -352,7 +352,7 @@ template <typename... ObjectTypes>
 template <typename... FromTypes>
 variant_object<ObjectTypes...>::variant_object(
     const variant_object<FromTypes...>& another)
-    : variant_object(visit(
+    : variant_base(visit(
           [](const auto& concrete_object) -> variant_base {
 	          using type = std::decay_t<decltype(concrete_object)>;
 	          if constexpr (std::is_constructible_v<variant_base, type>) {
@@ -402,9 +402,11 @@ template <typename ObjectType,
           std::enable_if_t<
               std::disjunction_v<std::is_same<ObjectType, ObjectTypes>...>,
               std::nullptr_t>>
-inline variant_object<ObjectTypes...>::operator const ObjectType&() const& {
-	if (std::holds_alternative<ObjectType>(*this)) {
-		return std::get<ObjectType>(*this);
+inline variant_object<ObjectTypes...>::operator const ObjectType&() const
+    volatile& {
+	const variant_object& self = *const_cast<const variant_object*>(this);
+	if (std::holds_alternative<ObjectType>(self)) {
+		return std::get<ObjectType>(self);
 	} else {
 		std::visit(
 		    [](const auto& concrete_object) {
@@ -416,7 +418,7 @@ inline variant_object<ObjectTypes...>::operator const ObjectType&() const& {
 				    throw type_mismatch();
 			    }
 		    },
-		    static_cast<const variant_base&>(*this));
+		    static_cast<const variant_base&>(self));
 	}
 }
 #if defined __GNUC__ || defined __clang__

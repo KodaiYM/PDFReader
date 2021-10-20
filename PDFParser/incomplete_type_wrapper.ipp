@@ -52,8 +52,8 @@ incomplete_type_wrapper<T>::operator T&() & noexcept {
 	return *m_value;
 }
 template <class T>
-incomplete_type_wrapper<T>::operator const T&() const& noexcept {
-	return *m_value;
+incomplete_type_wrapper<T>::operator const T&() const volatile& noexcept {
+	return *const_cast<const incomplete_type_wrapper*>(this)->m_value;
 }
 template <class T>
 incomplete_type_wrapper<T>::operator T() && noexcept {
