@@ -3,10 +3,9 @@
 #include "incomplete_type_wrapper.hpp"
 #include "pdfparser.portion_of_stream.hpp"
 #include "pdfparser.xref_types.hpp"
-#include "type_traits_extended.hpp"
 
-#include <cassert>
 #include <functional>
+#include <ios>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -146,6 +145,19 @@ template <class T>
 class array_object_base: public std::vector<T> {
 public:
 	using base = std::vector<T>;
+
+public:
+	typename base::reference operator[](typename base::size_type n) = delete;
+	typename base::const_reference
+	    operator[](typename base::size_type n) const = delete;
+	typename base::reference       at(typename base::size_type n);
+	typename base::const_reference at(typename base::size_type n) const;
+	typename base::reference       front()       = delete;
+	typename base::const_reference front() const = delete;
+	typename base::reference       back()        = delete;
+	typename base::const_reference back() const  = delete;
+
+public:
 	using base::base;
 };
 struct array_object: array_object_base<struct direct_object_or_ref> {
@@ -159,6 +171,9 @@ class onstream_array_object
 public:
 	inline operator array_object() const&;
 	inline operator array_object() &&;
+
+	typename base::reference       at(typename base::size_type n);
+	typename base::const_reference at(typename base::size_type n) const;
 
 public:
 	inline onstream_array_object(std::streampos    position,

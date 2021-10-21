@@ -9,7 +9,7 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 	exceptions(failbit | badbit);
 }
 
-[[nodiscard]] std::optional<char> istream_extended::peek() noexcept {
+[[nodiscard]] std::optional<char> istream_extended::peek() {
 	if (eof()) {
 		return std::nullopt;
 	}
@@ -23,7 +23,7 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 
 	return traits_type::to_char_type(std::istream::get());
 }
-[[nodiscard]] bool istream_extended::eof() noexcept {
+[[nodiscard]] bool istream_extended::eof() {
 	return std::istream::eof() ||
 	       traits_type::eq_int_type(traits_type::eof(), std::istream::peek());
 }
@@ -39,7 +39,7 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 	return end_pos;
 }
 
-[[nodiscard]] std::streamoff istream_extended::tell() const noexcept {
+[[nodiscard]] std::streamoff istream_extended::tell() const {
 	return rdbuf()->pubseekoff(0, std::ios_base::cur, std::ios_base::in);
 }
 void istream_extended::seek(std::streamoff byte_offset) {
@@ -108,9 +108,9 @@ istream_extended& istream_extended::operator++() {
 	return *this;
 }
 
-void istream_extended::ignore_if_present(whitespace_flags flags) noexcept {
+void istream_extended::ignore_if_present(whitespace_flags flags) {
 	constexpr auto check_one_character = [](char ch) noexcept {
-		return [ch](istream_extended& stream) noexcept {
+		return [ch](istream_extended& stream) {
 			if (stream.attempt(std::string{ch})) {
 				return true;
 			} else {
@@ -138,7 +138,7 @@ void istream_extended::ignore_if_present(whitespace_flags flags) noexcept {
 		ignore_functions.push_back(check_one_character(' '));
 	}
 	if ((whitespace_flags::comment & flags) != whitespace_flags{}) {
-		ignore_functions.push_back([](istream_extended& stream) noexcept {
+		ignore_functions.push_back([](istream_extended& stream) {
 			if (!stream.attempt("%")) {
 				return false;
 			}
@@ -154,14 +154,13 @@ void istream_extended::ignore_if_present(whitespace_flags flags) noexcept {
 	}
 
 	// repeat while any of ignore_functions returns true
-	while (std::any_of(
-	    ignore_functions.cbegin(), ignore_functions.cend(),
-	    [this](std::function<bool(istream_extended&)> ignore_fn) noexcept {
-		    return ignore_fn(*this);
-	    }))
+	while (std::any_of(ignore_functions.cbegin(), ignore_functions.cend(),
+	                   [this](std::function<bool(istream_extended&)> ignore_fn) {
+		                   return ignore_fn(*this);
+	                   }))
 		; // do nothing
 }
-bool istream_extended::attempt(std::string_view attempt_str) noexcept {
+bool istream_extended::attempt(std::string_view attempt_str) {
 	const auto old_pos = tell();
 	for (auto attempt_char : attempt_str) {
 		if (attempt_char == peek()) {

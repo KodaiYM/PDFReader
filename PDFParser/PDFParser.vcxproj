@@ -146,6 +146,7 @@
     <ClInclude Include="character_types.hpp" />
     <ClInclude Include="incomplete_type_wrapper.hpp" />
     <ClInclude Include="incomplete_type_wrapper.ipp" />
+    <ClInclude Include="pdfparser.character_types.ipp" />
     <ClInclude Include="pdfparser.contents_parser_errors.hpp" />
     <ClInclude Include="pdfparser.document_error.ipp" />
     <ClInclude Include="pdfparser.ipdffstream.hpp" />
@@ -156,17 +157,19 @@
     <ClInclude Include="pdfparser.graphics_state_stack.hpp" />
     <ClInclude Include="pdfparser.chroma.hpp" />
     <ClInclude Include="pdfparser.graphics_state.hpp" />
+    <ClInclude Include="pdfparser.ipdffstream.ipp" />
     <ClInclude Include="pdfparser.ipdfstream_errors.hpp" />
     <ClInclude Include="pdfparser.ipdfstringstream.hpp" />
+    <ClInclude Include="pdfparser.ipdfstringstream.ipp" />
     <ClInclude Include="pdfparser.istream_extended_errors.ipp" />
     <ClInclude Include="pdfparser.line_style.hpp" />
+    <ClInclude Include="pdfparser.object_cache.ipp" />
     <ClInclude Include="pdfparser.object_stream.hpp" />
     <ClInclude Include="pdfparser.object_stream.ipp" />
     <ClInclude Include="pdfparser.object_stream_errors.hpp" />
     <ClInclude Include="pdfparser.object_types.ipp" />
     <ClInclude Include="pdfparser.object_types_errors.hpp" />
     <ClInclude Include="pdfparser.page_parser.hpp" />
-    <ClCompile Include="pdfparser.ipdfstringstream.cpp" />
     <ClCompile Include="pdfparser.object_stream.cpp" />
     <ClCompile Include="pdfparser.object_types.cpp" />
     <ClCompile Include="pdfparser.page_parser.cpp" />
@@ -175,6 +178,7 @@
     <ClInclude Include="pdfparser.page_tree_parser_errors.hpp" />
     <ClInclude Include="pdfparser.pdfcontents_builder.hpp" />
     <ClInclude Include="pdfparser.pdfpage_builder.hpp" />
+    <ClInclude Include="pdfparser.pdftoken.ipp" />
     <ClInclude Include="pdfparser.portion_of_stream.hpp" />
     <ClInclude Include="pdfparser.portion_of_stream.ipp" />
     <ClInclude Include="pdfparser.space.hpp" />
@@ -199,17 +203,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="pdfparser.ipdffstream.cpp" />
     <ClCompile Include="pdfparser.ipdfstream.cpp" />
     <ClCompile Include="pdfparser.istream_extended.cpp" />
-    <ClCompile Include="pdfparser.object_cache.cpp" />
     <ClCompile Include="pdfparser.pdfcontents_builder.cpp" />
     <ClCompile Include="pdfparser.graphics_state_stack.cpp" />
     <ClCompile Include="pdfparser.pdfpage_builder.cpp" />
     <ClCompile Include="pdfparser.space.cpp" />
     <ClCompile Include="pdfparser.tokenizer.cpp" />
     <ClCompile Include="PDFReader.PagesModel.cpp" />
-    <ClCompile Include="pdfparser.pdftoken.cpp" />
     <ClCompile Include="pdfparser.xref_types.cpp" />
     <ClInclude Include="pdfparser.tokenizer_errors.ipp" />
   </ItemGroup>

@@ -19,9 +19,9 @@ public:
 	/// <returns>
 	/// std::nullopt for the end of file, otherwise the next character
 	/// </returns>
-	[[nodiscard]] std::optional<char> peek() noexcept;
+	[[nodiscard]] std::optional<char> peek();
 
-	/// <summary>get next character with peek() and do ++*this</summary>
+	/// <summary>get next character</summary>
 	/// <returns>
 	/// next character
 	/// </returns>
@@ -29,7 +29,7 @@ public:
 
 	/// <summary>check whether end of file or not</summary>
 	/// <returns>true if and only if stream is on EOF</returns>
-	[[nodiscard]] bool eof() noexcept;
+	[[nodiscard]] bool eof();
 
 	/// <summary>get stream length</summary>
 	/// <returns>stream length</returns>
@@ -39,7 +39,7 @@ public:
 	/// get current stream position (byte offset from beginning of file)
 	/// </summary>
 	/// <returns>current byte offset from beginning of file</returns>
-	[[nodiscard]] std::streamoff tell() const noexcept;
+	[[nodiscard]] std::streamoff tell() const;
 
 	/// <summary>
 	/// move stream position to byte_offset_from_beginning_of_file
@@ -58,7 +58,6 @@ public:
 	void seek_forward_head_of_line();
 
 	/// <summary>advance the stream by one character</summary>
-	/// <returns>*this</returns>
 	istream_extended& operator++();
 
 	/// <summary>
@@ -67,7 +66,7 @@ public:
 	/// <param name="flags">
 	/// bit flags to specify which whitespace characters to ignore
 	/// </param>
-	void ignore_if_present(whitespace_flags flags) noexcept;
+	void ignore_if_present(whitespace_flags flags);
 
 	/// <summary>
 	/// consume attempt_str at the current position of the stream if it's present;
@@ -75,7 +74,7 @@ public:
 	/// </summary>
 	/// <param name="attempt_str">string trying to consume</param>
 	/// <returns>true if and only if consumed</returns>
-	bool attempt(std::string_view attempt_str) noexcept;
+	bool attempt(std::string_view attempt_str);
 
 	/// <summary>
 	/// Promise any string in the promise_list to be able to attempt.

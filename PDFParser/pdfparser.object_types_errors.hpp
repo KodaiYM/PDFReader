@@ -26,4 +26,17 @@ public:
 	    : position_indicatable_error(
 	          position, "整数オブジェクトがオーバーフローしました。") {}
 };
+
+class array_out_of_range final: public document_error {
+public:
+	array_out_of_range()
+	    : document_error("配列オブジェクトの要素数が想定より少ないです。") {}
+};
+class array_onstream_out_of_range final
+    : public position_indicatable_error<array_onstream_out_of_range> {
+public:
+	explicit array_onstream_out_of_range(std::streampos position)
+	    : position_indicatable_error(
+	          position, "配列オブジェクトの要素数が想定より少ないです。") {}
+};
 } // namespace pdfparser

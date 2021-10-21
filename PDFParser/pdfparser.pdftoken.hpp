@@ -11,19 +11,26 @@ struct pdftoken: portion_of_stream {
 
 public:
 	/// <returns>this token type</returns>
-	[[nodiscard]] token_type type() const noexcept;
+	[[nodiscard]] inline token_type type() const noexcept;
 
 	/// <returns>this token string</returns>
-	[[nodiscard]] std::string str() const;
-	                          operator std::string() const;
+	[[nodiscard]] inline const std::string& str() const& noexcept;
+	[[nodiscard]] inline std::string        str() && noexcept;
+
+	/// <returns>this token string</returns>
+	inline operator const std::string&() const volatile& noexcept;
+	/// <returns>this token string</returns>
+	inline operator std::string() && noexcept;
 
 	/// <returns>view of this token string</returns>
-	[[nodiscard]] std::string_view sview() const noexcept;
-	                               operator std::string_view() const noexcept;
+	[[nodiscard]] inline std::string_view sview() const noexcept;
+
+	/// <returns>view of this token string</returns>
+	inline operator std::string_view() const noexcept;
 
 public:
-	pdftoken(std::streampos position, token_type type,
-	         std::string token_str) noexcept;
+	inline pdftoken(std::streampos position, token_type type,
+	                std::string token_str) noexcept;
 
 private:
 	/// <summary>token type of this token</summary>
@@ -32,4 +39,8 @@ private:
 	/// <summary>token string</summary>
 	std::string m_token_str;
 };
+static_assert(!std::is_invocable_v<
+              decltype(&pdftoken::operator const std::string&), pdftoken&&>);
 } // namespace pdfparser
+
+#include "pdfparser.pdftoken.ipp"

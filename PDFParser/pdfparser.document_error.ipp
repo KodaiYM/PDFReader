@@ -3,7 +3,8 @@
 #include "pdfparser.document_error.hpp"
 
 #include <sstream>
-#include <type_traits>
+#include <string>
+#include <typeinfo>
 
 namespace pdfparser {
 inline document_error::~document_error() noexcept {}

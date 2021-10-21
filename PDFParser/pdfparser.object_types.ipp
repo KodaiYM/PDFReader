@@ -4,6 +4,7 @@
 #include "pdfparser.object_types_errors.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <iterator>
 
 namespace pdfparser::object_types {
@@ -149,9 +150,32 @@ inline onstream_name_object::onstream_name_object(std::streampos position,
 #pragma endregion // region onstream_name_object
 
 #pragma region array_object_base
+template <class T>
+auto array_object_base<T>::at(typename base::size_type n) ->
+    typename base::reference {
+	if (n >= base::size()) {
+		throw array_out_of_range();
+	} else {
+		return base::operator[](n);
+	}
+}
+template <class T>
+auto array_object_base<T>::at(typename base::size_type n) const ->
+    typename base::const_reference {
+	if (n >= base::size()) {
+		throw array_out_of_range();
+	} else {
+		return base::operator[](n);
+	}
+}
 #pragma endregion // region array_object_base
 
-#pragma region                onstream_array_object
+#pragma region onstream_array_object
+inline onstream_array_object::onstream_array_object(
+    std::streampos position, array_object_base value) noexcept
+    : portion_of_stream(std::move(position)),
+      array_object_base(std::move(value)) {}
+
 inline onstream_array_object::operator array_object() const& {
 	return array_object(begin(), end());
 }
@@ -160,10 +184,22 @@ inline onstream_array_object::operator array_object() && {
 	                    std::make_move_iterator(end()));
 }
 
-inline onstream_array_object::onstream_array_object(
-    std::streampos position, array_object_base value) noexcept
-    : portion_of_stream(std::move(position)),
-      array_object_base(std::move(value)) {}
+inline auto onstream_array_object::at(typename base::size_type n) ->
+    typename base::reference {
+	try {
+		return array_object_base::at(n);
+	} catch (array_out_of_range&) {
+		throw array_onstream_out_of_range{position()};
+	}
+}
+inline auto onstream_array_object::at(typename base::size_type n) const ->
+    typename base::const_reference {
+	try {
+		return array_object_base::at(n);
+	} catch (array_out_of_range&) {
+		throw array_onstream_out_of_range{position()};
+	}
+}
 #pragma endregion // region onstream_array_object
 
 #pragma region dictionary_object_base

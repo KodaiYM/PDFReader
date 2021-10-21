@@ -231,6 +231,21 @@
     <ClInclude Include="pdfparser.page_tree_parser_errors.hpp">
       <Filter>pdfparser\document_reader\page_tree_parser</Filter>
     </ClInclude>
+    <ClInclude Include="pdfparser.character_types.ipp">
+      <Filter>pdfparser\document_reader\ipdfstream\object_stream\tokenizer\character_types</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.pdftoken.ipp">
+      <Filter>pdfparser\document_reader\ipdfstream\object_stream\tokenizer\pdftoken</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.ipdffstream.ipp">
+      <Filter>pdfparser\document_reader\ipdfstream\ipdffstream</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.ipdfstringstream.ipp">
+      <Filter>pdfparser\document_reader\ipdfstream\ipdfstringstream</Filter>
+    </ClInclude>
+    <ClInclude Include="pdfparser.object_cache.ipp">
+      <Filter>pdfparser\document_reader\object_cache</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -238,9 +253,6 @@
     </ClCompile>
     <ClCompile Include="pdfparser.xref_types.cpp">
       <Filter>pdfparser\document_reader\ipdfstream\xref_types</Filter>
-    </ClCompile>
-    <ClCompile Include="pdfparser.pdftoken.cpp">
-      <Filter>pdfparser\document_reader\ipdfstream\object_stream\tokenizer\pdftoken</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.space.cpp">
       <Filter>pdfparser\document_reader\page_tree_parser\page_parser\contents_parser\pdfcontents_builder\graphics_state_stack\graphics_state</Filter>
@@ -256,12 +268,6 @@
     </ClCompile>
     <ClCompile Include="pdfparser.pdfpage_builder.cpp">
       <Filter>pdfparser\document_reader\page_tree_parser\page_parser\pdfpage_builder</Filter>
-    </ClCompile>
-    <ClCompile Include="pdfparser.ipdffstream.cpp">
-      <Filter>pdfparser\document_reader\ipdfstream\ipdffstream</Filter>
-    </ClCompile>
-    <ClCompile Include="pdfparser.object_cache.cpp">
-      <Filter>pdfparser\document_reader\object_cache</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.istream_extended.cpp">
       <Filter>pdfparser\document_reader\ipdfstream\object_stream\tokenizer\istream_extended</Filter>
@@ -283,9 +289,6 @@
     </ClCompile>
     <ClCompile Include="pdfparser.document_reader.cpp">
       <Filter>pdfparser\document_reader</Filter>
-    </ClCompile>
-    <ClCompile Include="pdfparser.ipdfstringstream.cpp">
-      <Filter>pdfparser\document_reader\ipdfstream\ipdfstringstream</Filter>
     </ClCompile>
     <ClCompile Include="pdfparser.object_stream.cpp">
       <Filter>pdfparser\document_reader\ipdfstream\object_stream</Filter>

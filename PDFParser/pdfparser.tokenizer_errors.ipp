@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <sstream>
 
-using namespace pdfparser;
+namespace pdfparser {
 
 template <class InputIterator>
 promise_token_failed::promise_token_failed(std::streampos position,
@@ -39,3 +39,5 @@ std::string promise_token_failed::generate_message(InputIterator first,
 
 	return message.str();
 }
+
+} // namespace pdfparser

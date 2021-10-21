@@ -1,19 +1,24 @@
+#pragma once
+
 #include "pdfparser.ipdffstream.hpp"
 
-using namespace pdfparser;
+namespace pdfparser {
 
-ipdffstream::ipdffstream(const char* filepath)
+inline ipdffstream::ipdffstream(const char* filepath)
     : basic_ifstream(filepath, std::ios_base::in | std::ios_base::binary),
       ipdfstream(basic_ifstream::rdbuf()) {}
 
-ipdffstream::ipdffstream(const std::string& filepath)
+inline ipdffstream::ipdffstream(const std::string& filepath)
     : basic_ifstream(filepath, std::ios_base::in | std::ios_base::binary),
       ipdfstream(basic_ifstream::rdbuf()) {}
 
-ipdffstream::ipdffstream(const std::filesystem::path::value_type* filepath)
+inline ipdffstream::ipdffstream(
+    const std::filesystem::path::value_type* filepath)
     : basic_ifstream(filepath, std::ios_base::in | std::ios_base::binary),
       ipdfstream(basic_ifstream::rdbuf()) {}
 
-ipdffstream::ipdffstream(const std::filesystem::path& filepath)
+inline ipdffstream::ipdffstream(const std::filesystem::path& filepath)
     : basic_ifstream(filepath, std::ios_base::in | std::ios_base::binary),
       ipdfstream(basic_ifstream::rdbuf()) {}
+
+} // namespace pdfparser

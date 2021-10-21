@@ -1,3 +1,4 @@
+#include "character_types.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
 
@@ -496,7 +497,7 @@ object_types::onstream_direct_object object_stream::take_indirect_object(
 // definition of member functions from old object_cache
 #pragma region object_stream_definitions_on_old_object_cache
 void           object_stream::add_xref_table(
-    const xref_types::xref_table& referenced_xref_table) noexcept {
+    const xref_types::xref_table& referenced_xref_table) {
 	m_xref_table = std::move(referenced_xref_table);
 }
 #pragma endregion // object_stream_definitions_on_old_object_cache

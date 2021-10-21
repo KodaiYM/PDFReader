@@ -3,6 +3,7 @@
 #include "pdfparser.document_error.hpp"
 
 #include <string>
+#include <type_traits>
 
 namespace pdfparser {
 class failed_to_get final: public position_indicatable_error<failed_to_get> {
@@ -11,6 +12,8 @@ public:
 	    : position_indicatable_error(position, "次の文字の取得に失敗しました。") {
 	}
 };
+static_assert(std::is_nothrow_copy_constructible_v<failed_to_get>);
+
 class failed_to_seek final: public document_error {
 public:
 	explicit failed_to_seek(std::streampos seekpos)
@@ -24,6 +27,8 @@ public:
 	    : position_indicatable_error(position,
 	                                 "前の行にシーク出来ませんでした。") {}
 };
+static_assert(std::is_nothrow_copy_constructible_v<failed_to_seek>);
+
 class promise_failed final: public position_indicatable_error<promise_failed> {
 public:
 	template <class InputIterator>
@@ -34,6 +39,7 @@ private:
 	template <class InputIterator>
 	static std::string generate_message(InputIterator first, InputIterator last);
 };
+static_assert(std::is_nothrow_copy_constructible_v<promise_failed>);
 } // namespace pdfparser
 
 #include "pdfparser.istream_extended_errors.ipp"
