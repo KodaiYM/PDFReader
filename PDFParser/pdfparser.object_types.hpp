@@ -184,6 +184,16 @@ template <class Key, class Value>
 class dictionary_object_base: public std::unordered_map<Key, Value> {
 public:
 	using base = std::unordered_map<Key, Value>;
+
+public:
+	typename base::mapped_type&
+	    operator[](const typename base::key_type&)                    = delete;
+	typename base::mapped_type& operator[](typename base::key_type&&) = delete;
+	typename base::mapped_type& at(const typename base::key_type& key);
+	const typename base::mapped_type&
+	    at(const typename base::key_type& key) const;
+
+public:
 	using base::base;
 };
 struct dictionary_object

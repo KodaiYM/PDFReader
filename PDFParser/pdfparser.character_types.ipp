@@ -1,6 +1,6 @@
 #pragma once
 
-#include "character_types.hpp"
+#include "pdfparser.character_types.hpp"
 
 #include <string_view>
 

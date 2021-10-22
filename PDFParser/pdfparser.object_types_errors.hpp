@@ -39,4 +39,17 @@ public:
 	    : position_indicatable_error(
 	          position, "配列オブジェクトの要素数が想定より少ないです。") {}
 };
+
+class dictionary_out_of_range final: public document_error {
+public:
+	dictionary_out_of_range()
+	    : document_error("配列オブジェクトの要素数が想定より少ないです。") {}
+};
+class dictionary_onstream_out_of_range final
+    : public position_indicatable_error<dictionary_onstream_out_of_range> {
+public:
+	explicit dictionary_onstream_out_of_range(std::streampos position)
+	    : position_indicatable_error(
+	          position, "配列オブジェクトの要素数が想定より少ないです。") {}
+};
 } // namespace pdfparser

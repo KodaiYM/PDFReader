@@ -114,7 +114,7 @@
     <ClInclude Include="pdfparser.whitespace_flags.hpp">
       <Filter>pdfparser\document_reader\ipdfstream\object_stream\tokenizer\istream_extended\whitespace_flags</Filter>
     </ClInclude>
-    <ClInclude Include="character_types.hpp">
+    <ClInclude Include="pdfparser.character_types.hpp">
       <Filter>pdfparser\document_reader\ipdfstream\object_stream\tokenizer\character_types</Filter>
     </ClInclude>
     <ClInclude Include="pdfparser.tokenizer.hpp">

@@ -11,7 +11,7 @@ class document_error: public std::exception {
 public:
 	[[nodiscard]] const char* what() const noexcept final;
 
-public:
+protected:
 	explicit document_error(std::string_view message);
 	inline virtual ~document_error() noexcept = 0;
 
@@ -25,7 +25,7 @@ class position_indicatable_error: public document_error {
 public:
 	[[nodiscard]] std::streampos tell_position() const noexcept;
 
-public:
+private:
 	position_indicatable_error(std::streampos position, std::string_view message);
 	inline virtual ~position_indicatable_error() noexcept = 0;
 
@@ -35,6 +35,8 @@ private:
 private:
 	static std::string generate_message(std::streampos   position,
 	                                    std::string_view message);
+
+	friend Derived;
 };
 } // namespace pdfparser
 

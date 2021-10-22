@@ -203,6 +203,19 @@ inline auto onstream_array_object::at(typename base::size_type n) const ->
 #pragma endregion // region onstream_array_object
 
 #pragma region dictionary_object_base
+template <class Key, class Value>
+auto dictionary_object_base<Key, Value>::at(const typename base::key_type& key)
+    -> typename base::mapped_type& {
+	return const_cast<typename base::mapped_type&>(
+	    static_cast<const dictionary_object_base&>(*this).at(key));
+}
+template <class Key, class Value>
+auto dictionary_object_base<Key, Value>::at(const typename base::key_type& key)
+    const -> const typename base::mapped_type& {
+	try {
+		return base::at(key);
+	} catch (std::out_of_range&) { throw dictionary_out_of_range(); }
+}
 #pragma endregion // region dictionary_object_base
 
 #pragma region onstream_dictionary_object
@@ -235,11 +248,16 @@ inline auto
 
 inline auto onstream_dictionary_object::at(const name_object& key)
     -> mapped_type& {
-	return base::at({0, key});
+	return const_cast<mapped_type&>(
+	    static_cast<const onstream_dictionary_object&>(*this).at(key));
 }
 inline auto onstream_dictionary_object::at(const name_object& key) const
     -> const mapped_type& {
-	return base::at({0, key});
+	try {
+		return base::at({0, key});
+	} catch (array_out_of_range&) {
+		throw array_onstream_out_of_range(position());
+	}
 }
 
 inline onstream_dictionary_object::operator dictionary_object() const& {
