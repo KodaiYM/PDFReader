@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <limits>
 
 namespace pdfparser::object_types {
 
@@ -33,16 +34,21 @@ template <typename IntegerT,
                                !std::is_same_v<IntegerT, bool>,
                            std::nullptr_t>>
 constexpr integer_object::integer_object(IntegerT value) {
-	if (value >= 0) {
-		if (value > std::numeric_limits<int_type>::max()) {
+	if constexpr (std::is_unsigned_v<IntegerT>) {
+		using uint_type = std::make_unsigned_t<int_type>;
+
+		if (value > static_cast<uint_type>(std::numeric_limits<int_type>::max())) {
 			throw integer_object_overflows();
 		}
 	} else {
-		assert(value < 0);
-		if (value < std::numeric_limits<int_type>::min()) {
+		static_assert(std::is_signed_v<IntegerT>);
+
+		if (value < std::numeric_limits<int_type>::min() ||
+		    std::numeric_limits<int_type>::max() < value) {
 			throw integer_object_overflows();
 		}
 	}
+
 	m_value = value;
 }
 
