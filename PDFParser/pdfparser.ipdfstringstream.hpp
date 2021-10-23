@@ -8,7 +8,9 @@
 namespace pdfparser {
 class ipdfstringstream: public std::istringstream, public ipdfstream {
 public:
-	ipdfstringstream();
-	explicit ipdfstringstream(const std::string& str);
+	inline ipdfstringstream();
+	explicit inline ipdfstringstream(const std::string& str);
 };
 } // namespace pdfparser
+
+#include "pdfparser.ipdfstringstream.ipp"

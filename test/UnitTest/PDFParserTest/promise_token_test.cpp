@@ -1,5 +1,16 @@
+#include "testtool.h"
+
+namespace tokenizer_test {
+[TestClass] public ref class promise_token_test {
+public:
+	[TestMethod] void test_when_nothrow();
+	[TestMethod] void test_when_throw();
+};
+} // namespace tokenizer_test
+
+#include "AssertThrows.hpp"
 #include "pdfparser.tokenizer.hpp"
-#include "promise_token_test.hpp"
+#include "pdfparser.tokenizer_errors.hpp"
 
 #include <sstream>
 
@@ -23,13 +34,7 @@ void promise_token_test::test_when_throw() {
 	stream << "token1 token2 token3";
 
 	tokenizer tknizer(stream.rdbuf());
-	try {
-		tknizer.promise_token({"token2", "token3", "token4"});
-	} catch (const tokenize_error& tknize_e) {
-		Assert::IsTrue(tokenize_error::promise_token_failed == tknize_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(promise_token_failed,
+	             tknizer.promise_token({"token2", "token3", "token4"}));
 }

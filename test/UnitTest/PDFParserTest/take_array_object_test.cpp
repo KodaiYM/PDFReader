@@ -1,8 +1,19 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_array_object_test {
+public:
+	[TestMethod] void test_simple_array();
+	[TestMethod] void test_valid_array();
+	[TestMethod] void test_empty_array();
+	[TestMethod] void test_lack_of_right_square_bracket();
+};
+} // namespace object_stream_test
+
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
-#include "take_array_object_test.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <sstream>
 
@@ -19,6 +30,7 @@ void take_array_object_test::test_simple_array() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_array_object();
 	Assert::IsTrue(array_object{1, 2, 3} == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_array_object_test::test_valid_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -56,8 +68,9 @@ void take_array_object_test::test_valid_array() {
 	        indirect_reference{0, 1},                             //
 	        boolean_object{true},                                 //
 	        boolean_object{false},                                //
-	        null                                                  //
+	        null_object{}                                         //
 	    } == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_array_object_test::test_empty_array() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -67,7 +80,7 @@ void take_array_object_test::test_empty_array() {
 
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_array_object();
-	Assert::IsTrue(array_object{} == object);
+	Assert::IsTrue(array_object{} == object && 0 == object.position());
 }
 void take_array_object_test::test_lack_of_right_square_bracket() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -76,14 +89,7 @@ void take_array_object_test::test_lack_of_right_square_bracket() {
 	stream << "[0 1 2";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_array_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::array_lack_of_right_square_bracket ==
-		               parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(array_lack_of_right_square_bracket,
+	             obj_stream.take_array_object());
 }

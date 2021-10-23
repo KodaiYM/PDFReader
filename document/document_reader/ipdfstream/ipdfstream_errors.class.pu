@@ -1,0 +1,14 @@
+@startuml ipdfstream_errors
+hide empty members
+namespace pdfparser {
+class xref_entry_keyword_invalid {}
+xref_entry_keyword_invalid ..|> position_indicatable_error
+
+class object_number_overflow_in_xref_table {
+	object_number_overflow_in_xref_table(in position : std::streampos)
+}
+object_number_overflow_in_xref_table ..|> position_indicatable_error
+
+abstract position_indicatable_error {}
+}
+@enduml

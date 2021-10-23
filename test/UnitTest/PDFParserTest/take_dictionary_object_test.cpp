@@ -1,8 +1,19 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_dictionary_object_test {
+public:
+	[TestMethod] void test_sample();
+	[TestMethod] void test_empty();
+	[TestMethod] void test_null_value();
+	[TestMethod] void test_lack_of_double_greater_than_sign();
+};
+} // namespace object_stream_test
+
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
-#include "take_dictionary_object_test.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <sstream>
 
@@ -44,6 +55,7 @@ void take_dictionary_object_test::test_sample() {
 	                        {"VeryLastItem", string_object{"OK"}} //
 	                    }}                                        //
 	               } == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_dictionary_object_test::test_empty() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -54,6 +66,7 @@ void take_dictionary_object_test::test_empty() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{} == dictionary_object(object));
+	Assert::IsTrue(0 == object.position());
 }
 void take_dictionary_object_test::test_null_value() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -65,6 +78,7 @@ void take_dictionary_object_test::test_null_value() {
 	auto          object = obj_stream.take_dictionary_object();
 	Assert::IsTrue(dictionary_object{{"key3", string_object{"string"}}} ==
 	               object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -73,14 +87,6 @@ void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 	stream << "<</key (value)";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_dictionary_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::dictionary_lack_of_double_greater_than_sign ==
-		               parse_e.code());
-
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(dictionary_lack_of_double_greater_than_sign,
+	             obj_stream.take_dictionary_object());
 }

@@ -4,10 +4,12 @@ using namespace pdfparser;
 
 pdfparser::istream_extended::istream_extended(std::streambuf* sb)
     : basic_istream(sb) {
+	assert(sb != nullptr);
+
 	exceptions(failbit | badbit);
 }
 
-[[nodiscard]] std::optional<char> istream_extended::peek() noexcept {
+[[nodiscard]] std::optional<char> istream_extended::peek() {
 	if (eof()) {
 		return std::nullopt;
 	}
@@ -15,50 +17,63 @@ pdfparser::istream_extended::istream_extended(std::streambuf* sb)
 	return traits_type::to_char_type(std::istream::peek());
 }
 [[nodiscard]] char istream_extended::get() {
-	auto next_ch = peek();
-	++*this;
-	return next_ch.value();
+	if (eof()) {
+		throw failed_to_get(tell());
+	}
+
+	return traits_type::to_char_type(std::istream::get());
 }
-[[nodiscard]] bool istream_extended::eof() noexcept {
+[[nodiscard]] bool istream_extended::eof() {
 	return std::istream::eof() ||
 	       traits_type::eq_int_type(traits_type::eof(), std::istream::peek());
 }
 
-[[nodiscard]] std::streamoff istream_extended::tell() const noexcept {
+[[nodiscard]] std::streamsize istream_extended::length() {
+	auto original_pos = tell();
+
+	seek_to_end();
+	auto end_pos = tell();
+
+	seekg(original_pos);
+
+	return end_pos;
+}
+
+[[nodiscard]] std::streamoff istream_extended::tell() const {
 	return rdbuf()->pubseekoff(0, std::ios_base::cur, std::ios_base::in);
 }
 void istream_extended::seek(std::streamoff byte_offset) {
-	try {
-		seekg(byte_offset, std::ios_base::beg);
-	} catch (std::ios_base::failure&) {
-		throw istream_extended_error(istream_extended_error::failed_to_seek);
+	if (length() < byte_offset) {
+		throw failed_to_seek(byte_offset);
 	}
+
+	seekg(byte_offset, std::ios_base::beg);
 }
-void istream_extended::seek_to_end() noexcept {
+void istream_extended::seek_to_end() {
 	// NOTE: undefined behaviour on ISO C but it will go well on Windows
 	seekg(0, std::ios_base::end);
 }
 void istream_extended::seek_forward_head_of_line() {
 	// check an immediately preceding newline character
-	try {
-		seekg(-1, std::ios_base::cur);
-	} catch (std::ios_base::failure&) {
-		throw istream_extended_error(
-		    istream_extended_error::failed_to_seek_forward_head_of_line);
+
+	// if head of stream
+	if (0 == tell()) {
+		throw failed_to_seek_forward_head_of_line(tell());
 	}
+	seekg(-1, std::ios_base::cur);
+
 	assert(good());
 	switch (std::istream::peek()) {
 	case '\r':
 		// preceding newline character is CR
 		break;
 	case '\n':
-		try {
-			seekg(-1, std::ios_base::cur);
-		} catch (std::ios_base::failure&) {
+		// if head of stream
+		if (0 == tell()) {
 			// there is only LF in front of stream
-			clear();
 			return;
 		}
+		seekg(-1, std::ios_base::cur);
 
 		if ('\r' == std::istream::peek()) {
 			// preceding newline character is CRLF
@@ -74,13 +89,12 @@ void istream_extended::seek_forward_head_of_line() {
 	// seek to the next character after the previous newline character or
 	// beginning of the stream
 	do {
-		try {
-			seekg(-1, std::ios_base::cur);
-		} catch (std::ios_base::failure&) {
-			// beginnig of the stream
-			clear();
+		// if head of stream
+		if (0 == tell()) {
 			return;
 		}
+		seekg(-1, std::ios_base::cur);
+
 		assert(good());
 	} while (std::istream::peek() != '\r' && std::istream::peek() != '\n');
 
@@ -89,17 +103,14 @@ void istream_extended::seek_forward_head_of_line() {
 	seekg(1, std::ios_base::cur);
 }
 istream_extended& istream_extended::operator++() {
-	try {
-		seekg(1, std::ios_base::cur);
-	} catch (std::ios_base::failure&) {
-		throw istream_extended_error(istream_extended_error::failed_to_seek);
-	}
+	assert(tell() <= std::numeric_limits<decltype(tell())>::max() - 1);
+	seek(tell() + 1);
 	return *this;
 }
 
-void istream_extended::ignore_if_present(whitespace_flags flags) noexcept {
+void istream_extended::ignore_if_present(whitespace_flags flags) {
 	constexpr auto check_one_character = [](char ch) noexcept {
-		return [ch](istream_extended& stream) noexcept {
+		return [ch](istream_extended& stream) {
 			if (stream.attempt(std::string{ch})) {
 				return true;
 			} else {
@@ -127,7 +138,7 @@ void istream_extended::ignore_if_present(whitespace_flags flags) noexcept {
 		ignore_functions.push_back(check_one_character(' '));
 	}
 	if ((whitespace_flags::comment & flags) != whitespace_flags{}) {
-		ignore_functions.push_back([](istream_extended& stream) noexcept {
+		ignore_functions.push_back([](istream_extended& stream) {
 			if (!stream.attempt("%")) {
 				return false;
 			}
@@ -143,14 +154,13 @@ void istream_extended::ignore_if_present(whitespace_flags flags) noexcept {
 	}
 
 	// repeat while any of ignore_functions returns true
-	while (std::any_of(
-	    ignore_functions.cbegin(), ignore_functions.cend(),
-	    [this](std::function<bool(istream_extended&)> ignore_fn) noexcept {
-		    return ignore_fn(*this);
-	    }))
+	while (std::any_of(ignore_functions.cbegin(), ignore_functions.cend(),
+	                   [this](std::function<bool(istream_extended&)> ignore_fn) {
+		                   return ignore_fn(*this);
+	                   }))
 		; // do nothing
 }
-bool istream_extended::attempt(std::string_view attempt_str) noexcept {
+bool istream_extended::attempt(std::string_view attempt_str) {
 	const auto old_pos = tell();
 	for (auto attempt_char : attempt_str) {
 		if (attempt_char == peek()) {
@@ -175,6 +185,6 @@ void istream_extended::promise(
 		return;
 	} else {
 		// not found any of them
-		throw istream_extended_error(istream_extended_error::promise_failed);
+		throw promise_failed(tell(), promise_list.begin(), promise_list.end());
 	}
 }

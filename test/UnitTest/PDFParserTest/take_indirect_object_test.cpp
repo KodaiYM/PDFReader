@@ -1,8 +1,18 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_indirect_object_test {
+public:
+	[TestMethod] void test_sample();
+	[TestMethod] void test_inconsistent_object_number();
+	[TestMethod] void test_inconsistent_generation_number();
+};
+} // namespace object_stream_test
+
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
-#include "take_indirect_object_test.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <sstream>
 
@@ -45,10 +55,12 @@ endobj
 	object_stream obj_stream(stream.rdbuf());
 	obj_stream.add_xref_table(
 	    xref_table{xref_inuse_entry{8, 0, offset_of_objnum8}});
-	auto object = obj_stream.take_indirect_object(xref_inuse_entry{7, 0, 0});
+	onstream_stream_object object =
+	    obj_stream.take_indirect_object(xref_inuse_entry{7, 0, 0});
 	Assert::IsTrue(
 	    stream_object{dictionary_object{{"Length", indirect_reference{8, 0}}},
-	                  stream_contents} == std::get<stream_object>(object));
+	                  stream_contents} == object);
+	Assert::IsTrue(9 == object.position());
 }
 void take_indirect_object_test::test_inconsistent_object_number() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -61,17 +73,9 @@ endobj
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_indirect_object(xref_inuse_entry{8, 0, 0});
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(
-		    parse_error::indirect_object_is_inconsistent_with_xref_table ==
-		    parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(indirect_object_is_inconsistent_with_xref_table,
+	             obj_stream.take_indirect_object(xref_inuse_entry{8, 0, 0}));
 }
 void take_indirect_object_test::test_inconsistent_generation_number() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -84,15 +88,7 @@ endobj
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_indirect_object(xref_inuse_entry{7, 1, 0});
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(
-		    parse_error::indirect_object_is_inconsistent_with_xref_table ==
-		    parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(indirect_object_is_inconsistent_with_xref_table,
+	             obj_stream.take_indirect_object(xref_inuse_entry{7, 1, 0}));
 }

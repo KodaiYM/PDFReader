@@ -25,6 +25,7 @@
     <RootNamespace>PDFParserTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -80,6 +81,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\white\Documents\Visual Studio 2019\source\repos\PDFReader\PDFParser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4691;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -91,6 +98,12 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\white\Documents\Visual Studio 2019\source\repos\PDFReader\PDFParser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4691;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -103,6 +116,10 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\white\Documents\Visual Studio 2019\source\repos\PDFReader\PDFParser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4691;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -114,64 +131,43 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\white\Documents\Visual Studio 2019\source\repos\PDFReader\PDFParser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4691;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="data\helloworld.pdf" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="attempt_test.hpp" />
-    <ClInclude Include="attempt_token_test.hpp" />
-    <ClInclude Include="eof_test.hpp" />
-    <ClInclude Include="get_contents_test.hpp" />
-    <ClInclude Include="get_test.hpp" />
-    <ClInclude Include="ignore_if_present_test.hpp" />
+    <ClInclude Include="get_test.cpp" />
     <ClInclude Include="literal_trim.hpp" />
-    <ClInclude Include="operator++_test.hpp" />
-    <ClInclude Include="get_pages_test.hpp" />
-    <ClInclude Include="no_token.hpp" />
-    <ClInclude Include="peek_test.hpp" />
-    <ClInclude Include="promise_test.hpp" />
-    <ClInclude Include="promise_token_test.hpp" />
-    <ClInclude Include="seek_forward_head_of_line_test.hpp" />
-    <ClInclude Include="seek_test.hpp" />
-    <ClInclude Include="seek_to_end_test.hpp" />
-    <ClInclude Include="take_array_object_test.hpp" />
-    <ClInclude Include="take_boolean_object_test.hpp" />
-    <ClInclude Include="take_dictionary_object_test.hpp" />
-    <ClInclude Include="take_hexadecimal_string_test.hpp" />
-    <ClInclude Include="take_indirect_reference_test.hpp" />
-    <ClInclude Include="take_integer_object_test.hpp" />
-    <ClInclude Include="take_literal_string_test.hpp" />
-    <ClInclude Include="take_name_object_test.hpp" />
-    <ClInclude Include="take_null_object_test.hpp" />
-    <ClInclude Include="take_real_object_test.hpp" />
-    <ClInclude Include="take_stream_object_test.hpp" />
-    <ClInclude Include="take_object_test.hpp" />
-    <ClInclude Include="take_footer_test.hpp" />
-    <ClInclude Include="take_indirect_object_test.hpp" />
-    <ClInclude Include="take_token_test.hpp" />
-    <ClInclude Include="take_trailer_test.hpp" />
-    <ClInclude Include="take_xref_entry_test.hpp" />
-    <ClInclude Include="take_xref_table_test.hpp" />
-    <ClInclude Include="tell_test.hpp" />
+    <ClCompile Include="operator++_test.cpp" />
+    <ClCompile Include="no_token.cpp" />
     <ClInclude Include="testtool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssertThrows.hpp" />
+    <ClCompile Include="array_object_test.cpp" />
     <ClCompile Include="attempt_test.cpp" />
     <ClCompile Include="attempt_token_test.cpp" />
+    <ClCompile Include="dictionary_object_test.cpp" />
     <ClCompile Include="eof_test.cpp" />
     <ClCompile Include="get_contents_test.cpp" />
     <ClCompile Include="ignore_if_present_test.cpp" />
+    <ClCompile Include="integer_object_test.cpp" />
+    <ClCompile Include="length_test.cpp" />
     <ClCompile Include="literal_trim.cpp" />
     <ClCompile Include="get_pages_test.cpp" />
+    <ClCompile Include="onstream_array_object_test.cpp" />
+    <ClCompile Include="onstream_dictionary_object_test.cpp" />
+    <ClCompile Include="onstream_integer_object_test.cpp" />
     <ClCompile Include="peek_test.cpp" />
+    <ClCompile Include="promise_test.cpp" />
     <ClCompile Include="promise_token_test.cpp" />
     <ClCompile Include="seek_forward_head_of_line_test.cpp" />
     <ClCompile Include="seek_test.cpp" />
@@ -192,10 +188,44 @@
     <ClCompile Include="take_indirect_object_test.cpp" />
     <ClCompile Include="take_token_test.cpp" />
     <ClCompile Include="take_trailer_test.cpp" />
+    <ClCompile Include="take_xref_entry_test.cpp" />
     <ClCompile Include="take_xref_table_test.cpp" />
     <ClCompile Include="tell_test.cpp" />
-    <ClCompile Include="tests.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <_WildCardClCompile Include="..\..\..\PDFParser\*.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.TestPlatform.AdapterUtilities">
+      <HintPath>..\..\..\packages\MSTest.TestAdapter.2.2.7\build\_common\Microsoft.TestPlatform.AdapterUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter">
+      <HintPath>..\..\..\packages\MSTest.TestAdapter.2.2.7\build\_common\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices">
+      <HintPath>..\..\..\packages\MSTest.TestAdapter.2.2.7\build\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface">
+      <HintPath>..\..\..\packages\MSTest.TestAdapter.2.2.7\build\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework">
+      <HintPath>..\..\..\packages\MSTest.TestFramework.2.2.7\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions">
+      <HintPath>..\..\..\packages\MSTest.TestFramework.2.2.7\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Target Name="AddWildCardItems" AfterTargets="BuildGenerateSources">
+    <ItemGroup>
+      <ClCompile Include="@(_WildCardClCompile)" />
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <ComputeCompileInputsTargets>
+      AddWildCardItems
+      $(ComputeCompileInputsTargets)
+    </ComputeCompileInputsTargets>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

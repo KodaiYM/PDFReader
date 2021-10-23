@@ -1,8 +1,9 @@
 #include "pdfparser.ipdfstream.hpp"
+#include "pdfparser.ipdfstream_errors.hpp"
 
 using namespace pdfparser;
 
-object_types::dictionary_object ipdfstream::take_footer() {
+object_types::onstream_dictionary_object ipdfstream::take_footer() {
 	seek_to_end();
 	seek_forward_head_of_line();
 	seek_forward_head_of_line();
@@ -34,8 +35,11 @@ xref_types::xref_table ipdfstream::take_xref_table() {
 
 	promise_token({"xref"});
 
-	const object_t first_object_number = take_integer_object();
-	const object_t number_of_entries   = take_integer_object();
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto     first_object_number_pos = tell();
+	const object_t first_object_number     = take_integer_object();
+	const object_t number_of_entries       = take_integer_object();
 
 	assert(number_of_entries > 0); // HACK: error check? throw?
 	// this "if statement" means...
@@ -43,7 +47,7 @@ xref_types::xref_table ipdfstream::take_xref_table() {
 	// std::numeric_limits<object_t>::max()
 	if (number_of_entries - 1 >
 	    std::numeric_limits<object_t>::max() - first_object_number) {
-		throw std::overflow_error("overflow");
+		throw object_number_overflow_in_xref_table(first_object_number_pos);
 	}
 
 	for (object_t entry_offset = 0; entry_offset < number_of_entries;
@@ -61,19 +65,23 @@ xref_types::xref_entry
 	auto first_integer  = take_integer_object();
 	auto second_integer = take_integer_object();
 
+	ignore_if_present(whitespace_flags::any_whitespace_characters |
+	                  whitespace_flags::comment);
+	const auto keyword_token_pos = tell();
+
 	auto keyword_opt = take_token();
-	if (keyword_opt.has_value() && "n"sv == keyword_opt.value()) {
+	if ("n"sv == keyword_opt) {
 		return xref_types::xref_inuse_entry{object_number, second_integer,
 		                                    first_integer};
-	} else if (keyword_opt.has_value() && "f"sv == keyword_opt.value()) {
+	} else if ("f"sv == keyword_opt) {
 		return xref_types::xref_free_entry{object_number, second_integer,
 		                                   first_integer};
 	} else {
-		throw parse_error(parse_error::xref_entry_keyword_invalid);
+		throw xref_entry_keyword_invalid(keyword_token_pos);
 	}
 }
 
-object_types::dictionary_object ipdfstream::take_trailer() {
+object_types::onstream_dictionary_object ipdfstream::take_trailer() {
 	promise_token({"trailer"});
 	return take_dictionary_object();
 }

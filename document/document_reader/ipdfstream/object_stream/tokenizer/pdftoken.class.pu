@@ -12,7 +12,7 @@ class pdftoken <<struct>> {
 	+enum token_type
 	+m_type        : token_type
 	-m_token_str : std::string
-	+pdftoken(type : token_type, token_str : std::string)
+	+pdftoken(position : std::streampos, type : token_type, token_str : std::string)
 	+value() : token_type
 	+str()   : std::string()
 	+operator std::string()
@@ -20,5 +20,10 @@ class pdftoken <<struct>> {
 	+operator std::string_view()
 }
 pdftoken --> "1" token_type
+pdftoken ..|> portion_of_stream
+
+abstract portion_of_stream {
+	[[portion_of_stream.class.pu]]
+}
 }
 @enduml

@@ -4,6 +4,7 @@ open Microsoft.WindowsAPICodePack.Dialogs
 open System.ComponentModel
 open System.Collections.ObjectModel
 open System.Diagnostics
+open System.Windows
 
 type PagesViewModel() =
    member val Pages = ObservableCollection<PDFReader.PDFPage>()
@@ -15,7 +16,22 @@ type PagesViewModel() =
 
       if dialog.ShowDialog() = CommonFileDialogResult.Ok then
          let pages =
-            PDFReader.PagesModel.GetPages dialog.FileName
+            try
+               PDFReader.PagesModel.GetPages dialog.FileName
+            with
+            | :? PDFReader.PDFParserError as e ->
+               let caption = "エラー"
+
+               let message =
+                  "ドキュメントの読み込み中にエラーが発生しました。\n\n" + e.Message
+
+               let button = MessageBoxButton.OK
+               let icon = MessageBoxImage.Error
+
+               MessageBox.Show(message, caption, button, icon)
+               |> ignore
+
+               exit (1)
 
          for page in pages do
             this.Pages.Add

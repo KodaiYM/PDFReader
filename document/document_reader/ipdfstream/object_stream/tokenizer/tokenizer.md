@@ -14,6 +14,8 @@
 
 ## クラス図一覧
 - [トークン解析クラス図](tokenizer.class.pu)
+- [エラー一覧クラス図](tokenizer_errors.class.pu)
 
 ## フローチャート
 - [トークン解析アクティビティ図](tokenizer.activity.pu)
+- [エラー一覧アクティビティ図](tokenizer_errors.activity.pu)

@@ -1,11 +1,13 @@
 #include "pdfparser.document_error.hpp"
 #include "pdfparser.page_parser.hpp"
 #include "pdfparser.page_tree_parser.hpp"
+#include "pdfparser.page_tree_parser_errors.hpp"
 
 using namespace pdfparser;
+using namespace pdfparser::object_types;
 
-page_tree_parser::page_tree_parser(
-    ipdfstream& stream, const object_types::dictionary_object& root_node)
+page_tree_parser::page_tree_parser(ipdfstream&                       stream,
+                                   const onstream_dictionary_object& root_node)
     : m_stream(stream), m_root_node(root_node) {}
 
 System::Collections::Generic::List<PDFReader::PDFPage ^> ^
@@ -15,26 +17,28 @@ System::Collections::Generic::List<PDFReader::PDFPage ^> ^
 
 System::Collections::Generic::List<PDFReader::PDFPage ^> ^
     page_tree_parser::get_pages(
-        const object_types::dictionary_object& page_node,
-        const object_types::dictionary_object& inherited_attributes) {
-	using namespace object_types;
-
-	auto type = m_stream.dereference<name_object>(page_node.at("Type"));
+        const onstream_dictionary_object& page_node,
+        const std::unordered_map<onstream_name_object,
+                                 onstream_non_null_direct_object_or_ref>&
+            inherited_attributes) {
+	onstream_name_object type = m_stream.dereference(page_node.at("Type").get());
 	if ("Pages" == type) {
 		auto new_inherited_attributes = inherited_attributes;
 		for (const auto& entry : page_node) {
 			const auto key = entry.first;
 			if ("Resources" == key || "MediaBox" == key || "CropBox" == key ||
 			    "Rotate" == key) {
-				new_inherited_attributes.insert_or_assign(key, entry.second);
+				new_inherited_attributes.insert_or_assign(key, entry.second.get());
 			}
 		}
 
 		auto pages = gcnew System::Collections::Generic::List<PDFReader::PDFPage ^>;
-		const auto& kids = m_stream.dereference<array_object>(page_node.at("Kids"));
+
+		onstream_array_object kids =
+		    m_stream.dereference(page_node.at("Kids").get());
 		for (const auto& kid : kids) {
-			pages->AddRange(get_pages(m_stream.dereference<dictionary_object>(kid),
-			                          new_inherited_attributes));
+			pages->AddRange(
+			    get_pages(m_stream.dereference(kid), new_inherited_attributes));
 		}
 		return pages;
 	} else if ("Page" == type) {
@@ -49,6 +53,6 @@ System::Collections::Generic::List<PDFReader::PDFPage ^> ^
 
 		return only_this_page_list;
 	} else {
-		throw gcnew document_error();
+		throw non_page_node_detected(type.position());
 	}
 }

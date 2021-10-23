@@ -1,0 +1,10 @@
+@startuml integer_object
+partition "各関数" {
+	if (オーバーフロー) then (y)
+		:throw integer_object_overflows();
+		:(但し、onstream_integer_object の場合は、);
+		:throw onstream_integer_object_overflows();
+		stop
+	endif
+}
+@enduml

@@ -1,5 +1,15 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_name_object_test {
+public:
+	[TestMethod] void test_valid_name();
+	[TestMethod] void test_empty_name();
+	[TestMethod] void test_hexadecimal_code();
+};
+} // namespace object_stream_test
+
 #include "pdfparser.object_stream.hpp"
-#include "take_name_object_test.hpp"
 
 #include <sstream>
 #include <string>
@@ -20,6 +30,7 @@ void take_name_object_test::test_valid_name() {
 
 	auto object = obj_stream.take_name_object();
 	Assert::IsTrue(R"(;*_-.$@!"&'=~^\|`+:,?)" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_name_object_test::test_empty_name() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -31,6 +42,7 @@ void take_name_object_test::test_empty_name() {
 
 	auto object = obj_stream.take_name_object();
 	Assert::IsTrue("" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_name_object_test::test_hexadecimal_code() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -42,4 +54,5 @@ void take_name_object_test::test_hexadecimal_code() {
 
 	auto object = obj_stream.take_name_object();
 	Assert::IsTrue("A"s + '\x20' + "B" == object);
+	Assert::IsTrue(0 == object.position());
 }

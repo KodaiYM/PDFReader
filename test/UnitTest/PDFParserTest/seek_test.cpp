@@ -1,6 +1,17 @@
+#include "testtool.h"
+
+namespace istream_extended_test {
+[TestClass] public ref class seek_test {
+public:
+	[TestMethod] void test_to_between_CRLF();
+	[TestMethod] void test_to_EOF();
+	[TestMethod] void test_over_EOF();
+};
+} // namespace istream_extended_test
+
+#include "AssertThrows.hpp"
 #include "pdfparser.istream_extended.hpp"
-#include "pdfparser.istream_extended_error.hpp"
-#include "seek_test.hpp"
+#include "pdfparser.istream_extended_errors.hpp"
 
 #include <sstream>
 
@@ -37,13 +48,5 @@ void seek_test::test_over_EOF() {
 	stream << "test";
 
 	istream_extended str_extended(stream.rdbuf());
-	try {
-		str_extended.seek(5);
-	} catch (const istream_extended_error& parse_e) {
-		Assert::IsTrue(istream_extended_error::failed_to_seek == parse_e.code());
-
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(failed_to_seek, str_extended.seek(5));
 }

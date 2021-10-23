@@ -8,6 +8,8 @@
 
 ## クラス図一覧
 - [ストリーム機能拡張クラス図](istream_extended.class.pu)
+- [エラー一覧クラス図](istream_extended_error.class.pu)
 
 ## フローチャート
 - [ストリーム機能拡張アクティビティ図](istream_extended.activity.pu)
+- [エラー一覧アクティビティ図](istream_extended_error.activity.pu)

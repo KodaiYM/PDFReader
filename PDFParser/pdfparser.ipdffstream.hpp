@@ -9,9 +9,12 @@
 namespace pdfparser {
 class ipdffstream: public std::ifstream, public ipdfstream {
 public:
-	explicit ipdffstream(const char* filepath);
-	explicit ipdffstream(const std::string& filepath);
-	explicit ipdffstream(const std::filesystem::path::value_type* filepath);
-	explicit ipdffstream(const std::filesystem::path& filepath);
+	explicit inline ipdffstream(const char* filepath);
+	explicit inline ipdffstream(const std::string& filepath);
+	explicit inline ipdffstream(
+	    const std::filesystem::path::value_type* filepath);
+	explicit inline ipdffstream(const std::filesystem::path& filepath);
 };
 } // namespace pdfparser
+
+#include "pdfparser.ipdffstream.ipp"

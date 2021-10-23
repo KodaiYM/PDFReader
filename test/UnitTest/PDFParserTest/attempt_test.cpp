@@ -1,4 +1,15 @@
-#include "attempt_test.hpp"
+#include "testtool.h"
+
+namespace istream_extended_test {
+[TestClass] public ref class attempt_test {
+public:
+	[TestMethod] void test_match();
+	[TestMethod] void test_fail_during_match();
+	[TestMethod] void test_empty_match_on_EOF();
+	[TestMethod] void test_non_empty_match_on_EOF();
+};
+} // namespace istream_extended_test
+
 #include "pdfparser.istream_extended.hpp"
 
 #include <sstream>

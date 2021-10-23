@@ -12,7 +12,8 @@
 
 ## クラス図一覧
 - [PDFストリーム解析クラス図](ipdfstream.class.pu)
-- [PDFストリーム構文解析エラークラス図](parse_error.class.pu)
+- [エラー一覧クラス図](ipdfstream_errors.class.pu)
 
 ## フローチャート
 - [PDFストリーム解析アクティビティ図](ipdfstream.activity.pu)
+- [エラー一覧アクティビティ図](ipdfstream_errors.activity.pu)

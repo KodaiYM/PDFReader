@@ -13,11 +13,11 @@ start
 	:page_builder : pdfpage_builder;
 
 	' Get MediaBox
-	:MediaBox_array = m_stream.dereference<array_object>(m_page_object.at("MediaBox"));
+	:MediaBox_array = m_page_object.at("MediaBox");
 	:page_builder.set_media_box(RectangleData(Coordinates{MediaBox_array.at(0), MediaBox_array.at(1)}, Coordinates{MediaBox_array.at(2), MediaBox_array.at(3)}));
 
 	' Get Contents
-	:content_stream_object = m_stream.dereference<stream_object>(m_page_object.at("Contents"));
+	:content_stream_object = m_page_object.at("Contents");
 	:content_stream = ipdfstringstream(content_stream_object.get_decoded_data());
 	:this_contents_parser = contents_parser(content_stream);
 	:page_builder.set_contents(this_contents_parser.get_contents());

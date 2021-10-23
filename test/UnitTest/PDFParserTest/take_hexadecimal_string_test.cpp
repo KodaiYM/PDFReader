@@ -1,6 +1,19 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_hexadecimal_string_test {
+public:
+	[TestMethod] void test_mix_letters();
+	[TestMethod] void test_whitespace();
+	[TestMethod] void test_odd_number_of_digits();
+	[TestMethod] void test_non_hexadecimal_digit_found();
+	[TestMethod] void test_lack_of_greater_than_sign();
+};
+} // namespace object_stream_test
+
+#include "AssertThrows.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
-#include "take_hexadecimal_string_test.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <sstream>
 
@@ -17,6 +30,7 @@ void take_hexadecimal_string_test::test_mix_letters() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_string_object();
 	Assert::IsTrue("\x0A\x1B\x2C\x3D\x4E\x5F\xE6\xD7\xC8\xB9\xA1" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_hexadecimal_string_test::test_whitespace() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -27,6 +41,7 @@ void take_hexadecimal_string_test::test_whitespace() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_string_object();
 	Assert::IsTrue("\x20\x3A\xF5" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_hexadecimal_string_test::test_odd_number_of_digits() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -37,6 +52,7 @@ void take_hexadecimal_string_test::test_odd_number_of_digits() {
 	object_stream obj_stream(stream.rdbuf());
 	auto          object = obj_stream.take_string_object();
 	Assert::IsTrue("\x90\x1F\xA0" == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -45,17 +61,9 @@ void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
 	stream << "<901GA>";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_string_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(
-		    parse_error::hexadecimal_string_non_hexadecimal_digit_found ==
-		    parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(hexadecimal_string_non_hexadecimal_digit_found,
+	             obj_stream.take_string_object());
 }
 void take_hexadecimal_string_test::test_lack_of_greater_than_sign() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -64,14 +72,7 @@ void take_hexadecimal_string_test::test_lack_of_greater_than_sign() {
 	stream << "<901FA";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_string_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::hexadecimal_string_lack_of_greater_than_sign ==
-		               parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(hexadecimal_string_lack_of_greater_than_sign,
+	             obj_stream.take_string_object());
 }

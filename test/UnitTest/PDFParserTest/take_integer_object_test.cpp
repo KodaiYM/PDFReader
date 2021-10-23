@@ -1,6 +1,27 @@
-#include "pdfparser.object_not_found_error.hpp"
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_integer_object_test {
+public:
+	[TestMethod] void test_unsigned_integer();
+	[TestMethod] void test_plus_integer();
+	[TestMethod] void test_minus_integer();
+	[TestMethod] void test_max();
+	[TestMethod] void test_min();
+
+	[TestMethod] void test_not_number();
+	[TestMethod] void test_EOF();
+	[TestMethod] void test_plus_not_number();
+	[TestMethod] void test_minus_not_number();
+	[TestMethod] void test_sign_EOF();
+	[TestMethod] void test_max_plus1();
+	[TestMethod] void test_min_minus1();
+};
+} // namespace object_stream_test
+
+#include "AssertThrows.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "take_integer_object_test.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <sstream>
 
@@ -16,8 +37,9 @@ void take_integer_object_test::test_unsigned_integer() {
 
 	object_stream obj_stream(stream.rdbuf());
 
-	integer_object object = obj_stream.take_integer_object();
+	auto object = obj_stream.take_integer_object();
 	Assert::AreEqual(123, static_cast<int>(object));
+	Assert::IsTrue(0 == object.position());
 }
 void take_integer_object_test::test_plus_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -27,8 +49,9 @@ void take_integer_object_test::test_plus_integer() {
 
 	object_stream obj_stream(stream.rdbuf());
 
-	integer_object object = obj_stream.take_integer_object();
+	auto object = obj_stream.take_integer_object();
 	Assert::AreEqual(123, static_cast<int>(object));
+	Assert::IsTrue(0 == object.position());
 }
 void take_integer_object_test::test_minus_integer() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -38,8 +61,9 @@ void take_integer_object_test::test_minus_integer() {
 
 	object_stream obj_stream(stream.rdbuf());
 
-	integer_object object = obj_stream.take_integer_object();
+	auto object = obj_stream.take_integer_object();
 	Assert::AreEqual(-123, static_cast<int>(object));
+	Assert::IsTrue(0 == object.position());
 }
 void take_integer_object_test::test_max() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -75,32 +99,16 @@ void take_integer_object_test::test_not_number() {
 	stream << "deadbeef";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (const object_not_found_error& obj_e) {
-		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
-		               obj_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(integer_object_not_found, obj_stream.take_integer_object());
 }
 void take_integer_object_test::test_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (const object_not_found_error& obj_e) {
-		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
-		               obj_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(integer_object_not_found, obj_stream.take_integer_object());
 }
 void take_integer_object_test::test_plus_not_number() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -109,16 +117,8 @@ void take_integer_object_test::test_plus_not_number() {
 	stream << "+deadbeef";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (const object_not_found_error& obj_e) {
-		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
-		               obj_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(integer_object_not_found, obj_stream.take_integer_object());
 }
 void take_integer_object_test::test_minus_not_number() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -127,16 +127,8 @@ void take_integer_object_test::test_minus_not_number() {
 	stream << "-deadbeef";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (const object_not_found_error& obj_e) {
-		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
-		               obj_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(integer_object_not_found, obj_stream.take_integer_object());
 }
 void take_integer_object_test::test_sign_EOF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -145,16 +137,8 @@ void take_integer_object_test::test_sign_EOF() {
 	stream << "+";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (const object_not_found_error& obj_e) {
-		Assert::IsTrue(object_not_found_error::integer_object_not_found ==
-		               obj_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(integer_object_not_found, obj_stream.take_integer_object());
 }
 void take_integer_object_test::test_max_plus1() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -164,13 +148,9 @@ void take_integer_object_test::test_max_plus1() {
 	stream << max / 10 << ((max % 10) + 1);
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (std::out_of_range&) {
-		// success
-		return;
-	}
-	Assert::Fail();
+
+	AssertThrows(onstream_integer_object_overflows,
+	             obj_stream.take_integer_object());
 }
 void take_integer_object_test::test_min_minus1() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -180,11 +160,7 @@ void take_integer_object_test::test_min_minus1() {
 	stream << min / 10 << (-(min % 10) + 1);
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_integer_object();
-	} catch (std::out_of_range&) {
-		// success
-		return;
-	}
-	Assert::Fail();
+
+	AssertThrows(onstream_integer_object_overflows,
+	             obj_stream.take_integer_object());
 }

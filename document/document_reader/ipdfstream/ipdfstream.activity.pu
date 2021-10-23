@@ -41,11 +41,13 @@ start
 	:this_xref_table : xref_table;
 	:promise_token("xref");
 
+	:ignore_if_present(any_whitespace_characters | comment);
+	:first_object_number_pos = tell();
 	:first_object_number = take_integer_object() : object_t;
 	:number_of_entries = take_integer_object() : object_t;
 
 	if (first_object_number + number_of_entries - 1 がオーバーフロー) then (y)
-		:throw std::overflow_error("overflow");
+		:throw object_number_overflow_in_xref_table(first_object_number_pos);
 		stop
 	endif
 
@@ -65,6 +67,9 @@ start
 	:first_integer = take_integer_object();
 	:second_integer = take_integer_object() : generation_t;
 
+	:ignore_if_present(any_whitespace_characters | comment);
+	:keyword_token_pos = tell();
+
 	:keyword = take_token();
 
 	if ("n" == keyword) then (y)
@@ -74,7 +79,7 @@ start
 		:next_free_object_number = first_10_digitsを object_t 型の整数に変換;
 		:return xref_free_entry{object_number, generation_number, next_free_object_number};
 	else
-		:throw parse_error(xref_entry_keyword_invalid);
+		:throw xref_entry_keyword_invalid(keyword_token_pos);
 		stop
 	endif
 stop

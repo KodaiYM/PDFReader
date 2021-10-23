@@ -1,8 +1,20 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_stream_object_test {
+public:
+	[TestMethod] void test_sample_CRLF();
+	[TestMethod] void test_sample_LF();
+	[TestMethod] void test_indirect_reference_Length();
+	[TestMethod] void test_absence_of_Length_entry();
+	[TestMethod] void test_data_is_shorter_than_Length();
+};
+} // namespace object_stream_test
+
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
-#include "pdfparser.parse_error.hpp"
-#include "take_stream_object_test.hpp"
+#include "pdfparser.object_stream_errors.hpp"
 
 #include <sstream>
 
@@ -23,6 +35,7 @@ void take_stream_object_test::test_sample_CRLF() {
 	auto          object = obj_stream.take_stream_object();
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
 	                             " stream contents \n"} == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_stream_object_test::test_sample_LF() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -37,6 +50,7 @@ void take_stream_object_test::test_sample_LF() {
 	auto          object = obj_stream.take_stream_object();
 	Assert::IsTrue(stream_object{dictionary_object{{"Length", 18}},
 	                             " stream contents \n"} == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_stream_object_test::test_indirect_reference_Length() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -68,6 +82,7 @@ endobj
 	Assert::IsTrue(
 	    stream_object{dictionary_object{{"Length", indirect_reference{1, 0}}},
 	                  " stream contents "} == object);
+	Assert::IsTrue(beginning_of_stream == object.position());
 }
 void take_stream_object_test::test_absence_of_Length_entry() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -81,16 +96,9 @@ endstream
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_stream_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::stream_dictionary_absence_of_Length_entry ==
-		               parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(stream_dictionary_absence_of_Length_entry,
+	             obj_stream.take_stream_object());
 }
 void take_stream_object_test::test_data_is_shorter_than_Length() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -104,14 +112,7 @@ endstream
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_stream_object();
-	} catch (const parse_error& parse_e) {
-		Assert::IsTrue(parse_error::stream_data_is_shorter_than_Length ==
-		               parse_e.code());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(stream_data_is_shorter_than_Length,
+	             obj_stream.take_stream_object());
 }

@@ -1,5 +1,14 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_indirect_reference_test {
+public:
+	[TestMethod] void test_unsigned();
+	[TestMethod] void test_signed();
+};
+} // namespace object_stream_test
+
 #include "pdfparser.object_stream.hpp"
-#include "take_indirect_reference_test.hpp"
 
 #include <sstream>
 
@@ -18,6 +27,7 @@ void take_indirect_reference_test::test_unsigned() {
 
 	auto object = obj_stream.take_indirect_reference();
 	Assert::IsTrue(indirect_reference{3, 8} == object);
+	Assert::IsTrue(0 == object.position());
 }
 void take_indirect_reference_test::test_signed() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -29,4 +39,5 @@ void take_indirect_reference_test::test_signed() {
 
 	auto object = obj_stream.take_indirect_reference();
 	Assert::IsTrue(indirect_reference{3, 8} == object);
+	Assert::IsTrue(0 == object.position());
 }

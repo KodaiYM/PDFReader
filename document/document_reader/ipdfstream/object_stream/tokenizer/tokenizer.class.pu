@@ -12,16 +12,12 @@ class tokenizer {
 }
 tokenizer --|> istream_extended
 tokenizer ..> pdftoken
-tokenizer ..> tokenize_error
 
 class istream_extended {
 	[[istream_extended.class.pu]]
 }
 class pdftoken <<struct>> {
 	[[pdftoken.class.pu]]
-}
-class tokenize_error {
-	[[tokenize_error.class.pu]]
 }
 }
 @enduml
