@@ -184,8 +184,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssertThrows.hpp" />
+    <ClCompile Include="array_object_test.cpp" />
     <ClCompile Include="attempt_test.cpp" />
     <ClCompile Include="attempt_token_test.cpp" />
+    <ClCompile Include="dictionary_object_test.cpp" />
     <ClCompile Include="eof_test.cpp" />
     <ClCompile Include="get_contents_test.cpp" />
     <ClCompile Include="ignore_if_present_test.cpp" />
@@ -193,6 +195,9 @@
     <ClCompile Include="length_test.cpp" />
     <ClCompile Include="literal_trim.cpp" />
     <ClCompile Include="get_pages_test.cpp" />
+    <ClCompile Include="onstream_array_object_test.cpp" />
+    <ClCompile Include="onstream_dictionary_object_test.cpp" />
+    <ClCompile Include="onstream_integer_object_test.cpp" />
     <ClCompile Include="peek_test.cpp" />
     <ClCompile Include="promise_test.cpp" />
     <ClCompile Include="promise_token_test.cpp" />

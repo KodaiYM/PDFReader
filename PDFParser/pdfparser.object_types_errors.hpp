@@ -32,10 +32,10 @@ public:
 	array_out_of_range()
 	    : document_error("配列オブジェクトの要素数が想定より少ないです。") {}
 };
-class array_onstream_out_of_range final
-    : public position_indicatable_error<array_onstream_out_of_range> {
+class onstream_array_out_of_range final
+    : public position_indicatable_error<onstream_array_out_of_range> {
 public:
-	explicit array_onstream_out_of_range(std::streampos position)
+	explicit onstream_array_out_of_range(std::streampos position)
 	    : position_indicatable_error(
 	          position, "配列オブジェクトの要素数が想定より少ないです。") {}
 };
@@ -45,10 +45,10 @@ public:
 	dictionary_out_of_range()
 	    : document_error("配列オブジェクトの要素数が想定より少ないです。") {}
 };
-class dictionary_onstream_out_of_range final
-    : public position_indicatable_error<dictionary_onstream_out_of_range> {
+class onstream_dictionary_out_of_range final
+    : public position_indicatable_error<onstream_dictionary_out_of_range> {
 public:
-	explicit dictionary_onstream_out_of_range(std::streampos position)
+	explicit onstream_dictionary_out_of_range(std::streampos position)
 	    : position_indicatable_error(
 	          position, "配列オブジェクトの要素数が想定より少ないです。") {}
 };

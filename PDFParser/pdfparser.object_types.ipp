@@ -195,7 +195,7 @@ inline auto onstream_array_object::at(typename base::size_type n) ->
 	try {
 		return array_object_base::at(n);
 	} catch (array_out_of_range&) {
-		throw array_onstream_out_of_range{position()};
+		throw onstream_array_out_of_range{position()};
 	}
 }
 inline auto onstream_array_object::at(typename base::size_type n) const ->
@@ -203,7 +203,7 @@ inline auto onstream_array_object::at(typename base::size_type n) const ->
 	try {
 		return array_object_base::at(n);
 	} catch (array_out_of_range&) {
-		throw array_onstream_out_of_range{position()};
+		throw onstream_array_out_of_range{position()};
 	}
 }
 #pragma endregion // region onstream_array_object
@@ -262,7 +262,7 @@ inline auto onstream_dictionary_object::at(const name_object& key) const
 	try {
 		return base::at({0, key});
 	} catch (array_out_of_range&) {
-		throw array_onstream_out_of_range(position());
+		throw onstream_array_out_of_range(position());
 	}
 }
 

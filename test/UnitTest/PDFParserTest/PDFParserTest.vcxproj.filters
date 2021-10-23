@@ -256,5 +256,20 @@
     <ClCompile Include="integer_object_test.cpp">
       <Filter>tests\object_types</Filter>
     </ClCompile>
+    <ClCompile Include="onstream_integer_object_test.cpp">
+      <Filter>tests\object_types</Filter>
+    </ClCompile>
+    <ClCompile Include="array_object_test.cpp">
+      <Filter>tests\object_types</Filter>
+    </ClCompile>
+    <ClCompile Include="onstream_array_object_test.cpp">
+      <Filter>tests\object_types</Filter>
+    </ClCompile>
+    <ClCompile Include="dictionary_object_test.cpp">
+      <Filter>tests\object_types</Filter>
+    </ClCompile>
+    <ClCompile Include="onstream_dictionary_object_test.cpp">
+      <Filter>tests\object_types</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
