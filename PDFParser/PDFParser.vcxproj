@@ -188,6 +188,7 @@
     <ClInclude Include="pdfparser.space.hpp" />
     <ClInclude Include="pdfparser.text_style.hpp" />
     <ClInclude Include="PDFReader.PagesModel.hpp" />
+    <ClInclude Include="PDFReader.PagesModel_errors.hpp" />
     <ClInclude Include="PDFReader.PDFContents.hpp" />
     <ClInclude Include="type_traits_extended.hpp" />
     <ClInclude Include="pdfparser.document_error.hpp" />

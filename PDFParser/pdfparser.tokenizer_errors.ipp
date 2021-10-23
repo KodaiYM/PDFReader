@@ -23,10 +23,10 @@ std::string promise_token_failed::generate_message(InputIterator first,
 	std::for_each(first, last, [&message](std::string_view promise_token_str) {
 		message << promise_token_str;
 
-		message << '(';
+		message << "(0x";
 
-		auto old_flags =
-		    message.setf(std::ios_base::hex | std::ios_base::uppercase);
+		auto old_flags = message.setf(std::ios_base::hex | std::ios_base::uppercase,
+		                              std::ios_base::basefield);
 		for (const auto& character : promise_token_str) {
 			message << static_cast<unsigned int>(character);
 		}

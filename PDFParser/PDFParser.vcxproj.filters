@@ -246,6 +246,9 @@
     <ClInclude Include="pdfparser.object_cache.ipp">
       <Filter>pdfparser\document_reader\object_cache</Filter>
     </ClInclude>
+    <ClInclude Include="PDFReader.PagesModel_errors.hpp">
+      <Filter>PDFReader\PagesModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
