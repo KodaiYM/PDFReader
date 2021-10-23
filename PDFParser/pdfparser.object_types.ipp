@@ -82,8 +82,8 @@ constexpr integer_object::operator int_type() const noexcept {
 #pragma endregion // region integer_object
 
 #pragma region onstream_integer_object
-inline onstream_integer_object::onstream_integer_object(std::streampos position,
-                                                        integer_object value)
+inline onstream_integer_object::onstream_integer_object(
+    std::streampos position, integer_object value) noexcept
     : portion_of_stream(std::move(position)), integer_object(std::move(value)) {
 }
 inline onstream_integer_object::onstream_integer_object(
@@ -92,7 +92,8 @@ inline onstream_integer_object::onstream_integer_object(
       integer_object(std::stoll(str, nullptr, 10)) {
 	static_assert(std::is_same_v<long long, int_type>);
 } catch (std::out_of_range&) {
-	throw onstream_integer_object_overflows(position);
+	throw onstream_integer_object_overflows(
+	    const_cast<std::streampos&&>(portion_of_stream::position()));
 }
 
 template <typename IntegerT,
@@ -261,8 +262,8 @@ inline auto onstream_dictionary_object::at(const name_object& key) const
     -> const mapped_type& {
 	try {
 		return base::at({0, key});
-	} catch (array_out_of_range&) {
-		throw onstream_array_out_of_range(position());
+	} catch (dictionary_out_of_range&) {
+		throw onstream_dictionary_out_of_range(position());
 	}
 }
 

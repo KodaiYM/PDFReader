@@ -68,7 +68,8 @@ public:
 	operator IntegerT() const;
 
 public:
-	inline onstream_integer_object(std::streampos position, integer_object value);
+	inline onstream_integer_object(std::streampos position,
+	                               integer_object value) noexcept;
 	inline onstream_integer_object(std::streampos     position,
 	                               const std::string& str);
 };
