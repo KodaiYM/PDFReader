@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.istream_extended.hpp"
 #include "pdfparser.istream_extended_errors.hpp"
 #include "seek_forward_head_of_line_test.hpp"
@@ -17,15 +18,9 @@ void seek_forward_head_of_line_test::test_beginning_of_file() {
 	stream << "abc\ndef";
 
 	istream_extended str_extended(stream.rdbuf());
-	try {
-		str_extended.seek_forward_head_of_line();
-	} catch (const failed_to_seek_forward_head_of_line& e) {
-		Assert::IsTrue(0 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(failed_to_seek_forward_head_of_line,
+	             str_extended.seek_forward_head_of_line());
 }
 /**
  * abc

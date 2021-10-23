@@ -1,5 +1,5 @@
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
 #include "take_indirect_object_test.hpp"
@@ -63,15 +63,9 @@ endobj
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_indirect_object(xref_inuse_entry{8, 0, 0});
-	} catch (const indirect_object_is_inconsistent_with_xref_table& e) {
-		Assert::IsTrue(e.tell_position() == 0);
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(indirect_object_is_inconsistent_with_xref_table,
+	             obj_stream.take_indirect_object(xref_inuse_entry{8, 0, 0}));
 }
 void take_indirect_object_test::test_inconsistent_generation_number() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -84,13 +78,7 @@ endobj
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_indirect_object(xref_inuse_entry{7, 1, 0});
-	} catch (const indirect_object_is_inconsistent_with_xref_table& e) {
-		Assert::IsTrue(e.tell_position() == 0);
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(indirect_object_is_inconsistent_with_xref_table,
+	             obj_stream.take_indirect_object(xref_inuse_entry{7, 1, 0}));
 }

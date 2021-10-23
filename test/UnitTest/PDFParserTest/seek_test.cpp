@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.istream_extended.hpp"
 #include "pdfparser.istream_extended_errors.hpp"
 #include "seek_test.hpp"
@@ -37,11 +38,5 @@ void seek_test::test_over_EOF() {
 	stream << "test";
 
 	istream_extended str_extended(stream.rdbuf());
-	try {
-		str_extended.seek(5);
-	} catch (failed_to_seek&) {
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(failed_to_seek, str_extended.seek(5));
 }

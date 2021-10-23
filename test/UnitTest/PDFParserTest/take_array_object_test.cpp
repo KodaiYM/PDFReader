@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
 #include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
@@ -78,13 +79,7 @@ void take_array_object_test::test_lack_of_right_square_bracket() {
 	stream << "[0 1 2";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_array_object();
-	} catch (const array_lack_of_right_square_bracket& e) {
-		Assert::IsTrue(0 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(array_lack_of_right_square_bracket,
+	             obj_stream.take_array_object());
 }

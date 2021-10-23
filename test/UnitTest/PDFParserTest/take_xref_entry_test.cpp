@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.ipdfstream_errors.hpp"
 #include "take_xref_entry_test.hpp"
@@ -12,13 +13,6 @@ void take_xref_entry_test::test_keyword_invalid() {
 	stream << "100 0 fn";
 
 	ipdfstream str_parser(stream.rdbuf());
-	try {
-		str_parser.take_xref_entry(1);
-	} catch (const xref_entry_keyword_invalid& e) {
-		Assert::IsTrue(6 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(xref_entry_keyword_invalid, str_parser.take_xref_entry(1));
 }

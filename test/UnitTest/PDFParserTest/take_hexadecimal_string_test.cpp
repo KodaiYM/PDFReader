@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
 #include "take_hexadecimal_string_test.hpp"
@@ -48,15 +49,9 @@ void take_hexadecimal_string_test::test_non_hexadecimal_digit_found() {
 	stream << "<901GA>";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_string_object();
-	} catch (const hexadecimal_string_non_hexadecimal_digit_found& e) {
-		Assert::IsTrue(4 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(hexadecimal_string_non_hexadecimal_digit_found,
+	             obj_stream.take_string_object());
 }
 void take_hexadecimal_string_test::test_lack_of_greater_than_sign() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -65,13 +60,7 @@ void take_hexadecimal_string_test::test_lack_of_greater_than_sign() {
 	stream << "<901FA";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_string_object();
-	} catch (const hexadecimal_string_lack_of_greater_than_sign& e) {
-		Assert::IsTrue(0 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(hexadecimal_string_lack_of_greater_than_sign,
+	             obj_stream.take_string_object());
 }

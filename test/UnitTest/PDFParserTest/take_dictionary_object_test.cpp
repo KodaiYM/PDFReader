@@ -1,5 +1,5 @@
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
 #include "take_dictionary_object_test.hpp"
@@ -76,13 +76,6 @@ void take_dictionary_object_test::test_lack_of_double_greater_than_sign() {
 	stream << "<</key (value)";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_dictionary_object();
-	} catch (const dictionary_lack_of_double_greater_than_sign& e) {
-		Assert::IsTrue(0 == e.tell_position());
-
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(dictionary_lack_of_double_greater_than_sign,
+	             obj_stream.take_dictionary_object());
 }

@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
@@ -107,13 +108,6 @@ void take_literal_string_test::test_lack_of_right_parenthesis() {
 
 	object_stream obj_stream(stream.rdbuf());
 
-	try {
-		obj_stream.take_string_object();
-	} catch (const literal_string_lack_of_right_parenthesis& e) {
-		Assert::IsTrue(0 == e.tell_position());
-
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(literal_string_lack_of_right_parenthesis,
+	             obj_stream.take_string_object());
 }

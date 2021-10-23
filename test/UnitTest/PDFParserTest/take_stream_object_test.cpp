@@ -1,5 +1,5 @@
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
 #include "take_stream_object_test.hpp"
@@ -84,15 +84,9 @@ endstream
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_stream_object();
-	} catch (const stream_dictionary_absence_of_Length_entry& e) {
-		Assert::IsTrue(0 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(stream_dictionary_absence_of_Length_entry,
+	             obj_stream.take_stream_object());
 }
 void take_stream_object_test::test_data_is_shorter_than_Length() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
@@ -106,13 +100,7 @@ endstream
 )"_trimmed;
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_stream_object();
-	} catch (const stream_data_is_shorter_than_Length& e) {
-		Assert::IsTrue(22 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(stream_data_is_shorter_than_Length,
+	             obj_stream.take_stream_object());
 }

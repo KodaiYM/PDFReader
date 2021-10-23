@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.tokenizer.hpp"
 #include "pdfparser.tokenizer_errors.hpp"
 #include "promise_token_test.hpp"
@@ -24,13 +25,7 @@ void promise_token_test::test_when_throw() {
 	stream << "token1 token2 token3";
 
 	tokenizer tknizer(stream.rdbuf());
-	try {
-		tknizer.promise_token({"token2", "token3", "token4"});
-	} catch (const promise_token_failed& e) {
-		Assert::IsTrue(0 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(promise_token_failed,
+	             tknizer.promise_token({"token2", "token3", "token4"}));
 }

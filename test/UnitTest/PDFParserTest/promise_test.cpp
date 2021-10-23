@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.istream_extended.hpp"
 #include "promise_test.hpp"
 
@@ -23,13 +24,5 @@ void promise_test::test_failure() {
 
 	istream_extended str_extended(stream.rdbuf());
 
-	try {
-		str_extended.promise({"e", "d", "c", "b"});
-	} catch (const promise_failed& e) {
-		Assert::IsTrue(0 == e.tell_position());
-
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(promise_failed, str_extended.promise({"e", "d", "c", "b"}));
 }

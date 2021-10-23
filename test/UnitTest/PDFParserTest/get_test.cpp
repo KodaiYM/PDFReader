@@ -1,5 +1,3 @@
-#include "pdfparser.istream_extended.hpp"
-#include "pdfparser.istream_extended_errors.hpp"
 #include "testtool.h"
 
 namespace istream_extended_test {
@@ -9,6 +7,10 @@ public:
 	[TestMethod] void test_at_EOF();
 };
 } // namespace istream_extended_test
+
+#include "AssertThrows.hpp"
+#include "pdfparser.istream_extended.hpp"
+#include "pdfparser.istream_extended_errors.hpp"
 
 using namespace pdfparser;
 using namespace istream_extended_test;
@@ -28,13 +30,5 @@ void get_test::test_at_EOF() {
 
 	istream_extended str_extended(stream.rdbuf());
 
-	try {
-		(void)str_extended.get();
-	} catch (const failed_to_get& e) {
-		Assert::IsTrue(0 == e.tell_position());
-
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(failed_to_get, (void)str_extended.get());
 }

@@ -1,3 +1,4 @@
+#include "AssertThrows.hpp"
 #include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.ipdfstream_errors.hpp"
 #include "take_xref_table_test.hpp"
@@ -35,13 +36,6 @@ void take_xref_table_test::test_overflow() {
 	stream << "1 " << (max / 10) << (max % 10 + 1) << "\n";
 
 	ipdfstream str_parser(stream.rdbuf());
-	try {
-		str_parser.take_xref_table();
-	} catch (const onstream_integer_object_overflows& e) {
-		Assert::IsTrue(7 == e.tell_position());
 
-		// success
-		return;
-	}
-	Assert::Fail();
+	AssertThrows(onstream_integer_object_overflows, str_parser.take_xref_table());
 }

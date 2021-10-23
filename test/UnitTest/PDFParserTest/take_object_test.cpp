@@ -1,5 +1,5 @@
+#include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
 #include "take_object_test.hpp"
@@ -134,24 +134,14 @@ void take_object_test::test_no_object() {
 	stream << "nothing";
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_object();
-	} catch (specified_object_not_found&) {
-		// success
-		return;
-	}
-	Assert::Fail();
+
+	AssertThrows(specified_object_not_found, obj_stream.take_object());
 }
 void take_object_test::test_eof() {
 	std::stringstream stream(std::ios_base::in | std::ios_base::out |
 	                         std::ios_base::binary);
 
 	object_stream obj_stream(stream.rdbuf());
-	try {
-		obj_stream.take_object();
-	} catch (specified_object_not_found&) {
-		// success
-		return;
-	}
-	Assert::Fail();
+
+	AssertThrows(specified_object_not_found, obj_stream.take_object());
 }
