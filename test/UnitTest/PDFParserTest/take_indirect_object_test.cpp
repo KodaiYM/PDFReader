@@ -1,8 +1,18 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_indirect_object_test {
+public:
+	[TestMethod] void test_sample();
+	[TestMethod] void test_inconsistent_object_number();
+	[TestMethod] void test_inconsistent_generation_number();
+};
+} // namespace object_stream_test
+
 #include "AssertThrows.hpp"
 #include "literal_trim.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
-#include "take_indirect_object_test.hpp"
 
 #include <sstream>
 

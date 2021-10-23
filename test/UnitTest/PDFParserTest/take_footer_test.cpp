@@ -1,8 +1,21 @@
+#include "testtool.h"
+
+namespace ipdfstream_test {
+[TestClass] public ref class take_footer_test {
+public:
+	[TestMethod] void test_sample();
+	[TestMethod] void test_EOF_EOF_EOL();
+	[TestMethod] void test_EOF_EOF_only();
+
+	[TestMethod] void test_startxref_SP_startxref_comment_EOL();
+	[TestMethod] void test_xref_SP_xref_comment_EOL();
+};
+} // namespace ipdfstream_test
+
 #include "literal_trim.hpp"
 #include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.ipdfstream_errors.hpp"
 #include "pdfparser.object_cache.hpp"
-#include "take_footer_test.hpp"
 
 #include <sstream>
 

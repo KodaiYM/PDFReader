@@ -1,5 +1,14 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_indirect_reference_test {
+public:
+	[TestMethod] void test_unsigned();
+	[TestMethod] void test_signed();
+};
+} // namespace object_stream_test
+
 #include "pdfparser.object_stream.hpp"
-#include "take_indirect_reference_test.hpp"
 
 #include <sstream>
 

@@ -1,17 +1,22 @@
-#include "get_pages_test.hpp"
+#include "testtool.h"
+
+namespace document_reader_test {
+[TestClass] public ref class get_pages_test {
+public:
+	[TestMethod] void test_GetPages_helloworld();
+};
+} // namespace document_reader_test
+
 #include "pdfparser.document_reader.hpp"
 #include "pdfparser.ipdffstream.hpp"
 
 #include <filesystem>
-#include <fstream>
 
 using namespace pdfparser;
 using namespace document_reader_test;
+namespace fs = std::filesystem;
 
 void get_pages_test::test_GetPages_helloworld() {
-	using namespace xref_types;
-	namespace fs = std::filesystem;
-
 	fs::path helloworld_path =
 	    R"(..\..\test\UnitTest\PDFParserTest\data\helloworld.pdf)";
 

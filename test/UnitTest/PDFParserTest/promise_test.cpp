@@ -1,6 +1,15 @@
+#include "testtool.h"
+
+namespace istream_extended_test {
+[TestClass] public ref class promise_test {
+public:
+	[TestMethod] void test_success();
+	[TestMethod] void test_failure();
+};
+} // namespace istream_extended_test
+
 #include "AssertThrows.hpp"
 #include "pdfparser.istream_extended.hpp"
-#include "promise_test.hpp"
 
 using namespace pdfparser;
 using namespace istream_extended_test;

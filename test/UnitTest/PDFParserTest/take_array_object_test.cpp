@@ -1,9 +1,19 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_array_object_test {
+public:
+	[TestMethod] void test_simple_array();
+	[TestMethod] void test_valid_array();
+	[TestMethod] void test_empty_array();
+	[TestMethod] void test_lack_of_right_square_bracket();
+};
+} // namespace object_stream_test
+
 #include "AssertThrows.hpp"
 #include "literal_trim.hpp"
-#include "pdfparser.object_cache.hpp"
 #include "pdfparser.object_stream.hpp"
 #include "pdfparser.object_stream_errors.hpp"
-#include "take_array_object_test.hpp"
 
 #include <sstream>
 

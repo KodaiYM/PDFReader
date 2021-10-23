@@ -1,5 +1,13 @@
+#include "testtool.h"
+
+namespace object_stream_test {
+[TestClass] public ref class take_null_object_test {
+public:
+	[TestMethod] void test_null();
+};
+} // namespace object_stream_test
+
 #include "pdfparser.object_stream.hpp"
-#include "take_null_object_test.hpp"
 
 #include <sstream>
 

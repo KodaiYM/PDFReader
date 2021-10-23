@@ -1,7 +1,15 @@
+#include "testtool.h"
+
+namespace ipdfstream_test {
+[TestClass] public ref class take_xref_entry_test {
+public:
+	[TestMethod] void test_keyword_invalid();
+};
+} // namespace ipdfstream_test
+
 #include "AssertThrows.hpp"
 #include "pdfparser.ipdfstream.hpp"
 #include "pdfparser.ipdfstream_errors.hpp"
-#include "take_xref_entry_test.hpp"
 
 using namespace ipdfstream_test;
 using namespace pdfparser;
