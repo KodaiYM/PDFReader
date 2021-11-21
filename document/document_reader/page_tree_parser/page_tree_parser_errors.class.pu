@@ -1,9 +1,0 @@
-@startuml page_tree_parser_errors
-hide empty members
-namespace pdfparser {
-class non_page_node_detected {}
-non_page_node_detected --|> position_indicatable_error
-
-abstract position_indicatable_error {}
-}
-@enduml

@@ -8,10 +8,9 @@
 - PlantUML
 - WPF
 
-# 使用言語(予定)
+# 使用言語
 - C#
 - F#
-- C++/CLI
 
 # 動作環境
 - .NET Core 3.1
