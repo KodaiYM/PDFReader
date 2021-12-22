@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -10,76 +11,84 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using MuPDFCore;
 
 namespace ExportToImage.Commands {
-	public class ResetPreviewsCommand: ICommand {
+	public class ResetPreviewsCommand: ICommand, IDisposable {
 		public void Execute(object parameter) {
-			Task.Run(() => {
-				_viewModel.Previews.Clear();
+			if (_cancellationTokenSource != null) {
+				if (!_resetPreviewsTask.IsCompleted) {
+					_cancellationTokenSource.Cancel();
 
-				_viewModel.Document.ResetPath(_viewModel.PDFPath);
-				foreach (var page in _viewModel.Document.Pages) {
-					var bounds = page.Bounds;
-
-					_viewModel.Previews.Add(Preview.CreateLoadingPreview(
-					    bounds.Width * 96 / 72, bounds.Height * 96 / 72));
-					// TODO: for debugging
-					System.Threading.Thread.Sleep(30);
+					// Wait for complete cancellation
+					try {
+						_resetPreviewsTask.Wait();
+					} catch (AggregateException) {}
 				}
 
-				_viewModel.RenderPreviews.Execute(null);
+				_cancellationTokenSource.Dispose();
+			}
+
+			_cancellationTokenSource = new CancellationTokenSource();
+			_resetPreviewsTask       = Task.Run(ResetPreviews);
+		}
+		public void ResetPreviews() {
+			var cancellationToken = _cancellationTokenSource.Token;
+
+			cancellationToken.ThrowIfCancellationRequested();
+
+			_viewModel.Previews.Clear();
+
+			cancellationToken.ThrowIfCancellationRequested();
+
+			_viewModel.Document.ResetPath(_viewModel.PDFPath, cancellationToken);
+
+			cancellationToken.ThrowIfCancellationRequested();
+
+			foreach (var page in _viewModel.Document.Pages) {
+				cancellationToken.ThrowIfCancellationRequested();
+
+				var bounds = page.Bounds;
+
+				// TODO: for debugging
+				System.Threading.Thread.Sleep(30);
+				_viewModel.Previews.Add(Preview.CreateLoadingPreview(
+				    bounds.Width * 96.0 / 72.0, bounds.Height * 96.0 / 72.0));
+			}
+
+			cancellationToken.ThrowIfCancellationRequested();
+
+			Parallel.For(0, _viewModel.Document.Pages.Count, (int page_number) => {
+				cancellationToken.ThrowIfCancellationRequested();
+
+				var preview =
+				    _viewModel.Document.Render(page_number, 72,
+				                               cancellationToken); // for test, dpi is 1
+				preview.Freeze();
+
+				cancellationToken.ThrowIfCancellationRequested();
+
+				// TODO: for debugging
+				System.Threading.Thread.Sleep(30);
+				_viewModel.Previews[page_number].Source = preview;
 			});
-
-			// MuPDF を使ってやろう。
-			// Task.Run(async () => {
-			//			var stopwatch = new Stopwatch();
-			//			stopwatch.Start();
-
-			//			using var renderer = new DocumentRenderer(filename);
-			//			var       pages    = renderer.Pages;
-			//			var   thumbnails   = new ConcurrentBag<KeyValuePair<int,
-			// ImageSource>>(); 			  var generateBitmapSource = new
-			// ActionBlock<KeyValuePair<int, Cube.Pdf.Page>>((kv) => {
-			// using (var
-			// image = renderer.Render(kv.Value, kv.Value.Size)) {
-			// using (var
-			// image_stream = new MemoryStream()) {
-			// image.Save(image_stream,
-			// ImageFormat.Png);
-			// image_stream.Seek(0, SeekOrigin.Begin);
-			// ImageSource
-			// bitmap = BitmapFrame.Create(image_stream, BitmapCreateOptions.None,
-			// BitmapCacheOption.OnLoad);
-			// thumbnails.Add(KeyValuePair.Create(kv.Key, bitmap));
-			//		}
-			//	}
-			//},
-			// new ExecutionDataflowBlockOptions {
-			// CancellationToken =
-			// System.Threading.CancellationToken.None, EnsureOrdered =
-			// false, MaxDegreeOfParallelism =
-			// System.Threading.Tasks.Dataflow.DataflowBlockOptions.Unbounded
-			//}
-			//);
-
-			// foreach (var kv in pages.Select((page, index) =>
-			//                                    KeyValuePair.Create(index, page))) {
-			//	generateBitmapSource.SendAsync(kv).Wait();
-			//}
-			// generateBitmapSource.Complete();
-			// generateBitmapSource.Completion.Wait();
-			// foreach (var kv in thumbnails.OrderBy(kv => kv.Key)) {
-			//	vm.Thumbnails.Add(kv.Value);
-			//}
-
-			// stopwatch.Stop();
-			// Debug.WriteLine("Pattern 3: " + stopwatch.ElapsedMilliseconds);
-			//});
 		}
 
 		public ResetPreviewsCommand(MainPageViewModel viewModel) {
 			_viewModel = viewModel;
 		}
-		public event EventHandler          CanExecuteChanged;
-		public bool                        CanExecute(object parameter) => true;
+		public event EventHandler CanExecuteChanged;
+		public bool               CanExecute(object parameter) => true;
+
 		private readonly MainPageViewModel _viewModel;
+		private CancellationTokenSource    _cancellationTokenSource;
+		private Task                       _resetPreviewsTask;
+
+#region Dispose
+		private bool disposedValue;
+		public void  Dispose() {
+      if (!disposedValue) {
+        _cancellationTokenSource?.Dispose();
+        disposedValue = true;
+      }
+		}
+#endregion
 	}
 }
