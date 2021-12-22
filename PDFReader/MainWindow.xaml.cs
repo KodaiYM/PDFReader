@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace PDFReader {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window {
-		private PagesViewModel pagesViewModel = new PagesViewModel();
+	public partial class MainWindow: Window {
 		public MainWindow() {
 			InitializeComponent();
-
-			PagesControl.DataContext = pagesViewModel;
-		}
-		protected override void OnContentRendered(EventArgs e) {
-			base.OnContentRendered(e);
-
-			pagesViewModel.LoadPages();
 		}
 	}
 }
