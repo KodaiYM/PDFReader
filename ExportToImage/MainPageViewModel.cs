@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -42,8 +43,6 @@ namespace ExportToImage {
 		public Commands.OpenPDFCommand            OpenPDF { get; }
 		public Commands.SetOutputDirectoryCommand SetOutputDirectory { get; }
 		public Commands.ResetPreviewsCommand      ResetPreviews { get; }
-		public Commands.UpdatePreviewsCommand     UpdatePreviews { get; }
-		public Commands.RenderPreviewsCommand     RenderPreviews { get; }
 #endregion
 
 		public MainPageViewModel() {
@@ -51,8 +50,6 @@ namespace ExportToImage {
 			OpenPDF            = new Commands.OpenPDFCommand(this);
 			SetOutputDirectory = new Commands.SetOutputDirectoryCommand(this);
 			ResetPreviews      = new Commands.ResetPreviewsCommand(this);
-			UpdatePreviews     = new Commands.UpdatePreviewsCommand(this);
-			RenderPreviews     = new Commands.RenderPreviewsCommand(this);
 
 			System.Windows.Data.BindingOperations.EnableCollectionSynchronization(
 			    Previews, new object());
@@ -76,7 +73,8 @@ namespace ExportToImage {
 		private bool _disposedValue = false;
 		public void  Dispose() {
       if (!_disposedValue) {
-        Document.Dispose();
+        Document?.Dispose();
+        ResetPreviews?.Dispose();
         _disposedValue = true;
       }
 		}

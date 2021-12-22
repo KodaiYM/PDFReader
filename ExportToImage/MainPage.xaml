@@ -148,15 +148,15 @@
 
           <StackPanel Grid.Row="0">
             <DockPanel>
-              <TextBlock Margin="0,0,5,0">出力形式</TextBlock>
-              <ComboBox>
+              <TextBlock Margin="0,0,5,0">出力形式(未実装)</TextBlock>
+              <ComboBox IsEnabled="False">
                 <ComboBoxItem IsSelected="True">PNG</ComboBoxItem>
                 <ComboBoxItem>JPEG</ComboBoxItem>
                 <ComboBoxItem>TIFF</ComboBoxItem>
               </ComboBox>
             </DockPanel>
           </StackPanel>
-          <Button Margin="5" Grid.Row="1">出力</Button>
+          <Button Margin="5" IsEnabled="False" Grid.Row="1">出力(未実装)</Button>
         </Grid>
       </Border>
       <!-- end of Setting section -->
