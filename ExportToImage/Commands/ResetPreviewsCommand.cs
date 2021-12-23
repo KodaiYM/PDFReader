@@ -48,7 +48,9 @@ namespace ExportToImage.Commands {
 				var bounds = page.Bounds;
 
 				// TODO: for debugging
-				System.Threading.Thread.Sleep(30);
+				//#if DEBUG
+				//				System.Threading.Thread.Sleep(30);
+				//#endif
 				_viewModel.Previews.Add(Preview.CreateLoadingPreview(
 				    bounds.Width * 96.0 / 72.0, bounds.Height * 96.0 / 72.0));
 			}
@@ -63,10 +65,13 @@ namespace ExportToImage.Commands {
 				                               cancellationToken); // for test, dpi is 1
 				preview.Freeze();
 
+				// TODO: for debugging
+#if DEBUG
+				System.Threading.Thread.Sleep(30);
+#endif
+
 				cancellationToken.ThrowIfCancellationRequested();
 
-				// TODO: for debugging
-				System.Threading.Thread.Sleep(30);
 				_viewModel.Previews[page_number].Source = preview;
 			});
 		}
