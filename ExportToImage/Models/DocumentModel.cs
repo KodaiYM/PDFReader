@@ -88,36 +88,10 @@ namespace ExportToImage.Models {
 				cancellationToken.ThrowIfCancellationRequested();
 
 				// Rendering
-				{
-					bool renderingCompleted    = false;
-					var  checkCancellationTask = Task.Run(() => {
-            // wait for cancellation
-            while (!renderingCompleted &&
-                   !cancellationToken.IsCancellationRequested)
-              ; // do nothing
-          }, cancellationToken);
-					var  renderingTask         = Task.Run(() => {
-            _renderers[page_index].Render(renderedPageSize, bounds, destination,
-                                          MuPDFCore.PixelFormats.RGB);
-          }, cancellationToken);
-					int  completedTaskIndex =
-					    Task.WaitAny(new Task[] { renderingTask, checkCancellationTask });
-
-					if (completedTaskIndex == 0) {
-						// when rendering has completed
-
-						// terminate polling task
-						renderingCompleted = true;
-						checkCancellationTask.Wait();
-					} else if (completedTaskIndex == 1) {
-						// when canceled
-
-						// send signal to terminate rendering
-						_renderers[page_index].Abort();
-
-						// throw OperationCanceledException
-						cancellationToken.ThrowIfCancellationRequested();
-					}
+				using (cancellationToken.Register(
+				    () => { _renderers[page_index].Abort(); })) {
+					_renderers[page_index].Render(renderedPageSize, bounds, destination,
+					                              MuPDFCore.PixelFormats.RGB);
 				}
 
 				cancellationToken.ThrowIfCancellationRequested();
