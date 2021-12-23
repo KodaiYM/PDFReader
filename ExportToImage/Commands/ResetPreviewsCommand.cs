@@ -42,38 +42,49 @@ namespace ExportToImage.Commands {
 
 			cancellationToken.ThrowIfCancellationRequested();
 
-			foreach (var page in _viewModel.Document.Pages) {
-				cancellationToken.ThrowIfCancellationRequested();
+			var        pages        = _viewModel.Document.Pages;
+			var        num_of_pages = pages.Count;
+			List<Task> RenderTasks  = new List<Task>(num_of_pages);
+			for (int i = 0; i < num_of_pages; ++i) {
+				if (cancellationToken.IsCancellationRequested) {
+					break;
+				}
 
-				var bounds = page.Bounds;
+				var bounds = pages[i].Bounds;
 
-				// TODO: for debugging
-				//#if DEBUG
-				//				System.Threading.Thread.Sleep(30);
-				//#endif
 				_viewModel.Previews.Add(Preview.CreateLoadingPreview(
 				    bounds.Width * 96.0 / 72.0, bounds.Height * 96.0 / 72.0));
-			}
 
-			cancellationToken.ThrowIfCancellationRequested();
-
-			Parallel.For(0, _viewModel.Document.Pages.Count, (int page_number) => {
-				cancellationToken.ThrowIfCancellationRequested();
-
-				var preview =
-				    _viewModel.Document.Render(page_number, 72,
-				                               cancellationToken); // for test, dpi is 1
-				preview.Freeze();
+				if (cancellationToken.IsCancellationRequested) {
+					break;
+				}
 
 				// TODO: for debugging
 #if DEBUG
-				System.Threading.Thread.Sleep(30);
+				System.Threading.Thread.Sleep(10);
+#endif
+				// Start Rendering Task
+				var page_index = i;
+				RenderTasks.Add(Task.Run(() => {
+					cancellationToken.ThrowIfCancellationRequested();
+
+					var preview = _viewModel.Document.Render(page_index, dpi: 72,
+					                                         cancellationToken);
+					preview.Freeze();
+
+					// TODO: for debugging
+#if DEBUG
+					System.Threading.Thread.Sleep(200);
 #endif
 
-				cancellationToken.ThrowIfCancellationRequested();
+					cancellationToken.ThrowIfCancellationRequested();
 
-				_viewModel.Previews[page_number].Source = preview;
-			});
+					_viewModel.Previews[page_index].Source = preview;
+				}));
+			}
+
+			// wait for complete cancellation or complete all
+			Task.WaitAll(RenderTasks.ToArray());
 		}
 
 		public ResetPreviewsCommand(MainPageViewModel viewModel) {

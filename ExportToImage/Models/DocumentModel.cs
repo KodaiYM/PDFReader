@@ -90,15 +90,15 @@ namespace ExportToImage.Models {
 				// Rendering
 				{
 					bool renderingCompleted    = false;
-					var  renderingTask         = Task.Run(() => {
-            _renderers[page_index].Render(renderedPageSize, bounds, destination,
-                                          MuPDFCore.PixelFormats.RGB);
-          }, cancellationToken);
 					var  checkCancellationTask = Task.Run(() => {
             // wait for cancellation
             while (!renderingCompleted &&
                    !cancellationToken.IsCancellationRequested)
               ; // do nothing
+          }, cancellationToken);
+					var  renderingTask         = Task.Run(() => {
+            _renderers[page_index].Render(renderedPageSize, bounds, destination,
+                                          MuPDFCore.PixelFormats.RGB);
           }, cancellationToken);
 					int  completedTaskIndex =
 					    Task.WaitAny(new Task[] { renderingTask, checkCancellationTask });
