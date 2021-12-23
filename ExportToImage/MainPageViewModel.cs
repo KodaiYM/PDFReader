@@ -42,14 +42,12 @@ namespace ExportToImage {
 #region Commands to be Binding
 		public Commands.OpenPDFCommand            OpenPDF { get; }
 		public Commands.SetOutputDirectoryCommand SetOutputDirectory { get; }
-		public Commands.ResetPreviewsCommand      ResetPreviews { get; }
 #endregion
 
 		public MainPageViewModel() {
 			/* Set Commands */
 			OpenPDF            = new Commands.OpenPDFCommand(this);
 			SetOutputDirectory = new Commands.SetOutputDirectoryCommand(this);
-			ResetPreviews      = new Commands.ResetPreviewsCommand(this);
 
 			System.Windows.Data.BindingOperations.EnableCollectionSynchronization(
 			    Previews, new object());
@@ -74,7 +72,7 @@ namespace ExportToImage {
 		public void  Dispose() {
       if (!_disposedValue) {
         Document?.Dispose();
-        ResetPreviews?.Dispose();
+        OpenPDF?.Dispose();
         _disposedValue = true;
       }
 		}
