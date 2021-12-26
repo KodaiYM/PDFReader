@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ExportToImage {
 	public class Preview: INotifyPropertyChanged {
@@ -36,7 +37,7 @@ namespace ExportToImage {
 				}
 			}
 		}
-		public ImageSource Source {
+		public BitmapSource Source {
 			get { return _source; }
 			set {
 				if (value == null) {
@@ -51,7 +52,7 @@ namespace ExportToImage {
 			}
 		}
 
-		public Preview(ImageSource source) {
+		public Preview(BitmapSource source) {
 			Source = source;
 		}
 		public static Preview CreateLoadingPreview(double width, double height) {
@@ -66,10 +67,10 @@ namespace ExportToImage {
 		private Preview() {}
 
 #region Backing stores
-		private bool        _loading;
-		private double      _width;
-		private double      _height;
-		private ImageSource _source;
+		private bool         _loading;
+		private double       _width;
+		private double       _height;
+		private BitmapSource _source;
 #endregion
 
 #region Implementation of INotifyPropertyChanged

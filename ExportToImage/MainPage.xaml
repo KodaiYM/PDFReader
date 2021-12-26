@@ -38,12 +38,12 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
-          <TextBlock Margin="0,0,3,0" Grid.Column="0"
-              Style="{StaticResource header}">PDFファイル</TextBlock>
+          <TextBlock Margin="0,0,3,0" Style="{StaticResource header}"
+              Grid.Column="0">PDFファイル</TextBlock>
           <!-- TODO: currently readonly, but, eventually editable -->
           <TextBox Text="{Binding PDFPath}" IsReadOnly="True" Grid.Column="1" />
-          <Button Margin="5,0,0,0" Command="{Binding OpenPDF}" Grid.Column="2"
-              Padding="10,0">参照...</Button>
+          <Button Command="{Binding OpenPDF}" Margin="5,0,0,0" Padding="10,0"
+              Grid.Column="2">参照...</Button>
         </Grid>
         <Grid Margin="0,5,0,0">
           <Grid.ColumnDefinitions>
@@ -51,13 +51,13 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
-          <TextBlock Margin="0,0,3,0" Grid.Column="0"
-              Style="{StaticResource header}">出力先フォルダ</TextBlock>
+          <TextBlock Margin="0,0,3,0" Style="{StaticResource header}"
+              Grid.Column="0">出力先フォルダ</TextBlock>
           <!-- TODO: currently readonly, but, eventually editable -->
           <TextBox Text="{Binding OutputDirectoryPath}" IsReadOnly="True"
               Grid.Column="1" />
-          <Button Margin="5,0,0,0" Command="{Binding SetOutputDirectory}"
-              Grid.Column="2" Padding="10,0">参照...</Button>
+          <Button Command="{Binding SetOutputDirectory}" Margin="5,0,0,0"
+              Padding="10,0" Grid.Column="2">参照...</Button>
         </Grid>
       </StackPanel>
     </Border>
@@ -156,7 +156,7 @@
               </ComboBox>
             </DockPanel>
           </StackPanel>
-          <Button Margin="5" IsEnabled="False" Grid.Row="1">出力(未実装)</Button>
+          <Button Command="{Binding Export}" Margin="5" Grid.Row="1">出力(実装中)</Button>
         </Grid>
       </Border>
       <!-- end of Setting section -->

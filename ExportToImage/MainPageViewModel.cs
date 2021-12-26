@@ -42,12 +42,14 @@ namespace ExportToImage {
 #region Commands to be Binding
 		public Commands.OpenPDFCommand            OpenPDF { get; }
 		public Commands.SetOutputDirectoryCommand SetOutputDirectory { get; }
+		public Commands.ExportCommand             Export { get; }
 #endregion
 
 		public MainPageViewModel() {
 			/* Set Commands */
 			OpenPDF            = new Commands.OpenPDFCommand(this);
 			SetOutputDirectory = new Commands.SetOutputDirectoryCommand(this);
+			Export             = new Commands.ExportCommand(this);
 
 			System.Windows.Data.BindingOperations.EnableCollectionSynchronization(
 			    Previews, new object());
