@@ -71,8 +71,8 @@ namespace ExportToImage {
 		private bool _disposedValue = false;
 		public void  Dispose() {
       if (!_disposedValue) {
-        Document?.Dispose();
         OpenPDF?.Dispose();
+        Document?.Dispose();
         _disposedValue = true;
       }
 		}
