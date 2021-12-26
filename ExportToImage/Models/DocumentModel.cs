@@ -38,12 +38,6 @@ namespace ExportToImage.Models {
 
 			var page_count = Pages.Count;
 			_renderers     = new MuPDFMultiThreadedPageRenderer[page_count];
-			for (int i = 0; i < page_count; ++i) {
-				cancellationToken.ThrowIfCancellationRequested();
-
-				_renderers[i] =
-				    _document.GetMultiThreadedRenderer(i, RenderThreadCount);
-			}
 		}
 		public MuPDFPageCollection Pages {
 			get { return _document.Pages; }
@@ -56,6 +50,17 @@ namespace ExportToImage.Models {
 		/// <returns></returns>
 		public BitmapSource Render(int page_index, double dpi,
 		                           CancellationToken cancellationToken) {
+			cancellationToken.ThrowIfCancellationRequested();
+
+			// if renderer is not set
+			if (_renderers[page_index] == null) {
+				lock (_GetMultiThreadedRenderer_locker) {
+					// create renderer
+					_renderers[page_index] =
+					    _document.GetMultiThreadedRenderer(page_index, RenderThreadCount);
+				}
+			}
+
 			cancellationToken.ThrowIfCancellationRequested();
 
 			// actual bounds
@@ -137,6 +142,7 @@ namespace ExportToImage.Models {
 		private MuPDFContext  _context;
 		private MuPDFDocument _document;
 		private MuPDFMultiThreadedPageRenderer[] _renderers;
+		private readonly object _GetMultiThreadedRenderer_locker = new object();
 
 		private const int RenderThreadCount = 1 /*Environment.ProcessorCount*/;
 	}
