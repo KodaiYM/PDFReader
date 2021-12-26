@@ -26,13 +26,14 @@ namespace ExportToImage.Commands {
 			_busy = true;
 			RaiseCanExecuteChanged();
 
-			await Task.Run(CancelPreviousResetPreviewsTask);
-			_resetPreviewsTask = Task.Run(ResetPreviews);
+			await Task.Run(CancelPreviousResetPreviewsAsync);
+			_cancellationTokenSource = new CancellationTokenSource();
+			_resetPreviewsTask       = Task.Run(ResetPreviewsAsync);
 
 			_busy = false;
 			RaiseCanExecuteChanged();
 		}
-		private async Task CancelPreviousResetPreviewsTask() {
+		private async Task CancelPreviousResetPreviewsAsync() {
 			if (_cancellationTokenSource != null) {
 				if (!_resetPreviewsTask.IsCompleted) {
 					_cancellationTokenSource.Cancel();
@@ -46,9 +47,8 @@ namespace ExportToImage.Commands {
 
 				_cancellationTokenSource.Dispose();
 			}
-			_cancellationTokenSource = new CancellationTokenSource();
 		}
-		private async Task ResetPreviews() {
+		private async Task ResetPreviewsAsync() {
 			var cancellationToken = _cancellationTokenSource.Token;
 
 			cancellationToken.ThrowIfCancellationRequested();
@@ -124,10 +124,10 @@ namespace ExportToImage.Commands {
 		private bool                       _busy = false;
 
 #region Dispose
-		private bool disposedValue;
+		private bool disposedValue = false;
 		public void  Dispose() {
       if (!disposedValue) {
-        _cancellationTokenSource?.Dispose();
+        Task.Run(CancelPreviousResetPreviewsAsync).Wait();
         disposedValue = true;
       }
 		}
