@@ -61,19 +61,21 @@ namespace ExportToImage.Commands {
 
 			cancellationToken.ThrowIfCancellationRequested();
 
-			var        pages        = _viewModel.Document.Pages;
-			var        num_of_pages = pages.Count;
-			List<Task> RenderTasks  = new List<Task>(num_of_pages);
-			for (int i = 0; i < num_of_pages; ++i) {
-				if (cancellationToken.IsCancellationRequested) {
-					break;
-				}
+			var pages        = _viewModel.Document.Pages;
+			var num_of_pages = pages.Count;
 
-				var bounds = pages[i].Bounds;
+			for (int page_index = 0; page_index < num_of_pages; ++page_index) {
+				cancellationToken.ThrowIfCancellationRequested();
+
+				// Creating pages[page_index] takes time.
+				var bounds = pages[page_index].Bounds;
 
 				_viewModel.Previews.Add(Preview.CreateLoadingPreview(
 				    bounds.Width * 96.0 / 72.0, bounds.Height * 96.0 / 72.0));
+			}
 
+			List<Task> RenderTasks = new List<Task>(num_of_pages);
+			for (int page_index = 0; page_index < num_of_pages; ++page_index) {
 				if (cancellationToken.IsCancellationRequested) {
 					break;
 				}
@@ -83,15 +85,11 @@ namespace ExportToImage.Commands {
 				// System.Threading.Thread.Sleep(10);
 #endif
 				// Start Rendering Task
-				var page_index = i;
-#if DEBUG
+				var page_index_copy = page_index;
 				RenderTasks.Add(Task.Run(() => {
-#else
-				RenderTasks.Add(Task.Run(() => {
-#endif
 					cancellationToken.ThrowIfCancellationRequested();
 					// Debug.WriteLine(page_index + ": start");
-					var preview = _viewModel.Document.Render(page_index, dpi: 72,
+					var preview = _viewModel.Document.Render(page_index_copy, dpi: 72,
 					                                         cancellationToken);
 					preview.Freeze();
 					// Debug.WriteLine(page_index + ": end");
@@ -103,12 +101,8 @@ namespace ExportToImage.Commands {
 
 					cancellationToken.ThrowIfCancellationRequested();
 
-					_viewModel.Previews[page_index].Source = preview;
-#if DEBUG
+					_viewModel.Previews[page_index_copy].Source = preview;
 				}));
-#else
-				}));
-#endif
 			}
 
 			// Await cancel or complete
