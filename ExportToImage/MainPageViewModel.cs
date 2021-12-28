@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Reactive.Disposables;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Linq;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace ExportToImage {
 	public sealed class MainPageViewModel: INotifyPropertyChanged, IDisposable {
@@ -42,22 +49,38 @@ namespace ExportToImage {
 #region Commands to be Binding
 		public Commands.OpenPDFCommand            OpenPDF { get; }
 		public Commands.SetOutputDirectoryCommand SetOutputDirectory { get; }
-		public Commands.ExportCommand             Export { get; }
+		public AsyncReactiveCommand               Export { get; }
+		public AsyncReactiveCommand               CancelExport { get; }
 #endregion
 
 		public MainPageViewModel() {
+			//			_exporting = new
+			// ReactivePropertySlim<bool>(false).AddTo(_disposables);
+
 			/* Set Commands */
 			OpenPDF            = new Commands.OpenPDFCommand(this);
 			SetOutputDirectory = new Commands.SetOutputDirectoryCommand(this);
-			Export             = new Commands.ExportCommand(this);
+			Export             = _exportAndCancelCommandPair.Export;
+			Export.Subscribe(async () =>
+			                     await _exportAndCancelCommandPair.ExecuteExport(
+			                         OutputDirectoryPath, Previews));
+			CancelExport = _exportAndCancelCommandPair.Cancel;
+			CancelExport.Subscribe(
+			    async () => await _exportAndCancelCommandPair.ExecuteCancel());
 
 			System.Windows.Data.BindingOperations.EnableCollectionSynchronization(
 			    Previews, new object());
 		}
 
+#region Backing stores for Binding commands
+		private Commands.ExportAndCancelCommandPair _exportAndCancelCommandPair =
+		    new Commands.ExportAndCancelCommandPair();
+#endregion
+
 #region Backing stores for Binding properties
-		private string _pdfPath;
-		private string _outputDirectoryPath;
+		private CompositeDisposable _disposables = new CompositeDisposable();
+		private string              _pdfPath;
+		private string              _outputDirectoryPath;
 #endregion
 
 #region Implementation of INotifyPropertyChanged
@@ -75,6 +98,8 @@ namespace ExportToImage {
       if (!_disposedValue) {
         OpenPDF?.Dispose();
         Document?.Dispose();
+        _exportAndCancelCommandPair.Dispose();
+        _disposables.Dispose();
         _disposedValue = true;
       }
 		}

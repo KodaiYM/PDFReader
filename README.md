@@ -18,3 +18,4 @@ Windows でしか動作しません。
 | [Microsoft.Xaml.Behaviors.Wpf](https://github.com/Microsoft/XamlBehaviorsWpf) | [MIT](https://github.com/microsoft/XamlBehaviorsWpf/blob/master/LICENSE) |
 | [MuPDFCore](https://github.com/arklumpus/MuPDFCore) | [AGPL-3.0-only](https://github.com/arklumpus/MuPDFCore/blob/master/LICENSE) |
 | [SharpVectors](https://github.com/ElinamLLC/SharpVectors) | [BSD-3-Clause](https://github.com/ElinamLLC/SharpVectors/blob/master/License.txt) |
+| [ReactiveProperty](https://github.com/runceel/ReactiveProperty) | [MIT](https://github.com/runceel/ReactiveProperty/blob/main/LICENSE.txt) |
